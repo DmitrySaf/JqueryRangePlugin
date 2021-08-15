@@ -23,7 +23,7 @@ module.exports = {
 		paths: PATHS,
 		page: PAGE_LIVE
 	},
-	entry: './src/app/index.ts',
+	entry: './src/index.ts',
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js'],
 	},

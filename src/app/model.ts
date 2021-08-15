@@ -1,0 +1,1 @@
+//import {ChangeMin} from './controller';
