@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "es2021",
+        "removeComments": true,
+        "outDir": "dist/js",
+        "sourceMap": true,
+        "watch": true,
+        "strict": true
+    },
+    "exclude": [
+      "node_modules"
+    ]
+}
