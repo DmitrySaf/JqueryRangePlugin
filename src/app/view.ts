@@ -1,10 +1,13 @@
-export class SetMin {
-    slider : HTMLElement;
-    constructor(slider: HTMLElement) {
-        this.slider = slider
-    }
+class SetMin {
+    container : HTMLElement;
 
-    setMin() {
-        this.slider.setAttribute('min', '100');
+    slider : HTMLElement;
+
+    constructor() {
+        this.container = document.createElement('div');
+        this.slider = document.createElement('input');
+        this.container.setAttribute('value', '0');
     }
 }
+
+export { SetMin };

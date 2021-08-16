@@ -1,20 +1,9 @@
-//import {} from '../model';
-//import {expect} from 'chai';
-import 'mocha';
+import { Slider } from '../model';
 
-
-
-
-/* describe('Game', () => {
-    it('Should return empty game board', () => {
-      const game = new Game()
-      
-      const board = game.getState()
-      
-      expect(board).to.deep.equal([
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-      ])
-    })
-  }) */
+describe('Slider', () => {
+    it('Should return slider min number', () => {
+        const slider : Slider = new Slider(0, 100);
+        const sliderMin : number = slider.min;
+        expect(sliderMin).toBe(0);
+    });
+});

@@ -1,1 +1,10 @@
-//import {ChangeMin} from './controller';
+export class Slider {
+    min: number;
+
+    max: number;
+
+    constructor(min: number, max: number) {
+        this.min = min;
+        this.max = max;
+    }
+}
