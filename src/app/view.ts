@@ -1,13 +1,36 @@
-class SetMin {
-    container : HTMLElement;
+class View {
+    bar : HTMLElement;
 
     slider : HTMLElement;
 
-    constructor() {
-        this.container = document.createElement('div');
-        this.slider = document.createElement('input');
-        this.container.setAttribute('value', '0');
+    minSlider : HTMLElement;
+
+    container : JQuery<HTMLElement>;
+
+    constructor(container: JQuery<HTMLElement>) {
+        this.slider = document.createElement('div');
+        this.bar = document.createElement('div');
+        this.minSlider = document.createElement('span');
+        this.container = container;
+        this.init();
+    }
+
+    init() {
+        this.addClasses();
+        this.appendSlider();
+    }
+
+    addClasses() {
+        this.slider.classList.add('slider');
+        this.bar.classList.add('bar');
+        this.minSlider.classList.add('value-to');
+    }
+
+    appendSlider() {
+        this.container.append(this.slider);
+        this.slider.append(this.bar);
+        this.slider.append(this.minSlider);
     }
 }
 
-export { SetMin };
+export { View };

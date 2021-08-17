@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "jest": {
-    "verbose": true
+    "verbose": true,
+    "setupFiles": ["./setup-jest.js"]
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.7",
     "@babel/preset-typescript": "^7.15.0",
     "@types/jest": "^26.0.24",
+    "@types/jquery": "^3.5.6",
     "@types/node": "^16.6.1",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",

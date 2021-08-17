@@ -1,4 +1,4 @@
-import { Slider } from '../model';
+import { Slider } from '../app/model';
 
 describe('Slider', () => {
     it('Should return slider min number', () => {
