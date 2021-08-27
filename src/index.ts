@@ -20,6 +20,5 @@ import './app/options';
 $('#range').slider();
 
 $('#test').slider({
-    min: 200,
     double: true
 });

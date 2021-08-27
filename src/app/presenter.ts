@@ -1,6 +1,5 @@
 import { View } from './view';
 import { Model } from './model';
-//import { EventHandler } from './event';
 
 class Presenter {
     view: View;
@@ -17,7 +16,8 @@ class Presenter {
         this.view.mouseMoveHandler((event) => {
             this.view.onSliderMove(event);
             this.moveAt();
-        })
+        });
+        this.model.changeDotValueObserver.attach(this.moveAt())
     }
 
     moveAt = () => {
