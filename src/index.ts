@@ -1,12 +1,25 @@
-import './app/model';
-import { Controller } from './app/controller';
+import { Model } from './app/model';
+import { Presenter } from './app/presenter';
 import { View } from './app/view';
+import './app/options';
+
 
 (function ($) {
-    $.fn.slider = function (container: JQuery<HTMLElement>) {
-        const view = new View(container);
-        return new Controller(view);
+    $.fn.slider = function (options: IOptions) {
+        let settings = $.extend({
+            min: 0,
+            double: false
+        }, options)
+        let view = new View(this, settings);
+        let model = new Model();
+        let presenter = new Presenter(view, model)
+        return presenter;
     };
 }(jQuery));
 
-$('.container').slider($('.container'));
+$('#range').slider();
+
+$('#test').slider({
+    min: 200,
+    double: true
+});

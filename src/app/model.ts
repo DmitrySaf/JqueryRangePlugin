@@ -1,10 +1,16 @@
-export class Slider {
-    min: number;
+class Model {
 
-    max: number;
+    dotFromValue: number;
 
-    constructor(min: number, max: number) {
-        this.min = min;
-        this.max = max;
+    constructor() {
     }
+
+    changeDotValue(dotValue : number) {
+        this.dotFromValue = dotValue;
+        console.log(this.dotFromValue)
+    }
+
+
 }
+
+export { Model };
