@@ -4,14 +4,17 @@ class Model {
 
     changeDotValueObserver: Observable;
 
-    dotFromValue: number;
+    dotFirstValue: number;
+
+    dotSecondValue: number;
 
     constructor() {
         this.changeDotValueObserver = new Observable();
     }
 
-    changeDotValue(dotValue : number) {
-        this.dotFromValue = dotValue;
+    changeDotValue(dotSecondValue: number, dotFirstValue : number = 0) {
+        this.dotFirstValue = dotFirstValue;
+        this.dotSecondValue = dotSecondValue;
         this.changeDotValueObserver.notify();
     }
 

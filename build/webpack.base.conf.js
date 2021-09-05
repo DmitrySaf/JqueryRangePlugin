@@ -125,7 +125,8 @@ module.exports = {
 			filename: `${filename}.html`
 		})), */
 		new HtmlWebpackPlugin({
-			template: 'src/index.html'
+			template: 'src/index.html',
+			scriptLoading: 'blocking'
 		}),
 		new webpack.ProvidePlugin({
 			$: `jquery`,

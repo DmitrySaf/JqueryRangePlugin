@@ -13,15 +13,22 @@ class Presenter {
     }
 
     init = () => {
-        this.view.mouseMoveHandler((event) => {
+        this.view.mouseDownHandler((event) => {
             this.view.onSliderMove(event);
-            this.moveAt();
+            this.changeDotValue();
+            this.view.mouseMoveHandler((event) => {
+                this.changeDotValue();
+            });
         });
-        this.model.changeDotValueObserver.attach(this.moveAt())
+        this.model.changeDotValueObserver.attach(() => {
+            //console.log(this.model.dotSecondValue);
+        });
+
+        
     }
 
-    moveAt = () => {
-        this.model.changeDotValue(this.view.getDotCoords().leftTo);
+    changeDotValue = () => {
+        this.model.changeDotValue(this.view.getDotCoords().secondDot);
     }
 }
 

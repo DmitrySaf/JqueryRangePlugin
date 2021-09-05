@@ -9,13 +9,21 @@ interface Event {
 class View {
     options: IOptions;
 
-    dotTo: JQuery<HTMLElement>;
-
-    dotFrom: JQuery<HTMLElement>;
+    dotFirst: JQuery<HTMLElement>;
+    
+    dotSecond: JQuery<HTMLElement>;
 
     dot: JQuery<HTMLElement>;
 
+    dotWrapperFirst: JQuery<HTMLElement>;
+
+    dotWrapperSecond: JQuery<HTMLElement>;
+
     filler: JQuery<HTMLElement>;
+
+    dotFirstValue: JQuery<HTMLElement>;
+    
+    dotSecondValue: JQuery<HTMLElement>;
 
     slider: JQuery<HTMLElement>;
 
@@ -40,11 +48,15 @@ class View {
 
     render = () => {
         this.input.addClass('hidden');
+        this.dotWrapperSecond.css('left', `-${this.dotSecond[0].offsetWidth / 2}px`);
         if (this.options.double) {
-            this.dotFrom.addClass('shown')
+            this.dotWrapperFirst.addClass('shown');
+            this.dotWrapperFirst.css('left', `-${this.dotSecond[0].offsetWidth / 2}px`);
+            this.dotWrapperSecond.css('left', `${this.dotFirst[0].offsetWidth / 2}px`);
+            this.filler.css('width', `${this.dotFirst[0].offsetWidth}px`);
+            this.dotFirstValue.addClass('shown');
+            this.dotSecondValue.text(this.dotWrapperSecond[0].offsetLeft + (this.dotWrapperSecond[0].offsetWidth / 2))
         }
-        this.dotTo.css('left', `${this.options.min - 10}px`);
-        this.filler.css('width', `${this.options.min + 10}px`);
     }
 
     appendSlider = () => {
@@ -52,8 +64,14 @@ class View {
             <div class="slider js-slider">
                 <div class="slider__bar js-slider__bar"></div>
                 <div class="slider__filler js-slider__filler"></div>
-                <span class="slider__dot slider__dot_from js-slider__dot_from"></span>
-                <span class="slider__dot slider__dot_to js-slider__dot_to"></span>
+                <div class="slider__dot_wrapper_left js-slider__dot_wrapper_left">
+                    <span class="slider__dot slider__dot_from js-slider__dot_from"></span>
+                    <div class="slider__dot_from_value js-slider__dot_from_value">0</div>
+                </div>
+                <div class="slider__dot_wrapper_right js-slider__dot_wrapper_right">
+                    <span class="slider__dot slider__dot_to js-slider__dot_to"></span>
+                    <div class="slider__dot_to_value js-slider__dot_to_value">0</div>
+                </div>
             </div>
         `);
     }
@@ -61,32 +79,40 @@ class View {
     elemsInit = () => {
         this.slider = this.input.prev()
         this.filler = this.slider.find('.js-slider__filler');
-        this.dotFrom = this.slider.find('span.js-slider__dot_from');
-        this.dotTo = this.slider.find('span.js-slider__dot_to');
+        this.dotFirst = this.slider.find('span.js-slider__dot_from');
+        this.dotSecond = this.slider.find('span.js-slider__dot_to');
         this.dot = this.slider.find('span');
+        this.dotFirstValue = this.slider.find('.js-slider__dot_from_value');
+        this.dotSecondValue = this.slider.find('.js-slider__dot_to_value');
+        this.dotWrapperFirst = this.slider.find('.js-slider__dot_wrapper_left');
+        this.dotWrapperSecond = this.slider.find('.js-slider__dot_wrapper_right')
     }
 
     onSliderMove = (event: Event) => {
         const dot = this.dot;
         const slider = this.slider[0];
-        const dotTo = this.dotTo[0];
-        const dotFrom = this.dotFrom[0];
+        const dotTo = this.dotWrapperSecond[0];
+        const dotFrom = this.dotWrapperFirst[0];
         const currentDot = event.currentTarget;
+        const currentWrapper = currentDot.parentElement as HTMLElement;
+        const currentDotValue = currentWrapper.lastElementChild as HTMLElement
 
         event.preventDefault();
 
         const moveAt = (pageX: number) => {
-            if ( (pageX < (slider.offsetLeft + slider.offsetWidth) ) && (pageX > slider.offsetLeft) ) {
-                currentDot.style.left = `${pageX - slider.offsetLeft - (currentDot.offsetWidth / 2)}px`;
+            if ( (pageX < (slider.offsetLeft + slider.offsetWidth + 2) ) && (pageX > slider.offsetLeft) ) {
+                currentWrapper.style.left = `${pageX - (currentWrapper.offsetWidth / 2) - slider.offsetLeft}px`;
                 if (this.options.double) {
                     if (dotTo.offsetLeft <= (dotFrom.offsetLeft + dotFrom.offsetWidth)) {
-                        currentDot.style.left = (currentDot.classList.contains('js-slider__dot_from')) ? `${dotTo.offsetLeft - dotTo.offsetWidth}px` : `${dotFrom.offsetLeft + dotFrom.offsetWidth}px`;
+                        currentWrapper.style.left = (currentDot.classList.contains('js-slider__dot_from')) ? `${dotTo.offsetLeft - dotTo.offsetWidth}px` : `${dotFrom.offsetLeft + dotFrom.offsetWidth}px`;
                     }
-                }
+                };
                 this.filler.css({
-                    width: `${dotTo.offsetLeft - dotFrom.offsetLeft + (dotTo.offsetWidth / 2)}px`,
+                    width: `${dotTo.offsetLeft + (dotTo.offsetWidth / 2) - dotFrom.offsetLeft - (dotFrom.offsetWidth / 2)}px`,
                     left: `${dotFrom.offsetLeft + (dotFrom.offsetWidth / 2)}px`
                 });
+                console.log(((currentWrapper.offsetLeft + (currentWrapper.offsetWidth / 2) - 1) / (slider.offsetWidth)))
+                currentDotValue.textContent = `${Math.round(((currentWrapper.offsetLeft + (currentWrapper.offsetWidth / 2) - 1) / (slider.offsetWidth)) * this.options.max)}`;
             }
         };
     
@@ -105,14 +131,18 @@ class View {
         dot.on('dragstart', () => false);
     }
 
-    mouseMoveHandler = (handler: (event: Event) => void) => {
+    mouseDownHandler = (handler: (event: Event) => void) => {
         this.dot.on('mousedown', handler);
+    }
+
+    mouseMoveHandler = (handler: (event: Event) => void) => {
+        this.dot.on('mousemove', handler);
     }
 
     getDotCoords() {
         return {
-            leftFrom: this.dotFrom[0].offsetLeft,
-            leftTo: this.dotTo[0].offsetLeft
+            firstDot: this.dotWrapperFirst[0].offsetLeft + (this.dotFirst[0].offsetWidth / 2) - 1,
+            secondDot: this.dotWrapperSecond[0].offsetLeft + (this.dotSecond[0].offsetWidth / 2) - 1
         }
     }
 

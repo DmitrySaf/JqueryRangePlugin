@@ -1,6 +1,6 @@
 import { View } from '../app/view';
 
-const view : View = new View($('.container'), {min: 100, double: true});
+const view : View = new View($('.container'), {min: 100, max: 10000, double: true});
 
 beforeEach(() => {
     jest.spyOn(view, 'init');
