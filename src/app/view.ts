@@ -38,8 +38,6 @@ class View {
         this.init();
     }
 
-    // создать ивенты с handler в презентере
-
     init = () => {
         this.appendSlider();
         this.elemsInit();
@@ -47,15 +45,44 @@ class View {
     }
 
     render = () => {
+        const dotWrapperSecondWidth = this.dotWrapperSecond.width() as number,
+              sliderWidth = this.slider.width() as number;
+
         this.input.addClass('hidden');
-        this.dotWrapperSecond.css('left', `-${this.dotSecond[0].offsetWidth / 2}px`);
+        this.dotWrapperSecond.css('left', `${
+            (this.options.startValueSecond > this.options.max) ? ((this.options.max - this.options.min) / (this.options.max - this.options.min))*sliderWidth - (dotWrapperSecondWidth / 2) :
+            ((this.options.startValueSecond - this.options.min) / (this.options.max - this.options.min))*sliderWidth - (dotWrapperSecondWidth / 2)
+        }px`);
+        this.dotSecondValue.text(Math.round(
+            (( this.dotWrapperSecond.position().left + (dotWrapperSecondWidth / 2)) / sliderWidth) * 
+            (this.options.max - this.options.min) + this.options.min
+        ));
+        this.filler.css('width',`${this.dotWrapperSecond.position().left + (dotWrapperSecondWidth / 2)}px`)
+
         if (this.options.double) {
-            this.dotWrapperFirst.addClass('shown');
-            this.dotWrapperFirst.css('left', `-${this.dotSecond[0].offsetWidth / 2}px`);
-            this.dotWrapperSecond.css('left', `${this.dotFirst[0].offsetWidth / 2}px`);
-            this.filler.css('width', `${this.dotFirst[0].offsetWidth}px`);
-            this.dotFirstValue.addClass('shown');
-            this.dotSecondValue.text(this.dotWrapperSecond[0].offsetLeft + (this.dotWrapperSecond[0].offsetWidth / 2))
+            this.dotWrapperFirst
+                .addClass('shown')
+                .css('left', `${
+                    (this.options.startValueFirst > this.options.max) ? ((this.options.max - this.options.min) / (this.options.max - this.options.min))*sliderWidth - (dotWrapperSecondWidth / 2)  :
+                    ((this.options.startValueFirst - this.options.min) / (this.options.max - this.options.min))*sliderWidth - (dotWrapperSecondWidth / 2)
+                }px`);
+            this.dotFirstValue
+                .text(this.calculatedSliderValue( this.dotWrapperFirst.position().left + (dotWrapperSecondWidth / 2) ))
+                .addClass('shown');
+            this.dotSecondValue.text(this.calculatedSliderValue( this.dotWrapperSecond.position().left + (dotWrapperSecondWidth / 2) ));
+            this.filler.css({
+                left: `${this.dotWrapperFirst.position().left + (dotWrapperSecondWidth / 2)}px`,
+                width: `${this.dotWrapperSecond.position().left - this.dotWrapperFirst.position().left}`
+            })
+
+            //for a compact and comfortable values display
+            if ( 
+                ( this.dotWrapperSecond[0].offsetLeft - ((this.dotSecondValue[0].offsetWidth - this.dotSecond[0].offsetWidth) / 2) ) <= 
+                ( this.dotWrapperFirst[0].offsetLeft + ((this.dotFirstValue[0].offsetWidth - this.dotFirst[0].offsetWidth) / 2) + this.dotFirst[0].offsetWidth ) 
+            ) {
+                this.dotFirstValue[0].style.opacity = '0';
+                this.dotSecondValue[0].textContent = `${this.options.startValueFirst} - ${this.options.startValueSecond}`;
+            }
         }
     }
 
@@ -66,11 +93,11 @@ class View {
                 <div class="slider__filler js-slider__filler"></div>
                 <div class="slider__dot_wrapper_left js-slider__dot_wrapper_left">
                     <span class="slider__dot slider__dot_from js-slider__dot_from"></span>
-                    <div class="slider__dot_from_value js-slider__dot_from_value">0</div>
+                    <div class="slider__dot_from_value js-slider__dot_from_value"></div>
                 </div>
                 <div class="slider__dot_wrapper_right js-slider__dot_wrapper_right">
                     <span class="slider__dot slider__dot_to js-slider__dot_to"></span>
-                    <div class="slider__dot_to_value js-slider__dot_to_value">0</div>
+                    <div class="slider__dot_to_value js-slider__dot_to_value"></div>
                 </div>
             </div>
         `);
@@ -89,30 +116,46 @@ class View {
     }
 
     onSliderMove = (event: Event) => {
-        const dot = this.dot;
-        const slider = this.slider[0];
-        const dotTo = this.dotWrapperSecond[0];
-        const dotFrom = this.dotWrapperFirst[0];
-        const currentDot = event.currentTarget;
-        const currentWrapper = currentDot.parentElement as HTMLElement;
-        const currentDotValue = currentWrapper.lastElementChild as HTMLElement
+        const dot = this.dot,
+              slider = this.slider[0],
+              dotFirst = this.dotWrapperFirst[0],
+              dotSecond = this.dotWrapperSecond[0],
+              dotFirstValue = this.dotFirstValue[0],
+              dotSecondValue = this.dotSecondValue[0],
+              currentDot = event.currentTarget,
+              currentWrapper = currentDot.parentElement as HTMLElement,
+              currentDotValue = currentWrapper.lastElementChild as HTMLElement;
 
         event.preventDefault();
 
         const moveAt = (pageX: number) => {
             if ( (pageX < (slider.offsetLeft + slider.offsetWidth + 2) ) && (pageX > slider.offsetLeft) ) {
-                currentWrapper.style.left = `${pageX - (currentWrapper.offsetWidth / 2) - slider.offsetLeft}px`;
+
+                let cursorCoords = (pageX - slider.offsetLeft - (currentWrapper.offsetWidth / 2));
+                
+                currentDotValue.textContent = `${this.calculatedSliderValue(cursorCoords)}`;
+
+                currentWrapper.style.left = `${(((+currentDotValue.textContent - this.options.min) / (this.options.max - this.options.min))) * 100 }%`;
+
                 if (this.options.double) {
-                    if (dotTo.offsetLeft <= (dotFrom.offsetLeft + dotFrom.offsetWidth)) {
-                        currentWrapper.style.left = (currentDot.classList.contains('js-slider__dot_from')) ? `${dotTo.offsetLeft - dotTo.offsetWidth}px` : `${dotFrom.offsetLeft + dotFrom.offsetWidth}px`;
+                    if (dotSecond.offsetLeft <= (dotFirst.offsetLeft + dotFirst.offsetWidth - dotSecond.offsetWidth + 2)) {
+                        currentWrapper.style.left = (currentDot.classList.contains('js-slider__dot_from')) ? `${dotSecond.offsetLeft - 2}px` : `${dotFirst.offsetLeft + 2}px`;
                     }
+                    //for a compact and comfortable values display
+
+                    if ( 
+                        ( dotSecond.offsetLeft - ((dotSecondValue.offsetWidth - dotSecond.offsetWidth) / 2) ) <= 
+                        ( dotFirst.offsetLeft + ((dotFirstValue.offsetWidth - dotFirst.offsetWidth) / 2) + dotFirst.offsetWidth ) 
+                    ) {
+                        dotFirstValue.style.opacity = '0';
+                        dotSecondValue.textContent = `${this.calculatedSliderValue(this.dotWrapperFirst.position().left)} - ${Math.round(this.calculatedSliderValue(this.dotWrapperSecond.position().left))}`;
+                    } 
                 };
                 this.filler.css({
-                    width: `${dotTo.offsetLeft + (dotTo.offsetWidth / 2) - dotFrom.offsetLeft - (dotFrom.offsetWidth / 2)}px`,
-                    left: `${dotFrom.offsetLeft + (dotFrom.offsetWidth / 2)}px`
+                    width: `${dotSecond.offsetLeft + (dotSecond.offsetWidth / 2) - dotFirst.offsetLeft - (dotFirst.offsetWidth / 2)}px`,
+                    left: `${dotFirst.offsetLeft + (dotFirst.offsetWidth / 2)}px`
                 });
-                console.log(((currentWrapper.offsetLeft + (currentWrapper.offsetWidth / 2) - 1) / (slider.offsetWidth)))
-                currentDotValue.textContent = `${Math.round(((currentWrapper.offsetLeft + (currentWrapper.offsetWidth / 2) - 1) / (slider.offsetWidth)) * this.options.max)}`;
+
             }
         };
     
@@ -144,6 +187,13 @@ class View {
             firstDot: this.dotWrapperFirst[0].offsetLeft + (this.dotFirst[0].offsetWidth / 2) - 1,
             secondDot: this.dotWrapperSecond[0].offsetLeft + (this.dotSecond[0].offsetWidth / 2) - 1
         }
+    }
+
+    calculatedSliderValue(cursorCoords : number) {
+        return Math.round(
+            ( (cursorCoords / this.slider[0].offsetWidth) * 
+            (this.options.max - this.options.min) + this.options.min ) / this.options.step
+        ) * this.options.step
     }
 
 }

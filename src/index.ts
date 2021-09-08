@@ -8,6 +8,9 @@ import './app/options';
         let settings = $.extend({
             min: 0,
             max: 10000,
+            startValueFirst: 3000,
+            startValueSecond: 7000,
+            step: 1,
             double: false
         }, options)
         let view = new View(this, settings);
@@ -17,9 +20,15 @@ import './app/options';
     };
 }(jQuery));
 
-$('#range').slider();
+$('#range').slider({
+    min: 2000,
+    step: 300
+});
 
 $('#test').slider({
+    min: 2000,
+    startValueSecond: 3500,
+    step: 33,
     double: true
 });
 
