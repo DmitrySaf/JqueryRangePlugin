@@ -1,9 +1,10 @@
 interface IOptions {
     min: number,
     max: number,
-    startValueFirst: number,
-    startValueSecond: number,
+    from: number,
+    to: number,
     step: number,
+    vertical: boolean,
     double: boolean
 }
 

@@ -1,6 +1,6 @@
-import { Model } from './app/model';
-import { Presenter } from './app/presenter';
-import { View } from './app/view';
+import { Model } from './app/model/model';
+import { Presenter } from './app/presenter/presenter';
+import { View } from './app/view/view';
 import './app/options';
 
 (function ($) {
@@ -8,10 +8,11 @@ import './app/options';
         let settings = $.extend({
             min: 0,
             max: 10000,
-            startValueFirst: 3000,
-            startValueSecond: 7000,
+            from: 3000,
+            to: 7000,
             step: 1,
-            double: false
+            double: false,
+            vertical: false
         }, options)
         let view = new View(this, settings);
         let model = new Model();
@@ -21,14 +22,15 @@ import './app/options';
 }(jQuery));
 
 $('#range').slider({
-    min: 2000,
-    step: 300
+    min: -2000,
+    to: 9000,
+    vertical: true,
+    step: 1
 });
 
 $('#test').slider({
-    min: 2000,
-    startValueSecond: 3500,
-    step: 33,
+    min: -2000,
+    step: 30,
     double: true
 });
 

@@ -1,4 +1,4 @@
-import { Observable } from './observer';
+import { Observable } from '../observer';
 
 class Model {
 

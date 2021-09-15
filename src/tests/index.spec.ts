@@ -1,6 +1,6 @@
-import { Model } from '../app/model';
-import { Presenter } from '../app/presenter';
-import { View } from '../app/view';
+import { Model } from '../app/model/model';
+import { Presenter } from '../app/presenter/presenter';
+import { View } from '../app/view/view';
 import '../app/options';
 
 (function ($) {
