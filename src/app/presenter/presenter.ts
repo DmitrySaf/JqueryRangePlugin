@@ -14,21 +14,29 @@ class Presenter {
 
     init = () => {
         this.view.mouseDownHandler((event) => {
-            this.view.onSliderMove(event);
-            this.changeDotValue();
+            this.view.mouseMove(event);
+            //this.changeDotValue();
             this.view.mouseMoveHandler((event) => {
                 this.changeDotValue();
+/*                 this.view.documentMouseMoveHandler(() => {
+                    this.changeDotValue();
+                }) */
             });
         });
         this.model.changeDotValueObserver.attach(() => {
-            //console.log(this.model.dotSecondValue);
+            this.update();
         });
 
         
     }
 
     changeDotValue = () => {
-        this.model.changeDotValue(this.view.getDotCoords().secondDot);
+        this.model.changeDotValue(this.view.getDotsValues().secondDot, this.view.getDotsValues().firstDot);
+    }
+
+    update = () => {
+        this.view.dotFirstValue = this.model.dotFirstValue;
+        this.view.dotSecondValue = this.model.dotSecondValue;
     }
 }
 

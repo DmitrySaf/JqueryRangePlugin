@@ -14,23 +14,24 @@ import './app/options';
             double: false,
             vertical: false
         }, options)
-        let view = new View(this, settings);
-        let model = new Model();
+        let model = new Model(settings);
+        let view = new View(this, model.clearedOptions);
         let presenter = new Presenter(view, model)
         return presenter;
     };
 }(jQuery));
 
 $('#range').slider({
-    min: -2000,
-    to: 9000,
-    vertical: true,
+    min: 20000,
+    to: '9000',
+    vertical: 'asdasd',
     step: 1
 });
 
 $('#test').slider({
     min: -2000,
-    step: 30,
+    step: 200,
+    vertical: false,
     double: true
 });
 

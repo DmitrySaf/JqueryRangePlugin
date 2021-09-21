@@ -1,4 +1,4 @@
-class Observable {
+class Event {
     observers : any = [];
   
     attach(listener: any): void {
@@ -13,4 +13,4 @@ class Observable {
     }
 }
   
-export { Observable };
+export { Event };

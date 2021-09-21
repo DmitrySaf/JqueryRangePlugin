@@ -10,8 +10,8 @@ import '../app/options';
             max: 10000,
             double: false
         }, options)
-        let view = new View(this, settings);
-        let model = new Model();
+        let model = new Model(settings);
+        let view = new View(this, model.clearedOptions);
         let presenter = new Presenter(view, model)
         return presenter;
     };

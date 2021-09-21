@@ -27,25 +27,9 @@ class View {
     
     dots: JQuery<HTMLElement>;
 
-/*     dotFirst: JQuery<HTMLElement>;
-    
-    dotSecond: JQuery<HTMLElement>;
+    dotFirstValue: number;
 
-    dot: JQuery<HTMLElement>;
-
-    dotWrapperFirst: JQuery<HTMLElement>;
-
-    dotWrapperSecond: JQuery<HTMLElement>;
-
-    filler: JQuery<HTMLElement>;
-
-    bar: JQuery<HTMLElement>;
-
-    dotFirstValue: JQuery<HTMLElement>;
-    
-    dotSecondValue: JQuery<HTMLElement>;
-
-    slider: JQuery<HTMLElement>; */
+    dotSecondValue: number;
 
     input : JQuery<HTMLElement>;
 
@@ -55,21 +39,19 @@ class View {
         this.input = input;
         this.options = options;
         this.wrapper = this.input.parent(); 
-        this.init();
-    }
-
-    init = () => {
-        this.elemsInit();
-        this.createSlider();
-        this.render();
-    }
-
-    elemsInit = () => {
         this.slider = new Slider();
         this.bar = new Bar();
         this.dot = new Dot();
         this.filler = new Filler();
         this.minmax = new Minmax();
+        this.dotFirstValue = this.options.from;
+        this.dotSecondValue = this.options.to;
+        this.init();
+    }
+
+    init = () => {
+        this.createSlider();
+        this.render();
     }
 
     createSlider = () => {
@@ -145,7 +127,7 @@ class View {
         } */
     }
 
-    onSliderMove = (event: Event) => {
+    mouseMove = (event: Event) => {
         const slider = this.slider.elem,
             sliderWidth = slider.outerWidth() as number,
             dotSecond = this.dot.elemSecond,
@@ -168,16 +150,18 @@ class View {
                   dotSecondPos = dotSecond.position(),
                   sliderPos = slider.position();
 
+            console.log(this.dotSecondValue);
+
             if ( (pageX <= (sliderPos.left + sliderWidth) ) && (pageX >= sliderPos.left)) {
                 let cursorCoords = (pageX - sliderPos.left);
                 
                 currentDotValue.textContent = `${this.calculatedSliderValue(cursorCoords)}`;
 
-                currentWrapper.style.left = `${((+currentDotValue.textContent - options.min) / (options.max - options.min)) * sliderWidth - (dotWidth / 2) }px`;
+                currentWrapper.style.left = `${this.calcLeftValue(+currentDotValue.textContent)}px`;
 
                 if (options.double) {
-                    if (dotSecondPos.left <= (dotFirstPos.left + 1)) {
-                        currentWrapper.style.left = (currentDot.classList.contains('js-slider__dot_first')) ? `${dotSecondPos.left - 2}px` : `${dotFirstPos.left + 2}px`;
+                    if (dotSecondPos.left < dotFirstPos.left) {
+                        currentWrapper.style.left = currentDot.classList.contains('js-slider__dot_first') ? `${100}px` : `${dotFirstPos.left}px`;
                     }
                     //for a compact and comfortable values display
 
@@ -186,7 +170,7 @@ class View {
                         ( dotFirstPos.left + ((dotFirstValueWidth - dotWidth) / 2) + dotWidth ) 
                     ) {
                         dotFirstValue.css('opacity', '0');
-                        dotSecondValue.text(`${this.calculatedSliderValue(dotFirstPos.left)} - ${Math.round(this.calculatedSliderValue(dotSecondPos.left))}`)
+                        dotSecondValue.text(`${this.calculatedSliderValue(dotFirstPos.left)} - ${this.calculatedSliderValue(dotSecondPos.left)}`)
                     } 
                 };
 
@@ -194,7 +178,7 @@ class View {
 
                 }
                 this.filler.elem.css({
-                    width: `${dotSecondPos.left + (dotWidth / 2) - dotFirstPos.left - (dotFirst[0].offsetWidth / 2)}px`,
+                    width: `${this.calcLeftValue(+dotSecondValue.text()) + (dotWidth / 2) - dotFirstPos.left - (dotFirst[0].offsetWidth / 2)}px`,
                     left: `${dotFirstPos.left + (dotFirst[0].offsetWidth / 2)}px`
                 });
 
@@ -206,14 +190,13 @@ class View {
         };
     
         moveAt(event.pageX, event.pageY);
-    
-        document.addEventListener('mousemove', onMouseMove);
-    
-        document.onmouseup = () => {
-            document.removeEventListener('mousemove', onMouseMove);
-            this.dots.on('mouseup', () => null);                
-        };
-        this.dots.on('dragstart', () => false);
+
+        const mouseup = () => {
+            $(document).off('mousemove', onMouseMove);
+            //this.dots.off('mouseup', mouseup);
+        }
+        $(document).on('mousemove', onMouseMove);
+        $(document).on('mouseup', mouseup);
     }
 
     mouseDownHandler = (handler: (event: Event) => void) => {
@@ -224,10 +207,16 @@ class View {
         this.dots.on('mousemove', handler);
     }
 
-    getDotCoords() {
+    documentMouseMoveHandler = (handler: () => void) => {
+        $(document).on('mousemove', handler);
+    }
+
+    getDotsValues() {
+        const dotFirstWidth = this.dot.elemFirst[0].offsetWidth,
+              dotSecondWidth = this.dot.elemSecond[0].offsetWidth
         return {
-            firstDot: this.dot.elemFirst.position().left + (this.dot.elemFirst[0].offsetWidth / 2) - 1,
-            secondDot: this.dot.elemSecond.position().left + (this.dot.elemFirst[0].offsetWidth / 2) - 1
+            firstDot: this.calculatedSliderValue(this.dot.elemFirst.position().left + (dotFirstWidth / 2)),
+            secondDot: this.calculatedSliderValue(this.dot.elemSecond.position().left + (dotSecondWidth / 2))
         }
     }
 
