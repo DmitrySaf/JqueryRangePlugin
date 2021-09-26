@@ -57,7 +57,7 @@
     "last 2 versions"
   ],
   "scripts": {
-    "test": "jest --watch --env=jsdom",
+    "test": "jest --watch --coverage --env=jsdom",
     "dev": "cross-env NODE_ENV=development webpack serve --config ./build/webpack.dev.conf.js",
     "build": "cross-env NODE_ENV=build webpack --config ./build/webpack.build.conf.js",
     "eslint": "eslint --ext .js,.jsx,.ts,.tsx src"

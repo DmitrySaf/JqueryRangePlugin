@@ -1,11 +1,11 @@
-import '../options';
+import { IOptions } from '../options';
 import { Bar } from './bar';
 import { Dot } from './dot';
-import { Filler } from './filler';
 import { Slider } from './slider';
 import { Minmax} from './minmax';
+import { Event } from '../event';
 
-interface Event {
+interface MouseEvent {
     pageX: number,
     pageY: number,
     currentTarget: HTMLElement,
@@ -13,245 +13,194 @@ interface Event {
 }
 
 class View {
-    options: IOptions;
+    public options: IOptions;
 
-    slider: Slider;
+    private slider: Slider;
 
-    filler: Filler;
+    private dot: Dot;
 
-    dot: Dot;
+    private bar: Bar;
 
-    bar: Bar;
+    private minmax: Minmax;
 
-    minmax: Minmax;
-    
-    dots: JQuery<HTMLElement>;
+    public updateViewOptionsObserver: Event;
 
-    dotFirstValue: number;
+    public currentOptions: IOptions;
 
-    dotSecondValue: number;
+    private dots: JQuery<HTMLElement>;
 
-    input : JQuery<HTMLElement>;
+    private input: JQuery<HTMLElement>;
 
-    wrapper : JQuery<HTMLElement>;
+    get state() : {from: number, to: number} { return { from: this.currentOptions.from, to: this.currentOptions.to }; }
 
     constructor(input: JQuery<HTMLElement>, options: IOptions) {
         this.input = input;
         this.options = options;
-        this.wrapper = this.input.parent(); 
+        this.currentOptions = { ...options };
+        this.updateViewOptionsObserver = new Event();
         this.slider = new Slider();
         this.bar = new Bar();
         this.dot = new Dot();
-        this.filler = new Filler();
         this.minmax = new Minmax();
-        this.dotFirstValue = this.options.from;
-        this.dotSecondValue = this.options.to;
         this.init();
     }
 
-    init = () => {
+    public updateViewOptions = (modelOptions : IOptions) => {
+        this.options = { ...modelOptions };
+    }
+
+    private init = () => {
         this.createSlider();
         this.render();
+        this.addEventListeners();
     }
 
-    createSlider = () => {
-        this.slider.elem.append(this.bar.elem, this.filler.elem, this.minmax.elemMin, this.minmax.elemMax, this.dot.elemFirst, this.dot.elemSecond);
+    private createSlider = () => {        
+        this.input.addClass('hidden');
+        this.slider.elem.append(this.bar.elem, this.minmax.elemMin, this.minmax.elemMax, this.dot.elemFirst, this.dot.elemSecond);
         this.input.before(this.slider.elem);
-        
-        this.dots = this.slider.elem.find('span');
+        this.dots = this.slider.elem.find('span').parent();
     }
 
-    render = () => {
+    private render = () => {
         const dotSecond = this.dot.elemSecond,
-              dotSecondValue = this.dot.valueSecond,
-              dotSecondValueWidth = dotSecondValue.outerWidth() as number,
               dotFirst = this.dot.elemFirst,
               dotFirstValue = this.dot.valueFirst,
               minElem = this.minmax.elemMin,
-              minElemWidth = minElem.outerWidth() as number,
               maxElem = this.minmax.elemMax,
-              options = this.options,
-              dotWidth = this.dot.elemSecond.outerWidth() as number;
+              options = this.options;
 
-        this.input.addClass('hidden');
-        dotSecondValue.text(this.checkForValuesOverride(this.options.to));
-        dotSecond.css('left', `${this.calcLeftValue(+dotSecondValue.text())}px`);
-        this.filler.elem.css('width',`${dotSecond.position().left + (dotWidth / 2)}px`);
+        if (options.vertical) {
+            this.addVerticalClasses();
+            this.setFillerStyles();
+        }
+
+        if (options.double) {
+            dotFirstValue.addClass('shown');
+            dotFirst.addClass('shown');
+            this.moveAt(dotFirst[0], 'from');
+        }
+
+        this.setFillerStyles();
         minElem.text(options.min);
         maxElem.text(options.max);
 
-        //for a compact and comfortable values display
-
-        if ((dotSecond.position().left + ((dotSecondValueWidth - dotWidth) / 2) + dotWidth) >= maxElem.position().left) {
-            maxElem.addClass('hidden');
-        }
-
-
-        if (options.double) {
-            dotFirstValue
-                .text(this.checkForValuesOverride(this.options.from))
-                .addClass('shown');
-            dotFirst
-                .addClass('shown')
-                .css('left', `${this.calcLeftValue(+dotFirstValue.text())}px`);
-            this.filler.elem.css({
-                left: `${dotFirst.position().left + (dotWidth / 2)}px`,
-                width: `${dotSecond.position().left - dotFirst.position().left}`
-            })
-            const dotFirstValueWidth = dotFirstValue.outerWidth() as number;
-
-            //for a compact and comfortable values display
-            if ( 
-                ( dotSecond.position().left - ((dotSecondValueWidth - dotWidth) / 2) ) <= 
-                ( dotFirst.position().left + ((dotFirstValueWidth - dotWidth) / 2) + dotWidth ) 
-            ) {
-                dotFirstValue.css('opacity', '0')
-                dotSecondValue.text(`${dotFirstValue.text()} - ${dotSecondValue.text()}`);
-            }
-            if ((dotFirst.position().left - ((dotFirstValueWidth - dotWidth) / 2)) <= (minElemWidth / 2)) {
-                minElem.addClass('hidden');
-            }
-        }
-
-/*         if (this.options.vertical) {
-            this.slider.addClass('slider_vertical');
-            this.bar.addClass('slider__bar_vertical');
-            this.filler.addClass('slider__filler_vertical');
-            this.dotWrapperSecond.css({
-                top: `${
-                (this.options.startValueSecond > this.options.max) ? ((this.options.max - this.options.min) / (this.options.max - this.options.min))*sliderWidth - (dotWrapperSecondWidth / 2) :
-                ((this.options.startValueSecond - this.options.min) / (this.options.max - this.options.min))*sliderWidth - (dotWrapperSecondWidth / 2)
-                }px`,
-                left: `0`
-            });
-        } */
+        this.moveAt(dotSecond[0], 'to');
+        this.comfortableValueDisplay();
     }
 
-    mouseMove = (event: Event) => {
-        const slider = this.slider.elem,
-            sliderWidth = slider.outerWidth() as number,
-            dotSecond = this.dot.elemSecond,
-            dotSecondValue = this.dot.valueSecond,
-            dotSecondValueWidth = dotSecondValue.outerWidth() as number,
-            dotFirst = this.dot.elemFirst,
-            dotFirstValue = this.dot.valueFirst,
-            dotFirstValueWidth = dotFirstValue.outerWidth() as number,
-            options = this.options,
-            dotWidth = this.dot.elemSecond.outerWidth() as number,
-            currentDot = event.currentTarget,
-            currentWrapper = currentDot.parentElement as HTMLElement,
-            currentDotValue = currentWrapper.lastElementChild as HTMLElement;
+    private addEventListeners = () => {
+        this.dots.on('mousedown', this.mouseDownHandler);
+    }
 
+    private mouseDownHandler = (event: MouseEvent) => {
         event.preventDefault();
 
-        const moveAt = (pageX: number, pageY: number) => {
-            
-            const dotFirstPos = dotFirst.position(),
-                  dotSecondPos = dotSecond.position(),
-                  sliderPos = slider.position();
-
-            console.log(this.dotSecondValue);
-
-            if ( (pageX <= (sliderPos.left + sliderWidth) ) && (pageX >= sliderPos.left)) {
-                let cursorCoords = (pageX - sliderPos.left);
-                
-                currentDotValue.textContent = `${this.calculatedSliderValue(cursorCoords)}`;
-
-                currentWrapper.style.left = `${this.calcLeftValue(+currentDotValue.textContent)}px`;
-
-                if (options.double) {
-                    if (dotSecondPos.left < dotFirstPos.left) {
-                        currentWrapper.style.left = currentDot.classList.contains('js-slider__dot_first') ? `${100}px` : `${dotFirstPos.left}px`;
-                    }
-                    //for a compact and comfortable values display
-
-                    if ( 
-                        ( dotSecondPos.left - ((dotSecondValueWidth - dotWidth) / 2) ) <= 
-                        ( dotFirstPos.left + ((dotFirstValueWidth - dotWidth) / 2) + dotWidth ) 
-                    ) {
-                        dotFirstValue.css('opacity', '0');
-                        dotSecondValue.text(`${this.calculatedSliderValue(dotFirstPos.left)} - ${this.calculatedSliderValue(dotSecondPos.left)}`)
-                    } 
-                };
-
-                if (this.options.vertical) {
-
-                }
-                this.filler.elem.css({
-                    width: `${this.calcLeftValue(+dotSecondValue.text()) + (dotWidth / 2) - dotFirstPos.left - (dotFirst[0].offsetWidth / 2)}px`,
-                    left: `${dotFirstPos.left + (dotFirst[0].offsetWidth / 2)}px`
-                });
-
+        const mousemove = (e: { pageX: number, pageY: number }) => {
+            const coords = {
+                x: e.pageX - this.slider.elem.position().left,
+                y: e.pageY - this.slider.elem.position().top,
             }
-        };
-    
-        const onMouseMove = (e: { pageX: number, pageY: number }) => {
-            moveAt(e.pageX, e.pageY);
-        };
-    
-        moveAt(event.pageX, event.pageY);
+            if (event.currentTarget.classList.contains('js-slider__dot_wrapper_first')) {
+                this.updateCurrentOptions(this.calcValue(coords), 'from')
+                this.moveAt(event.currentTarget, 'from');
+            } else {
+                this.updateCurrentOptions(this.calcValue(coords), 'to')
+                this.moveAt(event.currentTarget, 'to');
+            }
+            this.comfortableValueDisplay();
+            this.setFillerStyles();
+        }
 
         const mouseup = () => {
-            $(document).off('mousemove', onMouseMove);
-            //this.dots.off('mouseup', mouseup);
+            $(document).off('mousemove', mousemove );
         }
-        $(document).on('mousemove', onMouseMove);
+        $(document).on('mousemove', mousemove );
         $(document).on('mouseup', mouseup);
     }
 
-    mouseDownHandler = (handler: (event: Event) => void) => {
-        this.dots.on('mousedown', handler);
+    private updateCurrentOptions = (value: number, name: 'from' | 'to') => {
+        this.currentOptions[name] = value;
+        this.updateViewOptionsObserver.notify();
     }
 
-    mouseMoveHandler = (handler: (event: Event) => void) => {
-        this.dots.on('mousemove', handler);
-    }
-
-    documentMouseMoveHandler = (handler: () => void) => {
-        $(document).on('mousemove', handler);
-    }
-
-    getDotsValues() {
-        const dotFirstWidth = this.dot.elemFirst[0].offsetWidth,
-              dotSecondWidth = this.dot.elemSecond[0].offsetWidth
-        return {
-            firstDot: this.calculatedSliderValue(this.dot.elemFirst.position().left + (dotFirstWidth / 2)),
-            secondDot: this.calculatedSliderValue(this.dot.elemSecond.position().left + (dotSecondWidth / 2))
+    private moveAt = (eTarget: HTMLElement, optionName: 'from' | 'to') => {
+        if ( this.options.vertical ) {
+            eTarget.style.top = `${this.calcTop(this.options[optionName])}px`;
+        } else {
+            eTarget.style.left = `${this.calcLeft(this.options[optionName])}px`;
         }
     }
 
-    calculatedSliderValue(cursorCoords : number) {
-        return Math.round(
-            ( (cursorCoords / (this.slider.elem.outerWidth() as number)) * 
-            (this.options.max - this.options.min) + this.options.min ) / this.options.step
-        ) * this.options.step
+    private comfortableValueDisplay = () => {
+        this.toggleClassHidden(this.calcLeft(this.options.max) - this.calcLeft(this.options.to), 'elemMax');
+        this.toggleClassHidden(this.calcLeft(this.options.to), 'elemMin');
+        
+        this.dot.valueSecond.text(this.options.to);
+        this.dot.valueFirst.text(this.options.from);
+
+        if (this.options.double) {
+            if ((this.calcLeft(this.options.to) - this.calcLeft(this.options.from)) < 40) {
+                this.dot.valueFirst.addClass('hidden')
+                this.dot.valueSecond
+                    .text(`${this.options.from} - ${this.options.to}`)
+                    .css('left', `calc(50% - ${(this.calcLeft(this.options.to) - this.calcLeft(this.options.from)) / 2}px)`);
+            } else {
+                this.dot.valueFirst.removeClass('hidden');
+                this.dot.valueSecond.css('left', '50%');
+            }
+            this.toggleClassHidden(this.calcLeft(this.options.from), 'elemMin');
+        }
     }
 
-    calcLeftValue(value: number) {
+    private addVerticalClasses = () => {
+        this.slider.elem.addClass('slider_vertical');
+        this.bar.elem.addClass('slider__bar_vertical');
+        this.minmax.elemMin.addClass('slider__min_vertical');
+
+    }
+
+    private toggleClassHidden = (coords: number, element: 'elemMin' | 'elemMax') => {
+        //const isVertical = this.options.vertical;
+/*         if (coords < 50) {
+            isVertical ? this.calcTop()
+        } */
+
+        (coords < 50) 
+            ? this.minmax[element].addClass('hidden') 
+            : this.minmax[element].removeClass('hidden');
+    }
+
+    private setFillerStyles = () => {
+        const dotWidth = this.dot.elemSecond.outerWidth() as number;
+        const isVertical = this.options.vertical;
+        this.bar.filler.css({
+            top: `${isVertical ? this.calcTop(this.options.from) + (dotWidth / 2) : 0}px`,
+            left: `${isVertical ? 0 : this.calcLeft(this.options.from) + (dotWidth / 2)}px`,
+            height: `${isVertical ? this.calcTop(this.options.to) - this.calcTop(this.options.from) : 20}px`,
+            width: `${isVertical ? 20 : this.calcLeft(this.options.to) - this.calcLeft(this.options.from)}`
+        })
+    }
+
+    private calcValue(cursorCoords : {x: number, y: number}): number {
+        let coordsToSliderRatio: number = this.options.vertical 
+            ? cursorCoords.y / (this.slider.elem.outerHeight() as number)
+            : cursorCoords.x / (this.slider.elem.outerWidth() as number);
+        return Math.round(
+            ( coordsToSliderRatio * (this.options.max - this.options.min) + this.options.min ) / this.options.step
+        ) * this.options.step;
+    }
+
+    private calcLeft(value: number): number {
         const sliderWidth = this.slider.elem.outerWidth() as number,
               dotWidth = this.dot.elemSecond.outerWidth() as number;
         return ((value - this.options.min) / (this.options.max - this.options.min)) * sliderWidth - (dotWidth / 2);
     }
 
-    checkForValuesOverride(value : number) {
-        const options = this.options;
-        if (value == options.to) {
-            if(options.to > options.max){
-                return options.max
-            } else if (options.to < options.min){
-                return options.min
-            }
-            return options.to
-        } else {
-            if (options.from > options.to) {
-                return (options.to < options.min) ? options.min : options.to
-            } else if (options.from > options.max) {
-                return options.max
-            } else if (options.from < options.min) {
-                return options.min
-            }
-            return options.from
-        }
+    private calcTop(value: number): number {
+        const sliderHeight = this.slider.elem.outerHeight() as number,
+              dotWidth = this.dot.elemSecond.outerWidth() as number;
+        return ((value - this.options.min) / (this.options.max - this.options.min)) * sliderHeight - (dotWidth / 2);
     }
 
 }

@@ -1,7 +1,7 @@
 import { Model } from '../app/model/model';
 import { Presenter } from '../app/presenter/presenter';
 import { View } from '../app/view/view';
-import '../app/options';
+import { IOptions } from '../app/options';
 
 (function ($) {
     $.fn.slider = function (options: IOptions) {
@@ -11,7 +11,7 @@ import '../app/options';
             double: false
         }, options)
         let model = new Model(settings);
-        let view = new View(this, model.clearedOptions);
+        let view = new View(this, model.options);
         let presenter = new Presenter(view, model)
         return presenter;
     };

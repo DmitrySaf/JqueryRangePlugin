@@ -1,59 +1,87 @@
 import { Event } from '../event';
-import '../options';
+import { IOptions } from '../options';
+import { defaultOptions } from '../options';
 
 class Model {
 
-    changeDotValueObserver: Event;
+    public updateModelOptionsObserver: Event;
 
-    dotFirstValue: number;
+    from: number;
 
-    clearedOptions: IOptions;
+    to: number;
 
-    defaultOptions: IOptions;
+    private _correctOptions: IOptions;
 
-    dotSecondValue: number;
+    get options() : IOptions { return { ...this._correctOptions }; }
 
-    constructor(defaultOptions: IOptions) {
-        this.changeDotValueObserver = new Event();
-        this.defaultOptions = defaultOptions;
-        this.clearedOptions = this.correctedOptions(defaultOptions);
-        console.log(this.clearedOptions);
+    constructor(options: IOptions) {
+        this.updateModelOptionsObserver = new Event();
+        this._correctOptions = this.optionsCorrection(options);
     }
 
-    changeDotValue = (dotSecondValue: number, dotFirstValue : number = 0) => {
-        this.dotFirstValue = dotFirstValue;
-        this.dotSecondValue = dotSecondValue;
-        this.changeDotValueObserver.notify();
+    updateModelOptions = (viewOptions : IOptions) => {
+        this._correctOptions = this.optionsCorrection(viewOptions);
+        this.updateModelOptionsObserver.notify();
     }
 
-    correctedOptions = (checkingOptions: IOptions) => {
-        const confirmedOptions = {...checkingOptions};
-        const { min, max, from, to,/*  vertical, double, */ step } = confirmedOptions;
-        const isNumber = (typeof(min) == 'number') && (typeof(max) == 'number') && (typeof(from) == 'number') && (typeof(to) == 'number') && (typeof(step) == 'number');
+    private optionsCorrection = (checkingOptions: IOptions) : IOptions => {
+        const confirmedOptions = { ...checkingOptions };
+        let { min, max, from,  to, step } = confirmedOptions;
 
-        if (isNumber) {
-            (min > max) ? (confirmedOptions.min = max) : (confirmedOptions.min = min);
+        //replacing inappropriate values
 
-            (max < min) ? (confirmedOptions.max = min) : (confirmedOptions.max = max);
-        } else {
-            confirmedOptions.min = this.defaultOptions.min;
-            confirmedOptions.max = this.defaultOptions.max;
-            confirmedOptions.to = this.defaultOptions.to;
-            confirmedOptions.from = this.defaultOptions.from;
-            confirmedOptions.step = this.defaultOptions.step;
-            console.log('done');
+        for (let key in confirmedOptions) {
+            if ((key == 'double') || (key == 'vertical')) {
+                if (typeof(confirmedOptions[key]) != 'boolean') {
+                    confirmedOptions[key] = defaultOptions[key]
+                }
+            } else if (!this.isNumber(confirmedOptions[key])) {
+                confirmedOptions[key] = defaultOptions[key];
+            }
         }
-        
-/* 
-        (from > to) ? (from = to) : (from = from);
 
-        (to < from) ? (to = from) : (to = to);
+        //checking from values override
 
-        (typeof(vertical) != 'boolean') ? (vertical = false) : (vertical = true); */
+        if (step <= 0) confirmedOptions.step = 1;
+        if (step > (max - min)) confirmedOptions.step = max - min;
+        if (min >= max) confirmedOptions.max = min + confirmedOptions.step;
+        //const localMax = confirmedOptions.to;
+        //const localMin = confirmedOptions.from;
+
+/*         if (confirmedOptions.from >= confirmedOptions.to) {
+            confirmedOptions.from = to;
+            //confirmedOptions.to = from;
+            console.log(confirmedOptions.from, confirmedOptions.to);
+        } 
+        if (from < confirmedOptions.min) confirmedOptions.from = confirmedOptions.min;
+        if (to < confirmedOptions.min) confirmedOptions.to = confirmedOptions.min;
+        if (to > confirmedOptions.max) confirmedOptions.to = confirmedOptions.max; */
+
+
+        confirmedOptions.to = this.correctDiapason(to, from, max);
+        confirmedOptions.from = this.correctDiapason(from, min, max);
+        //confirmedOptions.from = this.correctDiapason(from, min, localMax);
+        //confirmedOptions.from = double ? this.correctDiapason(from, min, to) : this.correctDiapason(to, min, max);
+/*         console.log(`def ${from} - ${to}`);
+        console.log(`conf ${this.from} - ${this.to}`); */
 
         return confirmedOptions;
     }
 
+    private isNumber = (parameter: number | boolean) : boolean => {
+        return typeof(parameter) == 'number'
+    }
+
+    public getState(state: {from: number, to: number}){
+        this.from = state.from;
+        this.to = state.to;
+    }
+
+    private correctDiapason = (value: number, min: number, max: number): number => {
+        if (value <= min) { return min }
+        if (value >= max) { return max }
+        return value
+    }
 
 }
 

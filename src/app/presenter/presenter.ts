@@ -1,5 +1,6 @@
 import { View } from '../view/view';
 import { Model } from '../model/model';
+import { IOptions } from '../options';
 
 class Presenter {
     view: View;
@@ -13,30 +14,34 @@ class Presenter {
     }
 
     init = () => {
-        this.view.mouseDownHandler((event) => {
+/*         this.view.mouseDownHandler((event) => {
             this.view.mouseMove(event);
-            //this.changeDotValue();
+            this.changeDotValue();
             this.view.mouseMoveHandler((event) => {
                 this.changeDotValue();
-/*                 this.view.documentMouseMoveHandler(() => {
+                this.view.documentMouseMoveHandler(() => {
                     this.changeDotValue();
-                }) */
+                })
             });
+        }); */
+        //console.log(this.view.state)
+        this.model.updateModelOptionsObserver.attach(() => {
+            this.updateViewOptions(this.model.options);
         });
-        this.model.changeDotValueObserver.attach(() => {
-            this.update();
-        });
+        this.view.updateViewOptionsObserver.attach(() => {
+            this.updateModelOptions(this.view.currentOptions);
+        })
 
         
     }
 
-    changeDotValue = () => {
-        this.model.changeDotValue(this.view.getDotsValues().secondDot, this.view.getDotsValues().firstDot);
+    updateModelOptions = (viewOptions : IOptions) => {
+        this.model.updateModelOptions(viewOptions);
+        this.model.getState(this.view.state);
     }
 
-    update = () => {
-        this.view.dotFirstValue = this.model.dotFirstValue;
-        this.view.dotSecondValue = this.model.dotSecondValue;
+    updateViewOptions = (modelOptions : IOptions) => {
+        this.view.updateViewOptions(modelOptions);
     }
 }
 
