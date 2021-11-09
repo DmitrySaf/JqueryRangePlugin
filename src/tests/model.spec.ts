@@ -1,13 +1,13 @@
-import { sliderModel } from './index.spec'
+import { sliderModel, options } from './index.spec';
 
 beforeAll(() => {
-    jest.spyOn(sliderModel, 'changeDotValue');
-    jest.spyOn(sliderModel.changeDotValueObserver, 'notify')
-})
+    jest.spyOn(sliderModel, 'updateModelOptions');
+    jest.spyOn(sliderModel.updateModelOptionsObserver, 'notify');
+});
 
 describe('Model', () => {
     it('checks if the function calls observer notify function', () => {
-        sliderModel.changeDotValue();
-        expect(sliderModel.changeDotValueObserver.notify).toHaveBeenCalled();
+        sliderModel.updateModelOptions(options);
+        expect(sliderModel.updateModelOptionsObserver.observers).toHaveBeenCalled();
     });
 });

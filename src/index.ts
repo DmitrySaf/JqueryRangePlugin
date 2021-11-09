@@ -3,8 +3,8 @@ import { Presenter } from './app/presenter/presenter';
 import { View } from './app/view/view';
 import { IOptions } from './app/options';
 
-(function ($) {
-    $.fn.slider = function (options: IOptions) {
+(function Declare($: JQueryStatic) {
+    $.fn.slider = function Slider(options: IOptions) {
         const settings = $.extend({
             min: 0,
             max: 10000,
@@ -12,8 +12,8 @@ import { IOptions } from './app/options';
             to: 5000,
             step: 1,
             double: false,
-            vertical: false
-        }, options)
+            vertical: false,
+        }, options);
         const model = new Model(settings);
         const view = new View(this, model.options);
         const presenter = new Presenter(view, model);
@@ -28,16 +28,15 @@ $('#range').slider({
     double: true,
     from: 5000,
     to: 7000,
-    step: -11
+    step: -11,
 });
 
 $('#test').slider({
+    max: 10000,
     min: 2000,
     from: 3000,
     to: 5000,
     step: 200,
     vertical: false,
-    double: true
+    double: true,
 });
-
-

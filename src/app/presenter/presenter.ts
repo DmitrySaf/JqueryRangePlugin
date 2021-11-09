@@ -13,38 +13,22 @@ class Presenter {
         this.init();
     }
 
-    init = () => {
-/*         this.view.mouseDownHandler((event) => {
-            this.view.mouseMove(event);
-            this.changeDotValue();
-            this.view.mouseMoveHandler((event) => {
-                this.changeDotValue();
-                this.view.documentMouseMoveHandler(() => {
-                    this.changeDotValue();
-                })
-            });
-        }); */
-        //console.log(this.view.state)
+    init = (): void => {
         this.model.updateModelOptionsObserver.attach(() => {
             this.updateViewOptions(this.model.options);
         });
         this.view.updateViewOptionsObserver.attach(() => {
             this.updateModelOptions(this.view.currentOptions);
-        })
+        });
+    };
 
-        
-    }
-
-    updateModelOptions = (viewOptions : IOptions) => {
+    updateModelOptions = (viewOptions : IOptions): void => {
         this.model.updateModelOptions(viewOptions);
-        this.model.getState(this.view.state);
-    }
+    };
 
-    updateViewOptions = (modelOptions : IOptions) => {
+    updateViewOptions = (modelOptions : IOptions): void => {
         this.view.updateViewOptions(modelOptions);
-    }
+    };
 }
 
 export { Presenter };
-
-

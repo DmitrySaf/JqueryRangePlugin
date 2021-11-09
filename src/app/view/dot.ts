@@ -1,6 +1,4 @@
-
 class Dot {
-
     elemFirst: JQuery<HTMLElement>;
 
     valueFirst: JQuery<HTMLElement>;
@@ -23,4 +21,4 @@ class Dot {
     }
 }
 
-export { Dot }
+export { Dot };

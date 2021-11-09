@@ -88,12 +88,19 @@ body
         white-space: nowrap
         background: #cacaca
         color: #fff
-        top: -115%
+        top: -25px
     &__min
         transform: translateX(-50%)
+        &_vertical
+            right: 0
+            top: 0
+            transform: translateX(110%)
     &__max
         right: 0
-        transform: translateX(50%)    
+        transform: translateX(50%)
+        &_vertical
+            transform: translate(110%, -100%)
+            top: 100%
         
 
 .hidden

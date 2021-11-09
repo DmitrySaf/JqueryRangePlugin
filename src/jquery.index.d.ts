@@ -1,3 +1,15 @@
-interface JQuery {
-    slider: any
+import { Model } from './app/model/model';
+import { Presenter } from './app/presenter/presenter';
+import { View } from './app/view/view';
+import { IOptions } from './app/options';
+
+interface Ex {
+    view: View,
+    model: Model,
+}
+
+declare global {
+    interface JQuery {
+        slider(options: IOptions): Presenter
+    }
 }
