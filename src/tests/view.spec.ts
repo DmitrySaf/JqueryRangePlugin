@@ -9,7 +9,7 @@ beforeEach(() => {
 
 describe('View', () => {
     it('check for main functions to be called', () => {
-        sliderView.updateViewOptions(options);
+        //sliderView.updateViewOptions(options);
     /*  sliderView.init();
         expect(sliderView.appendSlider).toHaveBeenCalled();
         expect(sliderView.elemsInit).toHaveBeenCalled();

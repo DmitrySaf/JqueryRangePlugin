@@ -4,21 +4,24 @@ import { IOptions, defaultOptions } from '../options';
 class Model {
     public updateModelOptionsObserver: Event;
 
-    from: number;
-
-    to: number;
-
     private correctOptions: IOptions;
+
+    public stateOptions: { from: number, to: number }
 
     get options() : IOptions { return { ...this.correctOptions }; }
 
+    get state() { return this.stateOptions }
+
     constructor(options: IOptions) {
         this.updateModelOptionsObserver = new Event();
+        this.stateOptions = { from: options.from, to: options.to };
+        this.stateOptions = { from: this.optionsCorrection(options).from, to: this.optionsCorrection(options).to }
         this.correctOptions = this.optionsCorrection(options);
     }
 
-    updateModelOptions = (viewOptions : IOptions): void => {
+    updateModelOptions = (viewOptions : IOptions, modelState: { from: number, to: number }): void => {
         this.correctOptions = this.optionsCorrection(viewOptions);
+        this.stateOptions = { ...modelState };
         this.updateModelOptionsObserver.notify();
     };
 
@@ -31,7 +34,6 @@ class Model {
             to,
             step,
         } = confirmedOptions;
-
         // replacing inappropriate values
 
         Object.keys(confirmedOptions).forEach((key) => {
@@ -49,29 +51,15 @@ class Model {
         if (step <= 0) confirmedOptions.step = 1;
         if (step > (max - min)) confirmedOptions.step = max - min;
         if (min >= max) confirmedOptions.max = min + confirmedOptions.step;
-
-        confirmedOptions.to = this.correctDiapason(to, from, max);
-        confirmedOptions.from = this.correctDiapason(from, min, max);
-        // console.log(this.percentToValue(checkingOptions.from));
+        confirmedOptions.to = to > confirmedOptions.max ? confirmedOptions.max : confirmedOptions.to
+        confirmedOptions.to = to < this.stateOptions.from ? from : confirmedOptions.to
+        confirmedOptions.from = from < confirmedOptions.min ? confirmedOptions.min : confirmedOptions.from
+        confirmedOptions.from = from > this.stateOptions.to ? to : confirmedOptions.from
+        //console.log(this.stateOptions.from, this.stateOptions.to)
         return confirmedOptions;
     };
 
     private isNumber = (parameter: number | boolean): boolean => typeof (parameter) === 'number';
-
-    /*     public getState(state: { from: number, to: number }): void {
-        this.from = state.from;
-        this.to = state.to;
-    } */
-
-    /*     private percentToValue = (percent: number): number => Math.round(
-        (percent * (this.options.max - this.options.min) + this.options.min) / this.options.step,
-    ) * this.options.step; */
-
-    private correctDiapason = (value: number, min: number, max: number): number => {
-        if (value <= min) { return min; }
-        if (value >= max) { return max; }
-        return value;
-    };
 }
 
 export { Model };

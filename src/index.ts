@@ -26,7 +26,7 @@ $('#range').slider({
     max: 11000,
     vertical: true,
     double: true,
-    from: 5000,
+    from: 1000,
     to: 7000,
     step: -11,
 });

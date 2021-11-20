@@ -1,4 +1,4 @@
-const defaultOptions : IOptions = {
+const defaultOptions: IOptions = {
     min: 0,
     max: 10000,
     from: 3000,
