@@ -10,14 +10,13 @@ class Model {
 
     private correctOptions: IOptions;
 
-    get options() : IOptions { return { ...this.correctOptions }; }
-
+    get options() : IOptions { return this.correctOptions }
     get static() { return this.staticOptions }
 
     constructor(options: IOptions) {
         this.updateModelOptionsObserver = new Event();
         this.optionsSec = options;
-        this.staticOptions = {from: options.from, to: options.to};
+        this.staticOptions = { from: options.from, to: options.to };
         this.correctOptions = this.optionsCorrection(options);
     }
 
@@ -33,20 +32,19 @@ class Model {
         this.correctValueTypes(confirmedOptions);
         confirmedOptions.step = this.correctStep(checkingOptions.step, checkingOptions.min, checkingOptions.max);
         confirmedOptions.max = this.correctMinMax(checkingOptions.min, checkingOptions.max);
-        this.correctStaticOptions(checkingOptions.min, checkingOptions.max, checkingOptions.to, checkingOptions.from);
-
+        this.correctStaticOptions(checkingOptions.min, checkingOptions.max);
         // checking for values override
-        confirmedOptions.to = (checkingOptions.to > confirmedOptions.max) ? confirmedOptions.max : confirmedOptions.to
-        confirmedOptions.to = (checkingOptions.to < this.staticOptions.from) ? this.staticOptions.from : confirmedOptions.to
+        confirmedOptions.to = (checkingOptions.to > confirmedOptions.max) ? confirmedOptions.max : confirmedOptions.to;
+        confirmedOptions.to = (checkingOptions.to < this.staticOptions.from) ? this.staticOptions.from : confirmedOptions.to;
 
-        confirmedOptions.from = (checkingOptions.from < confirmedOptions.min) ? confirmedOptions.min : confirmedOptions.from
-        confirmedOptions.from = (checkingOptions.from > this.staticOptions.to) ? this.staticOptions.to : confirmedOptions.from
+        confirmedOptions.from = (checkingOptions.from < confirmedOptions.min) ? confirmedOptions.min : confirmedOptions.from;
+        confirmedOptions.from = (checkingOptions.from > this.staticOptions.to) ? this.staticOptions.to : confirmedOptions.from;
         return confirmedOptions;
     };
 
     private isNumber = (parameter: number | boolean): boolean => typeof (parameter) === 'number';
 
-    private correctStaticOptions = (min: number, max: number, to: number, from: number): void => {
+    private correctStaticOptions = (min: number, max: number): void => {
         if (this.staticOptions.from === undefined) {
             this.staticOptions.from = this.optionsSec.from
         }
@@ -70,7 +68,7 @@ class Model {
 
     private correctMinMax = (min: number, max: number): number => {
         if (min >= max) return (min + 1)
-        return max
+        return max;
     }
 
     private correctValueTypes = (options: IOptions): void => {

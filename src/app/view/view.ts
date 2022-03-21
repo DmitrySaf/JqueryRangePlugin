@@ -48,6 +48,7 @@ class View {
     public updateViewOptions = (modelOptions: IOptions, modelStatic: { from: number, to: number }): void => {
         this.checkedOptions = { ...modelOptions };
         this.modelStatic = { ...modelStatic };
+        this.currentOptions = { ...modelOptions }
     };
 
     private init = () => {
@@ -77,25 +78,25 @@ class View {
 
         if (this.checkedOptions.double) {
             this.dot.elemFirst.addClass('shown');
-            this.moveAtFrom(this.dot.elemFirst[0]);
+            this.moveAt(this.dot.elemFirst[0], 'from');
         }
 
         this.setFillerStyles();
         this.minmax.elemMax.text(this.checkedOptions.max);
         this.minmax.elemMin.text(this.checkedOptions.min);
 
-        this.moveAtTo(this.dot.elemSecond[0]);
+        this.moveAt(this.dot.elemSecond[0], 'to');
         this.comfortableValueDisplay();
     };
+
+    private mouseUpHandler = () => {
+        this.modelStatic.from = this.checkedOptions.from;
+        this.modelStatic.to = this.checkedOptions.to;
+    }
 
     private addEventListeners = () => {
         this.dots.on('mousedown', this.mouseDownHandler);
     };
-
-    private mouseUpHandler = () => {
-        this.modelStatic.from = this.currentOptions.from;
-        this.modelStatic.to = this.currentOptions.to;
-    }
 
     private getValueOfDot = (event: { pageX: number, pageY: number }): number => {
         const coords = {
@@ -111,10 +112,10 @@ class View {
         const mousemove = (e: { pageX: number, pageY: number }) => {
             if (event.currentTarget.classList.contains('js-slider__dot_wrapper_first')) {
                 this.updateCurrentOptions(this.getValueOfDot(e), 'from');
-                this.moveAtFrom(event.currentTarget);
+                this.moveAt(event.currentTarget, 'from');
             } else {
                 this.updateCurrentOptions(this.getValueOfDot(e), 'to');
-                this.moveAtTo(event.currentTarget);
+                this.moveAt(event.currentTarget, 'to');
             }
             this.comfortableValueDisplay();
             this.setFillerStyles();
@@ -129,26 +130,49 @@ class View {
         $(document).on('mouseup', mouseup);
     };
 
+/*     private onMouseMove = (event: MouseEvent, e: { pageX: number, pageY: number}) => {
+        if (event.currentTarget.classList.contains('js-slider__dot_wrapper_first')) {
+            this.updateCurrentOptions(this.getValueOfDot(e), 'from');
+            this.moveAt(event.currentTarget, 'from');
+        } else {
+            this.updateCurrentOptions(this.getValueOfDot(e), 'to');
+            this.moveAt(event.currentTarget, 'to');
+        }
+        this.comfortableValueDisplay();
+        this.setFillerStyles();
+    }
+
+    private onMouseUp = () => {
+        $(document).off('mousemove', this.onMouseMove);
+        $(document).off('mouseup', this.onMouseUp);
+        this.modelStatic.from = this.currentOptions.from;
+        this.modelStatic.to = this.currentOptions.to;
+        //this.updateCurrentOptions(this.getValueOfDot(e), 'to');
+        //this.updateCurrentOptions(this.getValueOfDot(e), 'from');
+        //this.currentOptions = { ...this.checkedOptions };
+        console.log('from: ' + this.currentOptions.from + ' ' + this.checkedOptions.from);
+        console.log('to: ' + this.currentOptions.to + ' ' + this.checkedOptions.to);
+    }
+
+    private onMouseDown = (event: MouseEvent) => {
+        event.preventDefault();
+
+        const mousemove = this.onMouseMove
+
+        $(document).on('mousemove', mousemove);
+        $(document).on('mouseup', this.onMouseUp);
+    }; */
+
     private updateCurrentOptions = (value: number, name: 'from' | 'to') => {
         this.currentOptions[name] = value;
         this.updateViewOptionsObserver.notify();
     };
 
-    private moveAtTo = (eTarget: HTMLElement) => {
-        const target = eTarget;
+    private moveAt = (target: HTMLElement, option: 'from' | 'to') => {
         if (this.checkedOptions.vertical) {
-            target.style.top = `${this.calcTop(this.checkedOptions.to)}px`;
+            target.style.top = `${this.calcTop(this.checkedOptions[option])}px`;
         } else {
-            target.style.left = `${this.calcLeft(this.checkedOptions.to)}px`;
-        }
-    };
-
-    private moveAtFrom = (eTarget: HTMLElement) => {
-        const target = eTarget;
-        if (this.checkedOptions.vertical) {
-            target.style.top = `${this.calcTop(this.checkedOptions.from)}px`;
-        } else {
-            target.style.left = `${this.calcLeft(this.checkedOptions.from)}px`;
+            target.style.left = `${this.calcLeft(this.checkedOptions[option])}px`;
         }
     };
 
