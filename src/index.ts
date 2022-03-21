@@ -24,14 +24,14 @@ import { IOptions } from './app/options';
 $('#range').slider({
     min: 2000,
     max: 11000,
-    vertical: true,
+    vertical: false,
     double: true,
     from: 1000,
     to: 7000,
     step: -11,
 });
 
-$('#test').slider({
+/* $('#test').slider({
     max: 10000,
     min: 2000,
     from: 3000,
@@ -39,4 +39,4 @@ $('#test').slider({
     step: 200,
     vertical: false,
     double: true,
-});
+}); */

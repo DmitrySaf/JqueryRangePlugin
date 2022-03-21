@@ -4,62 +4,86 @@ import { IOptions, defaultOptions } from '../options';
 class Model {
     public updateModelOptionsObserver: Event;
 
-    private correctOptions: IOptions;
+    public staticOptions: {from: number, to: number}
 
-    public stateOptions: { from: number, to: number }
+    public optionsSec: IOptions
+
+    private correctOptions: IOptions;
 
     get options() : IOptions { return { ...this.correctOptions }; }
 
-    get state() { return this.stateOptions }
+    get static() { return this.staticOptions }
 
     constructor(options: IOptions) {
         this.updateModelOptionsObserver = new Event();
-        this.stateOptions = { from: options.from, to: options.to };
-        this.stateOptions = { from: this.optionsCorrection(options).from, to: this.optionsCorrection(options).to }
+        this.optionsSec = options;
+        this.staticOptions = {from: options.from, to: options.to};
         this.correctOptions = this.optionsCorrection(options);
     }
 
-    updateModelOptions = (viewOptions : IOptions, modelState: { from: number, to: number }): void => {
+    updateModelOptions = (viewOptions : IOptions, modelStatic: { from: number, to: number }): void => {
         this.correctOptions = this.optionsCorrection(viewOptions);
-        this.stateOptions = { ...modelState };
+        this.staticOptions = { ...modelStatic };
         this.updateModelOptionsObserver.notify();
     };
 
     private optionsCorrection = (checkingOptions: IOptions) : IOptions => {
         const confirmedOptions = { ...checkingOptions };
-        const {
-            min,
-            max,
-            from,
-            to,
-            step,
-        } = confirmedOptions;
-        // replacing inappropriate values
 
-        Object.keys(confirmedOptions).forEach((key) => {
-            if ((key === 'double') || (key === 'vertical')) {
-                if (typeof (confirmedOptions[key]) !== 'boolean') {
-                    confirmedOptions[key] = defaultOptions[key];
-                }
-            } else if (!this.isNumber(confirmedOptions[key])) {
-                confirmedOptions[key] = defaultOptions[key];
-            }
-        });
+        this.correctValueTypes(confirmedOptions);
+        confirmedOptions.step = this.correctStep(checkingOptions.step, checkingOptions.min, checkingOptions.max);
+        confirmedOptions.max = this.correctMinMax(checkingOptions.min, checkingOptions.max);
+        this.correctStaticOptions(checkingOptions.min, checkingOptions.max, checkingOptions.to, checkingOptions.from);
 
-        // checking from values override
+        // checking for values override
+        confirmedOptions.to = (checkingOptions.to > confirmedOptions.max) ? confirmedOptions.max : confirmedOptions.to
+        confirmedOptions.to = (checkingOptions.to < this.staticOptions.from) ? this.staticOptions.from : confirmedOptions.to
 
-        if (step <= 0) confirmedOptions.step = 1;
-        if (step > (max - min)) confirmedOptions.step = max - min;
-        if (min >= max) confirmedOptions.max = min + confirmedOptions.step;
-        confirmedOptions.to = to > confirmedOptions.max ? confirmedOptions.max : confirmedOptions.to
-        confirmedOptions.to = to < this.stateOptions.from ? from : confirmedOptions.to
-        confirmedOptions.from = from < confirmedOptions.min ? confirmedOptions.min : confirmedOptions.from
-        confirmedOptions.from = from > this.stateOptions.to ? to : confirmedOptions.from
-        //console.log(this.stateOptions.from, this.stateOptions.to)
+        confirmedOptions.from = (checkingOptions.from < confirmedOptions.min) ? confirmedOptions.min : confirmedOptions.from
+        confirmedOptions.from = (checkingOptions.from > this.staticOptions.to) ? this.staticOptions.to : confirmedOptions.from
         return confirmedOptions;
     };
 
     private isNumber = (parameter: number | boolean): boolean => typeof (parameter) === 'number';
+
+    private correctStaticOptions = (min: number, max: number, to: number, from: number): void => {
+        if (this.staticOptions.from === undefined) {
+            this.staticOptions.from = this.optionsSec.from
+        }
+        this.staticOptions.from = (this.staticOptions.from < min) ? min : this.staticOptions.from;
+
+        if (this.staticOptions.to === undefined) {
+            this.staticOptions.to = this.optionsSec.to
+        }
+        this.staticOptions.to = (this.staticOptions.to > max) ? max : this.staticOptions.to;
+    }
+
+    private correctStep = (step: number, min: number, max: number): number => {
+        if (min >= max) {
+            step = 1
+        } else if (step > (max - min)) {
+            step = max - min
+        }
+        if (step <= 0) step = 1;
+        return step;
+    }
+
+    private correctMinMax = (min: number, max: number): number => {
+        if (min >= max) return (min + 1)
+        return max
+    }
+
+    private correctValueTypes = (options: IOptions): void => {
+        Object.keys(options).forEach((key) => {
+            if ((key === 'double') || (key === 'vertical')) {
+                if (typeof (options[key]) !== 'boolean') {
+                    options[key] = defaultOptions[key];
+                }
+            } else if (!this.isNumber(options[key])) {
+                options[key] = defaultOptions[key];
+            }
+        });
+    }
 }
 
 export { Model };

@@ -15,19 +15,19 @@ class Presenter {
 
     init = (): void => {
         this.model.updateModelOptionsObserver.attach(() => {
-            this.updateViewOptions(this.model.options, this.model.state);
+            this.updateViewOptions(this.model.options, this.model.static);
         });
         this.view.updateViewOptionsObserver.attach(() => {
-            this.updateModelOptions(this.view.currentOptions, this.view.modelState);
+            this.updateModelOptions(this.view.currentOptions, this.view.modelStatic);
         });
     };
 
-    updateModelOptions = (viewOptions: IOptions, modelState: { from: number, to: number }): void => {
-        this.model.updateModelOptions(viewOptions, modelState);
+    updateModelOptions = (viewOptions: IOptions, modelStatic: { from: number, to: number }): void => {
+        this.model.updateModelOptions(viewOptions, modelStatic);
     };
 
-    updateViewOptions = (modelOptions: IOptions, modelState: { from: number, to: number }): void => {
-        this.view.updateViewOptions(modelOptions, modelState);
+    updateViewOptions = (modelOptions: IOptions, modelStatic: { from: number, to: number }): void => {
+        this.view.updateViewOptions(modelOptions, modelStatic);
     };
 }
 
