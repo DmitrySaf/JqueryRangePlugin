@@ -96,7 +96,22 @@ class View {
 
     private addEventListeners = () => {
         this.dots.on('mousedown', this.mouseDownHandler);
+        this.bar.elem.on('mousedown', this.onClick);
     };
+
+    private onClick = (event: MouseEvent) => {
+        if (Math.abs(this.getValueOfDot(event) - this.currentOptions.from) <= Math.abs(this.getValueOfDot(event) - this.currentOptions.to)) {
+            this.currentOptions.from = this.getValueOfDot(event);
+            this.updateViewOptionsObserver.notify();
+            this.moveAt(this.dots[0], 'from');
+        } else {
+            this.currentOptions.to = this.getValueOfDot(event);
+            this.updateViewOptionsObserver.notify();
+            this.moveAt(this.dots[1], 'to');
+        }
+        this.comfortableValueDisplay();
+        this.setFillerStyles();
+    }
 
     private getValueOfDot = (event: { pageX: number, pageY: number }): number => {
         const coords = {
