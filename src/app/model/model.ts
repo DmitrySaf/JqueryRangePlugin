@@ -4,13 +4,14 @@ import { IOptions, defaultOptions } from '../options';
 class Model {
     public updateModelOptionsObserver: Event;
 
-    public staticOptions: {from: number, to: number}
+    private staticOptions: {from: number, to: number}
 
-    public optionsSec: IOptions
+    private optionsSec: IOptions
 
     private correctOptions: IOptions;
 
     get options() : IOptions { return this.correctOptions }
+    
     get static() { return this.staticOptions }
 
     constructor(options: IOptions) {

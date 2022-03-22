@@ -13,13 +13,14 @@ interface MouseEvent {
 }
 
 class View {
-    public checkedOptions: IOptions;
 
     public updateViewOptionsObserver: Event;
 
     public currentOptions: IOptions;
 
     public modelStatic: { from: number, to: number };
+    
+    private checkedOptions: IOptions;
 
     private slider: Slider;
 
