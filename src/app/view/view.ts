@@ -89,39 +89,12 @@ class View {
         this.comfortableValueDisplay();
     };
 
-    private mouseUpHandler = () => {
-        this.modelStatic.from = this.checkedOptions.from;
-        this.modelStatic.to = this.checkedOptions.to;
-    }
-
     private addEventListeners = () => {
-        this.dots.on('mousedown', this.mouseDownHandler);
-        this.bar.elem.on('mousedown', this.onClick);
+        this.dots.on('mousedown', this.onMouseDown);
+        this.bar.elem.on('mousedown', this.onMouseClick);
     };
 
-    private onClick = (event: MouseEvent) => {
-        if (Math.abs(this.getValueOfDot(event) - this.currentOptions.from) <= Math.abs(this.getValueOfDot(event) - this.currentOptions.to)) {
-            this.currentOptions.from = this.getValueOfDot(event);
-            this.updateViewOptionsObserver.notify();
-            this.moveAt(this.dots[0], 'from');
-        } else {
-            this.currentOptions.to = this.getValueOfDot(event);
-            this.updateViewOptionsObserver.notify();
-            this.moveAt(this.dots[1], 'to');
-        }
-        this.comfortableValueDisplay();
-        this.setFillerStyles();
-    }
-
-    private getValueOfDot = (event: { pageX: number, pageY: number }): number => {
-        const coords = {
-            x: event.pageX - this.slider.elem.position().left,
-            y: event.pageY - this.slider.elem.position().top,
-        };
-        return this.calcValue(coords);
-    }
-
-    private mouseDownHandler = (event: MouseEvent) => {
+    private onMouseDown = (event: MouseEvent) => {
         event.preventDefault();
 
         const mousemove = (e: { pageX: number, pageY: number }) => {
@@ -144,6 +117,33 @@ class View {
         $(document).on('mousemove', mousemove);
         $(document).on('mouseup', mouseup);
     };
+
+    private onMouseClick = (event: MouseEvent) => {
+        if (Math.abs(this.getValueOfDot(event) - this.currentOptions.from) <= Math.abs(this.getValueOfDot(event) - this.currentOptions.to)) {
+            this.currentOptions.from = this.getValueOfDot(event);
+            this.updateViewOptionsObserver.notify();
+            this.moveAt(this.dots[0], 'from');
+        } else {
+            this.currentOptions.to = this.getValueOfDot(event);
+            this.updateViewOptionsObserver.notify();
+            this.moveAt(this.dots[1], 'to');
+        }
+        this.comfortableValueDisplay();
+        this.setFillerStyles();
+    }
+
+    private mouseUpHandler = () => {
+        this.modelStatic.from = this.checkedOptions.from;
+        this.modelStatic.to = this.checkedOptions.to;
+    }
+
+    private getValueOfDot = (event: { pageX: number, pageY: number }): number => {
+        const coords = {
+            x: event.pageX - this.slider.elem.position().left,
+            y: event.pageY - this.slider.elem.position().top,
+        };
+        return this.calcValue(coords);
+    }
 
 /*     private onMouseMove = (event: MouseEvent, e: { pageX: number, pageY: number}) => {
         if (event.currentTarget.classList.contains('js-slider__dot_wrapper_first')) {
@@ -231,15 +231,6 @@ class View {
         }
     };
 
-    private addVerticalClasses = () => {
-        this.slider.elem.addClass('slider_vertical');
-        this.bar.elem.addClass('slider__bar_vertical');
-        this.minmax.elemMin.addClass('slider__min_vertical');
-        this.minmax.elemMax.addClass('slider__max_vertical');
-    };
-
-    private toggleMinmaxHidden = (coords: number, element: 'elemMin' | 'elemMax') => ((coords < 50) ? this.minmax[element].addClass('hidden') : this.minmax[element].removeClass('hidden'));
-
     private setFillerStyles = () => {
         const dotWidth = this.dot.elemSecond.outerWidth() as number;
         const isVertical = this.checkedOptions.vertical;
@@ -250,6 +241,15 @@ class View {
             width: `${isVertical ? 20 : this.calcLeft(this.checkedOptions.to) - this.calcLeft(this.checkedOptions.from)}`,
         });
     };
+
+    private addVerticalClasses = () => {
+        this.slider.elem.addClass('slider_vertical');
+        this.bar.elem.addClass('slider__bar_vertical');
+        this.minmax.elemMin.addClass('slider__min_vertical');
+        this.minmax.elemMax.addClass('slider__max_vertical');
+    };
+
+    private toggleMinmaxHidden = (coords: number, element: 'elemMin' | 'elemMax') => ((coords < 50) ? this.minmax[element].addClass('hidden') : this.minmax[element].removeClass('hidden'));
 
     private calcValue(cursorCoords : { x: number, y: number }): number {
         const coordsToSliderRatio: number = this.checkedOptions.vertical
