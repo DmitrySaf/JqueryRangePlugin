@@ -44,6 +44,7 @@
         "@typescript-eslint/indent": ["error", 4, { "MemberExpression": 1 }],
         "import/prefer-default-export": "off",
         "no-unused-expressions": "off",
-        "no-param-reassign": [2, { "props": false }]
+        "no-param-reassign": [2, { "props": false }],
+        "max-len": ["error", { "code": 120 }]
     }
 }

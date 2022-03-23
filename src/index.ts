@@ -12,7 +12,7 @@ import { IOptions } from './app/options';
             to: 5000,
             step: 1,
             double: false,
-            vertical: false,
+            vertical: false
         }, options);
         const model = new Model(settings);
         const view = new View(this, model.options);
@@ -22,21 +22,21 @@ import { IOptions } from './app/options';
 }(jQuery));
 
 $('#range').slider({
-    min: 1,
-    max: 100,
+    min: -1000,
+    max: 1000,
     vertical: false,
     double: true,
-    from: 50,
-    to: 70,
-    step: 1,
+    from: 300,
+    to: 700,
+    step: 1
 });
 
-/* $('#test').slider({
+$('#test').slider({
     max: 10000,
     min: 2000,
     from: 3000,
     to: 5000,
     step: 200,
     vertical: false,
-    double: true,
-}); */
+    double: true
+});

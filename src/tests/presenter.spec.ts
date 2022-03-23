@@ -1,4 +1,4 @@
-import { sliderPresenter } from './index.spec';
+/* import { sliderPresenter } from './index.spec';
 
 beforeAll(() => {
     jest.spyOn(sliderPresenter, 'init');
@@ -14,4 +14,4 @@ describe('Controller', () => {
         expect(sliderPresenter.view.updateViewOptionsObserver).toHaveBeenCalled();
         expect(sliderPresenter.model.updateModelOptionsObserver).toHaveBeenCalled();
     });
-});
+}); */

@@ -1,4 +1,4 @@
-import { sliderModel } from './index.spec';
+/* import { sliderModel } from './index.spec';
 
 beforeAll(() => {
     jest.spyOn(sliderModel, 'updateModelOptions');
@@ -10,4 +10,4 @@ describe('Model', () => {
         //sliderModel.updateModelOptions(options);
         expect(sliderModel.updateModelOptionsObserver.observers).toHaveBeenCalled();
     });
-});
+}); */

@@ -5,7 +5,7 @@ const defaultOptions: IOptions = {
     to: 7000,
     step: 1,
     double: false,
-    vertical: false,
+    vertical: false
 };
 
 interface IOptions {
@@ -19,4 +19,9 @@ interface IOptions {
     double: boolean
 }
 
-export { defaultOptions, IOptions };
+interface Coords {
+    from: number,
+    to: number
+}
+
+export { defaultOptions, IOptions, Coords };
