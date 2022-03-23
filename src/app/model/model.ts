@@ -52,31 +52,47 @@ class Model {
         }
 
         this.correctStaticOptions(confirmedOptions.min, confirmedOptions.max);
-        
+
         // Change values overriding each other
-        confirmedOptions.to = (checkingOptions.to > confirmedOptions.max) ? confirmedOptions.max : confirmedOptions.to;
-        confirmedOptions.to = (checkingOptions.to < this.staticOptions.from) ? this.staticOptions.from : confirmedOptions.to;
-        
-        confirmedOptions.from = (checkingOptions.from < confirmedOptions.min) ? confirmedOptions.min : confirmedOptions.from;
-        confirmedOptions.from = (checkingOptions.from > this.staticOptions.to) ? this.staticOptions.to : confirmedOptions.from;
-        
+        confirmedOptions.to = (checkingOptions.to > confirmedOptions.max)
+            ? confirmedOptions.max
+            : confirmedOptions.to;
+
+        confirmedOptions.to = (checkingOptions.to < this.staticOptions.from)
+            ? this.staticOptions.from
+            : confirmedOptions.to;
+
+        confirmedOptions.from = (checkingOptions.from < confirmedOptions.min)
+            ? confirmedOptions.min
+            : confirmedOptions.from;
+
+        confirmedOptions.from = (checkingOptions.from > this.staticOptions.to)
+            ? this.staticOptions.to
+            : confirmedOptions.from;
+
         return confirmedOptions;
     };
 
     private correctStaticOptions = (min: number, max: number): void => {
         this.staticOptions.from = this.ifUndefined(this.staticOptions.from, 'from');
         this.staticOptions.to = this.ifUndefined(this.staticOptions.to, 'to');
-        
+
         this.staticOptions.from = this.isInDiapason(min, max, this.staticOptions.from);
         this.staticOptions.to = this.isInDiapason(min, max, this.staticOptions.to);
     };
 
     private isNumber = (parameter: number | boolean): boolean => typeof (parameter) === 'number';
 
-    private ifUndefined = (option: number | undefined, optionName: 'from' | 'to'): number => option ? option : this.optionsSec[optionName];
+    private ifUndefined = (
+        option: number | undefined,
+        optionName: 'from' | 'to'
+    ): number => (option || this.optionsSec[optionName]);
 
-    private isInDiapason = (min: number, max: number, value: number): number => ((value < min) || (value > max)) ? min : value;
-
+    private isInDiapason = (
+        min: number,
+        max: number,
+        value: number
+    ): number => (((value < min) || (value > max)) ? min : value);
 }
 
 export { Model };

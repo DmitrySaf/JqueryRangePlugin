@@ -8,7 +8,6 @@ class Bar {
         this.filler = $('<div class="slider__filler js-slider__filler"></div>');
         this.elem.append(this.filler);
     }
-
 }
 
 export { Bar };

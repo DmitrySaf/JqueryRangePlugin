@@ -45,6 +45,8 @@
         "import/prefer-default-export": "off",
         "no-unused-expressions": "off",
         "no-param-reassign": [2, { "props": false }],
-        "max-len": ["error", { "code": 120 }]
+        "max-len": ["error", { "code": 120 }],
+        "comma-dangle": "off",
+        "@typescript-eslint/comma-dangle": ["error", { "functions": "never" }]
     }
 }

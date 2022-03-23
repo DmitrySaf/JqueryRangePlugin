@@ -266,7 +266,7 @@ class View {
                 isVertical
                     ? 20
                     : this.calcLeft(this.checkedOptions.to) - this.calcLeft(this.checkedOptions.from)
-            }px`,
+            }px`
         });
     };
 
@@ -290,7 +290,7 @@ class View {
         return Math.round(
             (coordsToSliderRatio
             * (this.checkedOptions.max - this.checkedOptions.min)
-            + this.checkedOptions.min) / this.checkedOptions.step,
+            + this.checkedOptions.min) / this.checkedOptions.step
         ) * this.checkedOptions.step;
     }
 
