@@ -22,7 +22,7 @@ class Model {
     }
 
     public updateModelOptions = (
-        viewOptions : IOptions,
+        viewOptions: IOptions,
         modelStatic: Coords
     ): void => {
         this.correctOptions = this.optionsCorrection(viewOptions);

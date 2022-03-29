@@ -3,9 +3,9 @@ import { Model } from '../model/model';
 import { IOptions } from '../options';
 
 class Presenter {
-    private view: View;
+    public view: View;
 
-    private model: Model;
+    public model: Model;
 
     constructor(view: View, model: Model) {
         this.view = view;
@@ -13,7 +13,7 @@ class Presenter {
         this.init();
     }
 
-    private init = (): void => {
+    public init = (): void => {
         this.model.updateModelOptionsObserver.attach(() => {
             this.updateViewOptions(this.model.options, this.model.static);
         });
@@ -22,11 +22,11 @@ class Presenter {
         });
     };
 
-    private updateModelOptions = (viewOptions: IOptions, modelStatic: { from: number, to: number }): void => {
+    public updateModelOptions = (viewOptions: IOptions, modelStatic: { from: number, to: number }): void => {
         this.model.updateModelOptions(viewOptions, modelStatic);
     };
 
-    private updateViewOptions = (modelOptions: IOptions, modelStatic: { from: number, to: number }): void => {
+    public updateViewOptions = (modelOptions: IOptions, modelStatic: { from: number, to: number }): void => {
         this.view.updateViewOptions(modelOptions, modelStatic);
     };
 }

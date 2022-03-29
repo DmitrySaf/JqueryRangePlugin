@@ -93,9 +93,9 @@ describe('Model', () => {
         expect(model.options.from).toEqual(model.options.min);
     });
 
-    it('triggers notify function', () => {
+    it('triggers the "notify" function', () => {
         //sending updated options
-        const staticExample = {from: 5000, to: 6000}
+        const staticExample = { from: 5000, to: 6000 }
         model.updateModelOptions(recievedOptions, staticExample);
         expect(model.updateModelOptionsObserver.notify).toHaveBeenCalled();
     })
