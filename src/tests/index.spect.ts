@@ -8,7 +8,7 @@ import { IOptions } from '../app/options';
         const settings = $.extend({
             min: 0,
             max: 10000,
-            double: false,
+            double: false
         }, options);
         const model = new Model(settings);
         const view = new View(this, model.options);
@@ -24,12 +24,12 @@ const options = {
     double: true,
     from: 5000,
     to: 7000,
-    step: -11,
+    step: -11
 };
 
-const sliderPresenter = $('#range').slider(options);
-const sliderView = sliderPresenter.view;
-const sliderModel = sliderPresenter.model;
+const sliderModel = new Model(options);
+const sliderView = new View($('#range'), sliderModel.options);
+const sliderPresenter = new Presenter(sliderView, sliderModel);
 
 describe('plugin initialization', () => {
     it('plugin is initialized', () => {
@@ -37,6 +37,4 @@ describe('plugin initialization', () => {
     });
 });
 
-export {
-    sliderPresenter, sliderView, sliderModel, options,
-}; */
+export { sliderPresenter, sliderView, sliderModel, options }; */

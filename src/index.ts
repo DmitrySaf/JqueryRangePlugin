@@ -31,7 +31,7 @@ $('#range').slider({
     step: 1
 });
 
-$('#test').slider({
+/* $('#test').slider({
     max: 10000,
     min: 2000,
     from: 3000,
@@ -39,4 +39,4 @@ $('#test').slider({
     step: 200,
     vertical: false,
     double: false
-});
+}); */

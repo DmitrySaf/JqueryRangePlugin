@@ -8,7 +8,7 @@ class Model {
 
     private optionsSec: IOptions;
 
-    private correctOptions: IOptions;
+    public correctOptions: IOptions;
 
     get options(): IOptions { return this.correctOptions; }
 
@@ -21,7 +21,7 @@ class Model {
         this.correctOptions = this.optionsCorrection(options);
     }
 
-    updateModelOptions = (
+    public updateModelOptions = (
         viewOptions : IOptions,
         modelStatic: Coords
     ): void => {
@@ -32,7 +32,6 @@ class Model {
 
     private optionsCorrection = (checkingOptions: IOptions) : IOptions => {
         const confirmedOptions = { ...checkingOptions };
-
         // Check for inappropriate values
         Object.keys(checkingOptions).forEach((key) => {
             if ((key === 'double') || (key === 'vertical')) {
