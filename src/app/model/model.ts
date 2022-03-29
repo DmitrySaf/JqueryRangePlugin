@@ -37,10 +37,10 @@ class Model {
         Object.keys(checkingOptions).forEach((key) => {
             if ((key === 'double') || (key === 'vertical')) {
                 if (typeof (checkingOptions[key]) !== 'boolean') {
-                    checkingOptions[key] = defaultOptions[key];
+                    confirmedOptions[key] = defaultOptions[key];
                 }
             } else if (!this.isNumber(checkingOptions[key])) {
-                checkingOptions[key] = defaultOptions[key];
+                confirmedOptions[key] = defaultOptions[key];
             }
         });
 
@@ -54,6 +54,17 @@ class Model {
         this.correctStaticOptions(confirmedOptions.min, confirmedOptions.max);
 
         // Change values overriding each other
+        if (confirmedOptions.double) {
+            confirmedOptions.from = (checkingOptions.from < confirmedOptions.min)
+                ? confirmedOptions.min
+                : confirmedOptions.from;
+
+            confirmedOptions.from = (checkingOptions.from > this.staticOptions.to)
+                ? this.staticOptions.to
+                : confirmedOptions.from;
+        } else {
+            confirmedOptions.from = confirmedOptions.min;
+        }
         confirmedOptions.to = (checkingOptions.to > confirmedOptions.max)
             ? confirmedOptions.max
             : confirmedOptions.to;
@@ -61,14 +72,6 @@ class Model {
         confirmedOptions.to = (checkingOptions.to < this.staticOptions.from)
             ? this.staticOptions.from
             : confirmedOptions.to;
-
-        confirmedOptions.from = (checkingOptions.from < confirmedOptions.min)
-            ? confirmedOptions.min
-            : confirmedOptions.from;
-
-        confirmedOptions.from = (checkingOptions.from > this.staticOptions.to)
-            ? this.staticOptions.to
-            : confirmedOptions.from;
 
         return confirmedOptions;
     };

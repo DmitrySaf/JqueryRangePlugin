@@ -42,6 +42,7 @@ class View {
         this.bar = new Bar();
         this.dot = new Dot();
         this.minmax = new Minmax();
+        this.modelStatic = { from: this.checkedOptions.from, to: this.checkedOptions.to };
         this.init();
     }
 
@@ -94,7 +95,7 @@ class View {
 
     private addEventListeners = () => {
         this.dots.on('mousedown', this.onMouseDown);
-        this.bar.elem.on('mousedown', this.onMouseClick);
+        this.bar.elem.on('click', this.onMouseClick);
     };
 
     private onMouseDown = (event: MouseEvent) => {
@@ -110,33 +111,36 @@ class View {
             }
             this.comfortableValueDisplay();
             this.setFillerStyles();
-            this.mouseUpHandler();
+            this.onMouseUp();
         };
         const mouseup = () => {
             $(document).off('mousemove', mousemove);
             $(document).off('mouseup', mouseup);
-            this.mouseUpHandler();
+            this.onMouseUp();
         };
         $(document).on('mousemove', mousemove);
         $(document).on('mouseup', mouseup);
     };
 
     private onMouseClick = (event: MouseEvent) => {
-        if (Math.abs(this.getValueOfDot(event) - this.currentOptions.from)
-        <= Math.abs(this.getValueOfDot(event) - this.currentOptions.to)) {
-            this.currentOptions.from = this.getValueOfDot(event);
-            this.updateViewOptionsObserver.notify();
-            this.moveAt(this.dots[0], 'from');
+        if (this.checkedOptions.double) {
+            if (Math.abs(this.getValueOfDot(event) - this.currentOptions.from)
+            <= Math.abs(this.getValueOfDot(event) - this.currentOptions.to)) {
+                this.updateCurrentOptions(this.getValueOfDot(event), 'from');
+                this.moveAt(this.dots[0], 'from');
+            } else {
+                this.updateCurrentOptions(this.getValueOfDot(event), 'to');
+                this.moveAt(this.dots[1], 'to');
+            }
         } else {
-            this.currentOptions.to = this.getValueOfDot(event);
-            this.updateViewOptionsObserver.notify();
+            this.updateCurrentOptions(this.getValueOfDot(event), 'to');
             this.moveAt(this.dots[1], 'to');
         }
         this.comfortableValueDisplay();
         this.setFillerStyles();
     };
 
-    private mouseUpHandler = () => {
+    private onMouseUp = () => {
         this.modelStatic.from = this.checkedOptions.from;
         this.modelStatic.to = this.checkedOptions.to;
     };
@@ -148,39 +152,6 @@ class View {
         };
         return this.calcValue(coords);
     };
-
-    /*     private onMouseMove = (event: MouseEvent, e: { pageX: number, pageY: number}) => {
-        if (event.currentTarget.classList.contains('js-slider__dot_wrapper_first')) {
-            this.updateCurrentOptions(this.getValueOfDot(e), 'from');
-            this.moveAt(event.currentTarget, 'from');
-        } else {
-            this.updateCurrentOptions(this.getValueOfDot(e), 'to');
-            this.moveAt(event.currentTarget, 'to');
-        }
-        this.comfortableValueDisplay();
-        this.setFillerStyles();
-    }
-
-    private onMouseUp = () => {
-        $(document).off('mousemove', this.onMouseMove);
-        $(document).off('mouseup', this.onMouseUp);
-        this.modelStatic.from = this.currentOptions.from;
-        this.modelStatic.to = this.currentOptions.to;
-        //this.updateCurrentOptions(this.getValueOfDot(e), 'to');
-        //this.updateCurrentOptions(this.getValueOfDot(e), 'from');
-        //this.currentOptions = { ...this.checkedOptions };
-        console.log('from: ' + this.currentOptions.from + ' ' + this.checkedOptions.from);
-        console.log('to: ' + this.currentOptions.to + ' ' + this.checkedOptions.to);
-    }
-
-    private onMouseDown = (event: MouseEvent) => {
-        event.preventDefault();
-
-        const mousemove = this.onMouseMove
-
-        $(document).on('mousemove', mousemove);
-        $(document).on('mouseup', this.onMouseUp);
-    }; */
 
     private updateCurrentOptions = (value: number, optionName: 'from' | 'to') => {
         this.currentOptions[optionName] = value;
@@ -197,17 +168,17 @@ class View {
 
     private comfortableValueDisplay = () => {
         if (this.checkedOptions.vertical) {
-            this.toggleMinmaxHidden(
-                this.calcTop(this.checkedOptions.max)
-                - this.calcTop(this.checkedOptions.to), 'elemMax'
+            this.toggleMinMaxHidden(
+                this.calcTop(this.checkedOptions.max) - this.calcTop(this.checkedOptions.to),
+                'elemMax'
             );
-            this.toggleMinmaxHidden(this.calcTop(this.checkedOptions.to), 'elemMin');
+            this.toggleMinMaxHidden(this.calcTop(this.checkedOptions.to), 'elemMin');
         } else {
-            this.toggleMinmaxHidden(
-                this.calcLeft(this.checkedOptions.max)
-                - this.calcLeft(this.checkedOptions.to), 'elemMax'
+            this.toggleMinMaxHidden(
+                this.calcLeft(this.checkedOptions.max) - this.calcLeft(this.checkedOptions.to),
+                'elemMax'
             );
-            this.toggleMinmaxHidden(this.calcLeft(this.checkedOptions.to), 'elemMin');
+            this.toggleMinMaxHidden(this.calcLeft(this.checkedOptions.to), 'elemMin');
         }
 
         this.dot.valueSecond.text(this.checkedOptions.to);
@@ -223,7 +194,7 @@ class View {
                 } else {
                     this.dot.valueFirst.removeClass('hidden');
                 }
-                this.toggleMinmaxHidden(this.calcTop(this.checkedOptions.from), 'elemMin');
+                this.toggleMinMaxHidden(this.calcTop(this.checkedOptions.from), 'elemMin');
             } else {
                 if ((this.calcLeft(this.checkedOptions.to) - this.calcLeft(this.checkedOptions.from)) < 40) {
                     this.dot.valueFirst
@@ -238,7 +209,7 @@ class View {
                     this.dot.valueFirst.removeClass('hidden');
                     this.dot.valueSecond.css('left', '50%');
                 }
-                this.toggleMinmaxHidden(this.calcLeft(this.checkedOptions.from), 'elemMin');
+                this.toggleMinMaxHidden(this.calcLeft(this.checkedOptions.from), 'elemMin');
             }
         }
     };
@@ -277,7 +248,7 @@ class View {
         this.minmax.elemMax.addClass('slider__max_vertical');
     };
 
-    private toggleMinmaxHidden = (coords: number, elementName: 'elemMin' | 'elemMax') => (
+    private toggleMinMaxHidden = (coords: number, elementName: 'elemMin' | 'elemMax') => (
         coords < 50
             ? this.minmax[elementName].addClass('hidden')
             : this.minmax[elementName].removeClass('hidden')

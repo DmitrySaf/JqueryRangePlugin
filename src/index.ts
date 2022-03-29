@@ -38,5 +38,5 @@ $('#test').slider({
     to: 5000,
     step: 200,
     vertical: false,
-    double: true
+    double: false
 });
