@@ -19,7 +19,7 @@ class View {
 
     public modelStatic: Coords;
 
-    private checkedOptions: IOptions;
+    public checkedOptions: IOptions;
 
     private slider: Slider;
 
@@ -51,8 +51,8 @@ class View {
         modelStatic: Coords
     ): void => {
         this.checkedOptions = { ...modelOptions };
-        this.modelStatic = { ...modelStatic };
         this.currentOptions = { ...modelOptions };
+        this.modelStatic = { ...modelStatic };
     };
 
     private init = () => {
@@ -75,10 +75,7 @@ class View {
     };
 
     private render = () => {
-        if (this.checkedOptions.vertical) {
-            this.addVerticalClasses();
-            this.setFillerStyles();
-        }
+        if (this.checkedOptions.vertical) this.addVerticalClasses();
 
         if (this.checkedOptions.double) {
             this.dot.elemFirst.addClass('shown');
@@ -160,57 +157,39 @@ class View {
 
     private moveAt = (target: HTMLElement, optionName: 'from' | 'to') => {
         if (this.checkedOptions.vertical) {
-            target.style.top = `${this.calcTop(this.checkedOptions[optionName])}px`;
+            target.style.top = `${this.calcPosition(this.checkedOptions[optionName])}px`;
         } else {
-            target.style.left = `${this.calcLeft(this.checkedOptions[optionName])}px`;
+            target.style.left = `${this.calcPosition(this.checkedOptions[optionName])}px`;
         }
     };
 
     private comfortableValueDisplay = () => {
-        if (this.checkedOptions.vertical) {
-            this.toggleMinMaxHidden(
-                this.calcTop(this.checkedOptions.max) - this.calcTop(this.checkedOptions.to),
-                'elemMax'
-            );
-            this.toggleMinMaxHidden(this.calcTop(this.checkedOptions.to), 'elemMin');
-        } else {
-            this.toggleMinMaxHidden(
-                this.calcLeft(this.checkedOptions.max) - this.calcLeft(this.checkedOptions.to),
-                'elemMax'
-            );
-            this.toggleMinMaxHidden(this.calcLeft(this.checkedOptions.to), 'elemMin');
-        }
+        const max = this.checkedOptions.max;
+        const from = this.checkedOptions.from;
+        const to = this.checkedOptions.to;
+        const isVertical = this.checkedOptions.vertical;
+        const posFrom = this.calcPosition(from);
+        const posTo = this.calcPosition(to);
+        const posMax = this.calcPosition(max);
+        
+        this.toggleMinMaxHidden(posMax - posTo,'elemMax');
+        this.toggleMinMaxHidden(posTo, 'elemMin');
 
-        this.dot.valueSecond.text(this.checkedOptions.to);
-        this.dot.valueFirst.text(this.checkedOptions.from);
+        this.dot.valueSecond.text(to);
+        this.dot.valueFirst.text(from);
 
         if (this.checkedOptions.double) {
-            if (this.checkedOptions.vertical) {
-                if ((this.calcTop(this.checkedOptions.to) - this.calcTop(this.checkedOptions.from)) < 40) {
-                    this.dot.valueFirst
-                        .addClass('hidden')
-                        .removeClass('shown');
-                    this.dot.valueSecond.text(`${this.checkedOptions.from} - ${this.checkedOptions.to}`);
-                } else {
-                    this.dot.valueFirst.removeClass('hidden');
-                }
-                this.toggleMinMaxHidden(this.calcTop(this.checkedOptions.from), 'elemMin');
+            if ((posTo - posFrom) < 40) {
+                this.dot.valueFirst
+                    .addClass('hidden')
+                    .removeClass('shown');
+                this.dot.valueSecond.text(`${from} - ${to}`);
+                if (!isVertical) this.dot.valueSecond.css({ left: `calc(50% - ${(posTo - posFrom) / 2}px)` });
             } else {
-                if ((this.calcLeft(this.checkedOptions.to) - this.calcLeft(this.checkedOptions.from)) < 40) {
-                    this.dot.valueFirst
-                        .addClass('hidden')
-                        .removeClass('shown');
-                    this.dot.valueSecond
-                        .text(`${this.checkedOptions.from} - ${this.checkedOptions.to}`)
-                        .css('left', `calc(50% - ${
-                            (this.calcLeft(this.checkedOptions.to) - this.calcLeft(this.checkedOptions.from)) / 2
-                        }px)`);
-                } else {
-                    this.dot.valueFirst.removeClass('hidden');
-                    this.dot.valueSecond.css('left', '50%');
-                }
-                this.toggleMinMaxHidden(this.calcLeft(this.checkedOptions.from), 'elemMin');
+                this.dot.valueFirst.removeClass('hidden');
+                if (!isVertical) this.dot.valueSecond.css('left', '50%');
             }
+            this.toggleMinMaxHidden(posFrom, 'elemMin');
         }
     };
 
@@ -220,23 +199,23 @@ class View {
         this.bar.filler.css({
             top: `${
                 isVertical
-                    ? this.calcTop(this.checkedOptions.from) + (dotWidth / 2)
+                    ? this.calcPosition(this.checkedOptions.from) + (dotWidth / 2)
                     : 0
             }px`,
             left: `${
                 isVertical
                     ? 0
-                    : this.calcLeft(this.checkedOptions.from) + (dotWidth / 2)
+                    : this.calcPosition(this.checkedOptions.from) + (dotWidth / 2)
             }px`,
             height: `${
                 isVertical
-                    ? this.calcTop(this.checkedOptions.to) - this.calcTop(this.checkedOptions.from)
+                    ? this.calcPosition(this.checkedOptions.to) - this.calcPosition(this.checkedOptions.from)
                     : 20
             }px`,
             width: `${
                 isVertical
                     ? 20
-                    : this.calcLeft(this.checkedOptions.to) - this.calcLeft(this.checkedOptions.from)
+                    : this.calcPosition(this.checkedOptions.to) - this.calcPosition(this.checkedOptions.from)
             }px`
         });
     };
@@ -263,25 +242,18 @@ class View {
             * (this.checkedOptions.max - this.checkedOptions.min)
             + this.checkedOptions.min) / this.checkedOptions.step
         ) * this.checkedOptions.step;
-    }
+    };
 
-    private calcLeft(value: number): number {
-        const sliderWidth = this.slider.elem.outerWidth() as number;
-        const dotWidth = this.dot.elemSecond.outerWidth() as number;
-        return (
-            (value - this.checkedOptions.min)
-            / (this.checkedOptions.max - this.checkedOptions.min)
-        ) * sliderWidth - (dotWidth / 2);
-    }
-
-    private calcTop(value: number): number {
+    private calcPosition = (value: number): number => {
         const sliderHeight = this.slider.elem.outerHeight() as number;
+        const sliderWidth = this.slider.elem.outerWidth() as number
+        const sliderProp = this.checkedOptions.vertical ? sliderHeight : sliderWidth;
         const dotWidth = this.dot.elemSecond.outerWidth() as number;
         return (
             (value - this.checkedOptions.min)
             / (this.checkedOptions.max - this.checkedOptions.min)
-        ) * sliderHeight - (dotWidth / 2);
-    }
+        ) * sliderProp - (dotWidth / 2);
+    };
 }
 
 export { View };

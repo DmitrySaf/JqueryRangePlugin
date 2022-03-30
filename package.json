@@ -5,7 +5,9 @@
   "main": "index.js",
   "jest": {
     "verbose": true,
-    "setupFiles": ["./setup-jest.js"]
+    "setupFiles": [
+      "./setup-jest.js"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",

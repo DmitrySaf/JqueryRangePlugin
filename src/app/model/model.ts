@@ -4,11 +4,11 @@ import { IOptions, defaultOptions, Coords } from '../options';
 class Model {
     public updateModelOptionsObserver: Event;
 
+    public correctOptions: IOptions;
+
     private staticOptions: Coords;
 
     private optionsSec: IOptions;
-
-    public correctOptions: IOptions;
 
     get options(): IOptions { return this.correctOptions; }
 
@@ -54,23 +54,13 @@ class Model {
 
         // Change values overriding each other
         if (confirmedOptions.double) {
-            confirmedOptions.from = (checkingOptions.from < confirmedOptions.min)
-                ? confirmedOptions.min
-                : confirmedOptions.from;
-
-            confirmedOptions.from = (checkingOptions.from > this.staticOptions.to)
-                ? this.staticOptions.to
-                : confirmedOptions.from;
+            if (checkingOptions.from < confirmedOptions.min) confirmedOptions.from = confirmedOptions.min;
+            if (checkingOptions.from > this.staticOptions.to) confirmedOptions.from = this.staticOptions.to;
         } else {
             confirmedOptions.from = confirmedOptions.min;
         }
-        confirmedOptions.to = (checkingOptions.to > confirmedOptions.max)
-            ? confirmedOptions.max
-            : confirmedOptions.to;
-
-        confirmedOptions.to = (checkingOptions.to < this.staticOptions.from)
-            ? this.staticOptions.from
-            : confirmedOptions.to;
+        if (checkingOptions.to > confirmedOptions.max) confirmedOptions.to = confirmedOptions.max;
+        if (checkingOptions.to < this.staticOptions.from) confirmedOptions.to = this.staticOptions.from;
 
         return confirmedOptions;
     };
