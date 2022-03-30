@@ -9,20 +9,14 @@ const recievedOptions = {
     from: 5000,
     to: 6000,
     step: 100
-}
-
-const model = new Model(recievedOptions);
-
-beforeAll(() => {
-    jest.spyOn(model, 'updateModelOptions');
-    jest.spyOn(model.updateModelOptionsObserver, 'notify');
-})
+};
 
 describe('Model', () => {
     it('changes value types where needed', () => {
         const options = $.extend(recievedOptions, { min: '123', vertical: 'asda' });
         const model = new Model(options);
-        //return options to normal types
+
+        // return options to normal types
         $.extend(recievedOptions, { min: 2000, vertical: true });
 
         expect(model.options.min).toEqual(defaultOptions.min);
@@ -94,10 +88,13 @@ describe('Model', () => {
     });
 
     it('triggers the "notify" function', () => {
-        //sending updated options
-        const staticExample = { from: 5000, to: 6000 }
+        const model = new Model({ ...recievedOptions });
+        jest.spyOn(model, 'updateModelOptions');
+        jest.spyOn(model.updateModelOptionsObserver, 'notify');
+
+        // sending updated options
+        const staticExample = { from: 5000, to: 6000 };
         model.updateModelOptions(recievedOptions, staticExample);
         expect(model.updateModelOptionsObserver.notify).toHaveBeenCalled();
-    })
-
+    });
 });

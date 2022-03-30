@@ -10,12 +10,12 @@ const recievedOptions = {
     from: 5000,
     to: 6000,
     step: 100
-}
+};
 
-const staticExample = {from: 5000, to: 6000}
+const staticExample = { from: 5000, to: 6000 };
 
 const model = new Model(recievedOptions);
-const view = new View($('#range'), recievedOptions)
+const view = new View($('#range'), recievedOptions);
 const presenter = new Presenter(view, model);
 
 beforeAll(() => {
@@ -36,5 +36,5 @@ describe('Controller', () => {
     it('presenters function "updateModelOptions" triggers the "notify" function', () => {
         presenter.updateModelOptions(view.currentOptions, staticExample);
         expect(model.updateModelOptionsObserver.notify).toHaveBeenCalled();
-    })
+    });
 });

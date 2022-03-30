@@ -164,15 +164,15 @@ class View {
     };
 
     private comfortableValueDisplay = () => {
-        const max = this.checkedOptions.max;
-        const from = this.checkedOptions.from;
-        const to = this.checkedOptions.to;
+        const { max } = this.checkedOptions;
+        const { from } = this.checkedOptions;
+        const { to } = this.checkedOptions;
         const isVertical = this.checkedOptions.vertical;
         const posFrom = this.calcPosition(from);
         const posTo = this.calcPosition(to);
         const posMax = this.calcPosition(max);
 
-        this.toggleMinMaxHidden(posMax - posTo,'elemMax');
+        this.toggleMinMaxHidden(posMax - posTo, 'elemMax');
         this.toggleMinMaxHidden(posTo, 'elemMin');
 
         this.dot.valueSecond.text(to);
@@ -184,9 +184,9 @@ class View {
                     .addClass('hidden')
                     .removeClass('shown');
                 this.dot.valueSecond.text(`${from} - ${to}`);
-                if (!isVertical) this.dot.valueSecond.css({ 
-                    left: `calc(50% - ${(posTo - posFrom) / 2}px)`
-                });
+                if (!isVertical) {
+                    this.dot.valueSecond.css({ left: `calc(50% - ${(posTo - posFrom) / 2}px)` });
+                }
             } else {
                 this.dot.valueFirst.removeClass('hidden');
                 if (!isVertical) this.dot.valueSecond.css('left', '50%');
@@ -243,7 +243,7 @@ class View {
 
     private calcPosition = (value: number): number => {
         const sliderHeight = this.slider.elem.outerHeight() as number;
-        const sliderWidth = this.slider.elem.outerWidth() as number
+        const sliderWidth = this.slider.elem.outerWidth() as number;
         const sliderProp = this.checkedOptions.vertical ? sliderHeight : sliderWidth;
         const dotWidth = this.dot.elemSecond.outerWidth() as number;
         return (

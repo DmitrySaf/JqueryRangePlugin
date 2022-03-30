@@ -1,13 +1,7 @@
-//import { View } from '../app/view/view';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { View } from '../app/view/view';
 
-beforeAll(() => {
-/*     jest.spyOn(viewT, 'init');
-    jest.spyOn(viewT, 'createSlider');
-    jest.spyOn(viewT, 'render');
-    jest.spyOn(viewT, 'addEventListeners'); */
-});
-
-/* const recievedOptions = {
+const recievedOptions = {
     min: 2000,
     max: 11000,
     vertical: false,
@@ -15,16 +9,16 @@ beforeAll(() => {
     from: 5000,
     to: 6000,
     step: 100
-}
+};
 
 describe('View', () => {
     beforeEach(() => {
-        $('<input/>').attr( {id: 'range'} ).appendTo($('body'));
-    })
+        $('<input/>').attr({ id: 'range' }).appendTo($('body'));
+    });
 
     afterEach(() => {
         $('body').empty();
-    })
+    });
 
     it('creates a slider above the input', () => {
         const input = $('input[id="range"]');
@@ -55,7 +49,7 @@ describe('View', () => {
 
     it('adds class "shown" if option "double" is true', () => {
         const input = $('input[id="range"]');
-        const options = { ...recievedOptions, double: true } 
+        const options = { ...recievedOptions, double: true };
         const view = new View(input, options);
         const slider = input.prev();
 
@@ -64,7 +58,7 @@ describe('View', () => {
 
     it('adds verical classes if options "vertical" is true', () => {
         const input = $('input[id="range"]');
-        const options = { ...recievedOptions, vertical: true } 
+        const options = { ...recievedOptions, vertical: true };
         const view = new View(input, options);
         const slider = input.prev();
 
@@ -72,17 +66,11 @@ describe('View', () => {
         expect(slider.find('.slider__min').hasClass('slider__min_vertical')).toBeTruthy();
     });
 
-    it('checks the coords into value calcuation', () => {
-        const input = $('input[id="range"]');
-        const coordsExample = { pageX: 600, pageY: 400 };
-        const view = new View(input, recievedOptions);
-
-        //expect(view.getValueOfDot(coordsExample)).toEqual
-    });
-
     it('toggles the min-max elements hide class depends on the value', () => {
         const input = $('input[id="range"]');
-        const optoinsExample = { ...recievedOptions, min: 0, from: 1, double: true };
+        const optoinsExample = {
+            ...recievedOptions, min: 0, from: 1, double: true
+        };
         const view = new View(input, optoinsExample);
         const slider = input.prev();
 
@@ -91,12 +79,38 @@ describe('View', () => {
 
     it('shows correct current values above the dot', () => {
         const input = $('input[id="range"]');
-        const optoinsExample = { ...recievedOptions, from: 2000, to: 11000, double: true };
-        const view = new View(input, optoinsExample);
+        const view = new View(input, { ...recievedOptions });
         const slider = input.prev();
 
-        expect(+slider.find('.slider__dot_first_value').text()).toEqual(view.currentOptions.from);
-        expect(slider.find('.slider__dot_second_value').text()).toEqual(view.currentOptions.to);
-    })
+        expect(+slider.find('.slider__dot_first_value').text()).toBe(view.checkedOptions.from);
+    });
 
-}); */
+    it('static options are equal to checked "from" and "to" options', () => {
+        const input = $('input[id="range"]');
+        const view = new View(input, { ...recievedOptions });
+
+        expect(view.modelStatic.from).toEqual(view.checkedOptions.from);
+        expect(view.modelStatic.to).toEqual(view.checkedOptions.to);
+    });
+
+    it('updateViewOptions method changes all options', () => {
+        const input = $('input[id="range"]');
+        const view = new View(input, { ...recievedOptions });
+        jest.spyOn(view, 'updateViewOptions');
+        const optoinsExample = { ...recievedOptions, from: 4000, to: 6000 };
+        const modelStaticExample = { from: 5000, to: 6000 };
+
+        // check for equality before change
+        expect(view.checkedOptions).toEqual({ ...recievedOptions });
+        expect(view.currentOptions).toEqual({ ...recievedOptions });
+        expect(view.modelStatic).toEqual({ from: recievedOptions.from, to: recievedOptions.to });
+
+        // new data uploaded
+        view.updateViewOptions(optoinsExample, modelStaticExample);
+
+        // check for equality after new data
+        expect(view.checkedOptions).toEqual(optoinsExample);
+        expect(view.currentOptions).toEqual(optoinsExample);
+        expect(view.modelStatic).toEqual(modelStaticExample);
+    });
+});
