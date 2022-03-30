@@ -171,7 +171,7 @@ class View {
         const posFrom = this.calcPosition(from);
         const posTo = this.calcPosition(to);
         const posMax = this.calcPosition(max);
-        
+
         this.toggleMinMaxHidden(posMax - posTo,'elemMax');
         this.toggleMinMaxHidden(posTo, 'elemMin');
 
@@ -184,7 +184,9 @@ class View {
                     .addClass('hidden')
                     .removeClass('shown');
                 this.dot.valueSecond.text(`${from} - ${to}`);
-                if (!isVertical) this.dot.valueSecond.css({ left: `calc(50% - ${(posTo - posFrom) / 2}px)` });
+                if (!isVertical) this.dot.valueSecond.css({ 
+                    left: `calc(50% - ${(posTo - posFrom) / 2}px)`
+                });
             } else {
                 this.dot.valueFirst.removeClass('hidden');
                 if (!isVertical) this.dot.valueSecond.css('left', '50%');
@@ -196,26 +198,21 @@ class View {
     private setFillerStyles = () => {
         const dotWidth = this.dot.elemSecond.outerWidth() as number;
         const isVertical = this.checkedOptions.vertical;
+        const posFrom = this.calcPosition(this.checkedOptions.from);
+        const posTo = this.calcPosition(this.checkedOptions.to);
+
         this.bar.filler.css({
             top: `${
-                isVertical
-                    ? this.calcPosition(this.checkedOptions.from) + (dotWidth / 2)
-                    : 0
+                isVertical ? posFrom + (dotWidth / 2) : 0
             }px`,
             left: `${
-                isVertical
-                    ? 0
-                    : this.calcPosition(this.checkedOptions.from) + (dotWidth / 2)
+                isVertical ? 0 : posFrom + (dotWidth / 2)
             }px`,
             height: `${
-                isVertical
-                    ? this.calcPosition(this.checkedOptions.to) - this.calcPosition(this.checkedOptions.from)
-                    : 20
+                isVertical ? (posTo - posFrom) : 20
             }px`,
             width: `${
-                isVertical
-                    ? 20
-                    : this.calcPosition(this.checkedOptions.to) - this.calcPosition(this.checkedOptions.from)
+                isVertical ? 20 : (posTo - posFrom)
             }px`
         });
     };
@@ -233,7 +230,7 @@ class View {
             : this.minmax[elementName].removeClass('hidden')
     );
 
-    private calcValue(cursorCoords : { x: number, y: number }): number {
+    private calcValue = (cursorCoords : { x: number, y: number }): number => {
         const coordsToSliderRatio: number = this.checkedOptions.vertical
             ? cursorCoords.y / (this.slider.elem.outerHeight() as number)
             : cursorCoords.x / (this.slider.elem.outerWidth() as number);
