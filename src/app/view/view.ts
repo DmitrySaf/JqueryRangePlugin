@@ -3,6 +3,7 @@ import { Bar } from './bar';
 import { Dot } from './dot';
 import { Slider } from './slider';
 import { Minmax } from './minmax';
+import { Scale } from './scale';
 import { Event } from '../event';
 
 interface MouseEvent {
@@ -33,6 +34,8 @@ class View {
 
     private input: JQuery<HTMLElement>;
 
+    private scale: Scale;
+
     constructor(input: JQuery<HTMLElement>, options: IOptions) {
         this.input = input;
         this.checkedOptions = options;
@@ -42,6 +45,7 @@ class View {
         this.bar = new Bar();
         this.dot = new Dot();
         this.minmax = new Minmax();
+        this.scale = new Scale();
         this.modelStatic = { from: this.checkedOptions.from, to: this.checkedOptions.to };
         this.init();
     }
@@ -65,8 +69,9 @@ class View {
         this.input.addClass('hidden');
         this.slider.elem.append(
             this.bar.elem,
-            this.minmax.elemMin,
             this.minmax.elemMax,
+            this.minmax.elemMin,
+            this.scale.container,
             this.dot.elemFirst,
             this.dot.elemSecond
         );
@@ -75,16 +80,24 @@ class View {
     };
 
     private render = () => {
-        if (this.checkedOptions.vertical) this.addVerticalClasses();
+        const { 
+            min,
+            max,
+            vertical,
+            double
+        } = this.checkedOptions
+        if (vertical) this.addVerticalClasses();
 
-        if (this.checkedOptions.double) {
+        if (double) {
             this.dot.elemFirst.addClass('shown');
             this.moveAt(this.dot.elemFirst[0], 'from');
         }
 
+        if (this.checkedOptions.scale) this.comfortableScaleDisplay();
+
         this.setFillerStyles();
-        this.minmax.elemMax.text(this.checkedOptions.max);
-        this.minmax.elemMin.text(this.checkedOptions.min);
+        this.minmax.elemMax.text(max);
+        this.minmax.elemMin.text(min);
 
         this.moveAt(this.dot.elemSecond[0], 'to');
         this.comfortableValueDisplay();
@@ -93,6 +106,7 @@ class View {
     private addEventListeners = () => {
         this.dots.on('mousedown', this.onMouseDown);
         this.bar.elem.on('click', this.onMouseClick);
+        this.scale.container.children().on('click', this.onScaleClick);
     };
 
     private onMouseDown = (event: MouseEvent) => {
@@ -142,6 +156,19 @@ class View {
         this.modelStatic.to = this.checkedOptions.to;
     };
 
+    private onScaleClick = (event: MouseEvent) => {
+/*         const target = event.currentTarget;
+        const width = target.offsetWidth / 2;
+        const height = target.offsetHeight / 2; */
+        const coords = { x: event.currentTarget.offsetLeft + event.currentTarget.offsetWidth / 2, y: event.currentTarget.offsetTop}
+        const val = this.calcValue(coords);
+
+        this.updateCurrentOptions(val, "to")
+        this.moveAt(this.dots[1], "to");
+        this.comfortableValueDisplay();
+        this.setFillerStyles();
+    };
+
     private getValueOfDot = (event: { pageX: number, pageY: number }): number => {
         const coords = {
             x: event.pageX - this.slider.elem.position().left,
@@ -164,9 +191,11 @@ class View {
     };
 
     private comfortableValueDisplay = () => {
-        const { max } = this.checkedOptions;
-        const { from } = this.checkedOptions;
-        const { to } = this.checkedOptions;
+        const { 
+            max,
+            from, 
+            to 
+        } = this.checkedOptions;
         const isVertical = this.checkedOptions.vertical;
         const posFrom = this.calcPosition(from);
         const posTo = this.calcPosition(to);
@@ -217,6 +246,44 @@ class View {
         });
     };
 
+    private comfortableScaleDisplay = () => {
+        const frequency = this.checkedOptions.scaleFrequency;
+        const {
+            min,
+            max
+        } = this.checkedOptions;
+
+        this.scale.container.append(this.scale.createElemsArray(frequency, min, max));
+
+        const scaleElemsArray = this.scale.container.find('div');
+
+        if (this.checkedOptions.scaleFrequency > 1) {
+            for (let i = 0; i < frequency; i++) {
+                scaleElemsArray.filter(`:nth-child(${ i + 1 })`).css({
+                    left: `${
+                        this.calcPosition( 
+                            Math.round(min + i * ((max - min) / (frequency - 1))) * this.checkedOptions.step, 
+                            scaleElemsArray.filter(`:nth-child(${ i + 1 })`)
+                        )
+                    }px`
+                });
+            };
+        } else {
+            scaleElemsArray[0].style.left = `calc(50% - ${scaleElemsArray[0].clientWidth / 2}px)`;
+        }
+        console.log(this.checkedOptions.scaleFrequency)
+        let sum = 0;
+        for (let i = 0; i < scaleElemsArray.length; i++) {
+            sum += scaleElemsArray[i].offsetWidth;
+        };
+        const sliderWidth = this.slider.elem.outerWidth() as number;
+        if (sum > sliderWidth) {
+            this.currentOptions.scaleFrequency -= 1;
+            console.log(this.currentOptions.scaleFrequency);
+        }
+        console.log(this.checkedOptions.scaleFrequency)
+    }
+
     private addVerticalClasses = () => {
         this.slider.elem.addClass('slider_vertical');
         this.bar.elem.addClass('slider__bar_vertical');
@@ -241,11 +308,11 @@ class View {
         ) * this.checkedOptions.step;
     };
 
-    private calcPosition = (value: number): number => {
+    private calcPosition = (value: number, target: JQuery<HTMLElement> = this.dot.elemSecond): number => {
         const sliderHeight = this.slider.elem.outerHeight() as number;
         const sliderWidth = this.slider.elem.outerWidth() as number;
         const sliderProp = this.checkedOptions.vertical ? sliderHeight : sliderWidth;
-        const dotWidth = this.dot.elemSecond.outerWidth() as number;
+        const dotWidth = target.outerWidth() as number;
         return (
             (value - this.checkedOptions.min)
             / (this.checkedOptions.max - this.checkedOptions.min)

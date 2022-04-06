@@ -32,9 +32,10 @@ class Model {
 
     private optionsCorrection = (checkingOptions: IOptions) : IOptions => {
         const confirmedOptions = { ...checkingOptions };
+
         // Check for inappropriate values
         Object.keys(checkingOptions).forEach((key) => {
-            if ((key === 'double') || (key === 'vertical')) {
+            if ((key === 'double') || (key === 'vertical') || (key === 'scale')) {
                 if (typeof (checkingOptions[key]) !== 'boolean') {
                     confirmedOptions[key] = defaultOptions[key];
                 }
@@ -43,12 +44,14 @@ class Model {
             }
         });
 
-        // Change invalid step and minmax
-        confirmedOptions.step = (checkingOptions.step < 1) ? 1 : checkingOptions.step;
+        // Change invalid property value
+        if (checkingOptions.step < 1) confirmedOptions.step = 1;
         if (checkingOptions.min >= checkingOptions.max) {
             confirmedOptions.max = checkingOptions.min + 1;
             confirmedOptions.step = 1;
         }
+        if (checkingOptions.scaleFrequency < 1) confirmedOptions.scaleFrequency = 1;
+        if (checkingOptions.scaleFrequency > (confirmedOptions.max - confirmedOptions.min + 1)) confirmedOptions.scaleFrequency = confirmedOptions.max - confirmedOptions.min + 1;
 
         this.correctStaticOptions(confirmedOptions.min, confirmedOptions.max);
 

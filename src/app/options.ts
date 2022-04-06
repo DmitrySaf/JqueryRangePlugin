@@ -5,7 +5,9 @@ const defaultOptions: IOptions = {
     to: 7000,
     step: 1,
     double: false,
-    vertical: false
+    vertical: false,
+    scale: false,
+    scaleFrequency: 5
 };
 
 interface IOptions {
@@ -16,7 +18,9 @@ interface IOptions {
     to: number,
     step: number,
     vertical: boolean,
-    double: boolean
+    double: boolean,
+    scale: boolean,
+    scaleFrequency: number
 }
 
 interface Coords {

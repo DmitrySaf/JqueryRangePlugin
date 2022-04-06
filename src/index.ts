@@ -22,13 +22,15 @@ import { IOptions } from './app/options';
 }(jQuery));
 
 $('#range').slider({
-    min: -1000,
-    max: 1000,
+    min: 1,
+    max: 20000,
     vertical: false,
-    double: true,
+    double: false,
     from: 300,
     to: 700,
-    step: 1
+    step: 1,
+    scale: true,
+    scaleFrequency: 20
 });
 
 /* $('#test').slider({

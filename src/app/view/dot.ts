@@ -1,11 +1,11 @@
 class Dot {
-    elemFirst: JQuery<HTMLElement>;
+    public elemFirst: JQuery<HTMLElement>;
 
-    valueFirst: JQuery<HTMLElement>;
+    public valueFirst: JQuery<HTMLElement>;
 
-    elemSecond: JQuery<HTMLElement>;
+    public elemSecond: JQuery<HTMLElement>;
 
-    valueSecond: JQuery<HTMLElement>;
+    public valueSecond: JQuery<HTMLElement>;
 
     constructor() {
         this.elemFirst = $(`<div class="slider__dot_wrapper_first js-slider__dot_wrapper_first">

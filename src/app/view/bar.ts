@@ -1,7 +1,7 @@
 class Bar {
-    elem: JQuery<HTMLElement>;
+    public elem: JQuery<HTMLElement>;
 
-    filler: JQuery<HTMLElement>;
+    public filler: JQuery<HTMLElement>;
 
     constructor() {
         this.elem = $('<div class="slider__bar js-slider__bar"></div>');

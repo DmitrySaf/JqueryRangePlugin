@@ -1,7 +1,7 @@
 class Minmax {
-    elemMax: JQuery<HTMLElement>;
+    public elemMax: JQuery<HTMLElement>;
 
-    elemMin: JQuery<HTMLElement>;
+    public elemMin: JQuery<HTMLElement>;
 
     constructor() {
         this.elemMin = $('<div class="slider__min js-slider__min"></div>');

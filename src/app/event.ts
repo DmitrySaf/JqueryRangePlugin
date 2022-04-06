@@ -1,12 +1,12 @@
 class Event {
-    observers : (() => void)[] = [];
+    public observers : (() => void)[] = [];
 
-    attach(listener: () => void): void {
+    public attach(listener: () => void): void {
         if (typeof listener !== 'function') return;
         this.observers.push(listener);
     }
 
-    notify(): void {
+    public notify(): void {
         for (let i = 0; i < this.observers.length; i += 1) {
             this.observers[i]();
         }
