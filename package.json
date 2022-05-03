@@ -1,5 +1,5 @@
 {
-  "name": "toxin",
+  "name": "range",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -66,12 +66,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DmitrySaf/MetaLampToxin.git"
+    "url": "git+https://github.com/DmitrySaf/JqueryRangePlugin.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/DmitrySaf/MetaLampToxin/issues"
+    "url": "https://github.com/DmitrySaf/JqueryRangePlugin/issues"
   },
-  "homepage": "https://github.com/DmitrySaf/MetaLampToxin#readme"
+  "homepage": "https://github.com/DmitrySaf/JqueryRangePlugin#readme"
 }

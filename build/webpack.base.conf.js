@@ -1,9 +1,6 @@
 const path = require('path'),
-	  fs = require('fs'),
 	  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
-	  CopyWebpackPlugin = require('copy-webpack-plugin'),
 	  HtmlWebpackPlugin = require('html-webpack-plugin'),
-	  FaviconsWebpackPlugin = require('favicons-webpack-plugin'),
 	  webpack = require('webpack');
 
 const PAGE_LIVE = 'index.html';
@@ -14,9 +11,6 @@ const PATHS = {
 	assets: 'assets/',
 	pageTest: path.join(__dirname, `../dist/${PAGE_LIVE}`)
 };
-
-/* const PAGES_DIR = `${PATHS.src}/pug/pages/`,
-	  PAGES = fs.readdirSync(`${PAGES_DIR}`); */
 
 module.exports = {
 	externals: {
@@ -35,11 +29,6 @@ module.exports = {
 	target: (process.env.NODE_ENV === "development") ? "web" : "browserslist",
 	module: {
 		rules: [
-/* 			{
-				//Pug
-			test: /\.pug$/,
-			loader: "pug-loader"
-			}, */
 			{
 				//JavaScript
 				test: /\.js$/,
@@ -115,15 +104,6 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: `${PATHS.assets}css/[name].css`
 		}),
-/* 		new FaviconsWebpackPlugin({
-			logo: './src/assets/icons/logo.svg',
-			outputPath: './assets/favicon/',
-			prefix: 'assets/favicon/',
-		}), */
-/* 		...PAGES.map(filename => new HtmlWebpackPlugin({
-			template: `${PAGES_DIR}/${filename}/${filename}.pug`,
-			filename: `${filename}.html`
-		})), */
 		new HtmlWebpackPlugin({
 			template: 'src/index.html',
 			scriptLoading: 'blocking'

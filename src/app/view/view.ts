@@ -277,9 +277,11 @@ class View {
             sum += scaleElemsArray[i].offsetWidth;
         };
         const sliderWidth = this.slider.elem.outerWidth() as number;
+
         if (sum > sliderWidth) {
+            this.scale.removeElem(scaleElemsArray)
             this.currentOptions.scaleFrequency -= 1;
-            console.log(this.currentOptions.scaleFrequency);
+            //this.comfortableScaleDisplay();
         }
         console.log(this.checkedOptions.scaleFrequency)
     }

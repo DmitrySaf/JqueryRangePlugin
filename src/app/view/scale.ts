@@ -29,9 +29,7 @@ class Scale {
         return array;
     };
 
-    public removeElem = () => {
-
-    }
+    public removeElem = (array: JQuery<HTMLDivElement>) => array.remove();
 }
 
 export { Scale };
