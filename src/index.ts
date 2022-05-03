@@ -24,7 +24,7 @@ import { Panel } from './panel/panel';
 
 $('#range').slider({
     min: 1,
-    max: 2000,
+    max: 4000,
     vertical: false,
     double: false,
     from: 300,

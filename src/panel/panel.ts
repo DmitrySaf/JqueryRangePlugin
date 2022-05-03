@@ -1,7 +1,7 @@
 import { Model } from '../app/model/model';
 //import { Presenter } from '../app/presenter/presenter';
 import { View } from '../app/view/view';
-import { IOptions } from '../app/options';
+//import { IOptions } from '../app/options';
 
 class Panel {
     model: Model;
@@ -10,7 +10,7 @@ class Panel {
 
     $elem: JQuery<HTMLElement>;
 
-    options: IOptions;
+    //options: IOptions;
 
     constructor(){
         this.$elem = $(`            
@@ -28,16 +28,16 @@ class Panel {
                 <input type="number" class="panel__input_step js-panel__input_step">
             </div>
         </div>`);
-        this.options = { ...this.view.checkedOptions };
+        //this.options = { ...this.view.checkedOptions };
         this.onChange();
     }
 
     onChange = () => {
-        this.$elem.find('input.panel__input_min').on('change', () => {
+/*         this.$elem.find('input.panel__input_min').on('change', () => {
             const val = this.$elem.find('input.panel__input_min').val() as number;
             this.options.min = val;
             this.model.updateModelOptions(this.options, { from: this.options.from, to: this.options.to });
-        })
+        }) */
     }
 }
 

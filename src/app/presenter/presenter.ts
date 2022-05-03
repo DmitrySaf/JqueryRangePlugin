@@ -24,7 +24,6 @@ class Presenter {
 
     public updateModelOptions = (viewOptions: IOptions, modelStatic: { from: number, to: number }): void => {
         this.model.updateModelOptions(viewOptions, modelStatic);
-        console.log(this.view.checkedOptions.scaleFrequency)
     };
 
     public updateViewOptions = (modelOptions: IOptions, modelStatic: { from: number, to: number }): void => {

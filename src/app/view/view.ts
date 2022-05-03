@@ -157,7 +157,15 @@ class View {
     };
 
     private onScaleClick = (event: MouseEvent) => {
-        const coords = { x: event.currentTarget.offsetLeft + event.currentTarget.offsetWidth / 2, y: event.currentTarget.offsetTop}
+        const coords = this.checkedOptions.vertical 
+            ? {
+                x: event.currentTarget.offsetTop + event.currentTarget.offsetHeight / 2, 
+                y: event.currentTarget.offsetLeft
+            }
+            : { 
+                x: event.currentTarget.offsetLeft + event.currentTarget.offsetWidth / 2, 
+                y: event.currentTarget.offsetTop
+            }
         const val = this.calcValue(coords);
 
         this.updateCurrentOptions(val, "to")
@@ -247,44 +255,67 @@ class View {
         const frequency = this.checkedOptions.scaleFrequency;
         const {
             min,
-            max
+            max,
+            step,
+            vertical
         } = this.checkedOptions;
 
-        this.scale.$container.append(this.scale.createElemsArray(frequency, min, max));
+        this.scale.$container.append(this.scale.createElemsArray(frequency, min, max, step));
 
         const scaleElemsArray = this.scale.$container.find('div');
-
-        if (this.checkedOptions.scaleFrequency > 1) {
-            for (let i = 0; i < frequency; i++) {
-                scaleElemsArray.filter(`:nth-child(${ i + 1 })`).css({
-                    left: `${
-                        this.calcPosition( 
-                            Math.round(min + i * ((max - min) / (frequency - 1))) * this.checkedOptions.step, 
-                            scaleElemsArray.filter(`:nth-child(${ i + 1 })`)
-                        )
-                    }px`
-                });
+        const scaleElemsDisplay = (option: 'top' | 'left') => {
+            scaleElemsArray.filter(`:nth-child(1)`).css(
+                option, 
+                this.calcPosition(min, scaleElemsArray.filter(`:nth-child(1)`))
+            );
+            for (let i = 1; i < (frequency - 1); i++) {
+                scaleElemsArray.filter(`:nth-child(${ i + 1 })`).css(
+                    option,
+                    this.calcPosition(
+                        Math.round((min + i * ( (max - min) / (frequency - 1) )) / step) * step,
+                        scaleElemsArray.filter(`:nth-child(${ i + 1 })`)
+                    )
+                );
             };
+            scaleElemsArray.filter(`:nth-child(${frequency})`).css(
+                option, 
+                this.calcPosition(max, scaleElemsArray.filter(`:nth-child(${frequency})`))
+            );
+        }
+
+        if (frequency > 1) {
+            vertical ? scaleElemsDisplay('top') : scaleElemsDisplay('left')
         } else {
-            scaleElemsArray[0].style.left = `calc(50% - ${scaleElemsArray[0].clientWidth / 2}px)`;
+            vertical 
+                ? scaleElemsArray[0].style.top = `calc(50% - ${scaleElemsArray[0].clientHeight / 2}px)`
+                : scaleElemsArray[0].style.left = `calc(50% - ${scaleElemsArray[0].clientWidth / 2}px)`
         }
     }
 
     private comfortableScaleDisplay = () => {
         this.appendScaleElements();
-        const scaleElemsArray = this.scale.$container.find('div');
-        let sum = 0;
-        const sliderWidth = this.slider.$elem.outerWidth() as number;
+        if (!this.checkedOptions.vertical) {
+            const scaleElemsArray = this.scale.$container.find('div');
+            let sum = 0;
+            const sliderWidth = this.slider.$elem.outerWidth() as number;
+    
+            for (let i = 0; i < scaleElemsArray.length; i++) {
+                sum += scaleElemsArray[i].offsetWidth;
+                if (sum > (sliderWidth - 100)) {
+                    this.scale.removeElem(scaleElemsArray)
+                    this.checkedOptions.scaleFrequency -= 1;
+                }
+            };
+            
+            this.appendScaleElements();
+            const test = this.scale.$container.find('div');
+            for (let i=0; i < (test.length - 1); i++) {
+                if (Math.abs(test[i].offsetLeft - test[i+1].offsetLeft) < 30) {
+                    $(test[i]).remove();
+                }
 
-        for (let i = 0; i < scaleElemsArray.length; i++) {
-            sum += scaleElemsArray[i].offsetWidth;
-            if (sum > (sliderWidth - 100)) {
-                this.scale.removeElem(scaleElemsArray)
-                this.checkedOptions.scaleFrequency -= 1;
             }
-        };
-        
-        this.appendScaleElements();
+        }
     }
 
     private addVerticalClasses = () => {
@@ -292,6 +323,7 @@ class View {
         this.bar.$elem.addClass('slider__bar_vertical');
         this.minmax.$elemMin.addClass('slider__min_vertical');
         this.minmax.$elemMax.addClass('slider__max_vertical');
+        this.scale.$container.addClass('slider__scale_container_vertical');
     };
 
     private toggleMinMaxHidden = (coords: number, elementName: '$elemMin' | '$elemMax') => (
@@ -315,7 +347,9 @@ class View {
         const sliderHeight = this.slider.$elem.outerHeight() as number;
         const sliderWidth = this.slider.$elem.outerWidth() as number;
         const sliderProp = this.checkedOptions.vertical ? sliderHeight : sliderWidth;
-        const dotWidth = target.outerWidth() as number;
+        const dotWidth = this.checkedOptions.vertical 
+            ? target.outerHeight() as number 
+            : target.outerWidth() as number;
         return (
             (value - this.checkedOptions.min)
             / (this.checkedOptions.max - this.checkedOptions.min)
