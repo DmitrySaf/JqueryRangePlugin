@@ -157,9 +157,6 @@ class View {
     };
 
     private onScaleClick = (event: MouseEvent) => {
-/*         const target = event.currentTarget;
-        const width = target.offsetWidth / 2;
-        const height = target.offsetHeight / 2; */
         const coords = { x: event.currentTarget.offsetLeft + event.currentTarget.offsetWidth / 2, y: event.currentTarget.offsetTop}
         const val = this.calcValue(coords);
 
@@ -246,7 +243,7 @@ class View {
         });
     };
 
-    private comfortableScaleDisplay = () => {
+    private appendScaleElements = () => {
         const frequency = this.checkedOptions.scaleFrequency;
         const {
             min,
@@ -271,19 +268,23 @@ class View {
         } else {
             scaleElemsArray[0].style.left = `calc(50% - ${scaleElemsArray[0].clientWidth / 2}px)`;
         }
-        console.log(this.checkedOptions.scaleFrequency)
+    }
+
+    private comfortableScaleDisplay = () => {
+        this.appendScaleElements();
+        const scaleElemsArray = this.scale.container.find('div');
         let sum = 0;
-        for (let i = 0; i < scaleElemsArray.length; i++) {
-            sum += scaleElemsArray[i].offsetWidth;
-        };
         const sliderWidth = this.slider.elem.outerWidth() as number;
 
-        if (sum > sliderWidth) {
-            this.scale.removeElem(scaleElemsArray)
-            this.currentOptions.scaleFrequency -= 1;
-            //this.comfortableScaleDisplay();
-        }
-        console.log(this.checkedOptions.scaleFrequency)
+        for (let i = 0; i < scaleElemsArray.length; i++) {
+            sum += scaleElemsArray[i].offsetWidth;
+            if (sum > (sliderWidth - 100)) {
+                this.scale.removeElem(scaleElemsArray)
+                this.checkedOptions.scaleFrequency -= 1;
+            }
+        };
+        
+        this.appendScaleElements();
     }
 
     private addVerticalClasses = () => {

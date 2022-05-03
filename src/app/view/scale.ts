@@ -26,6 +26,7 @@ class Scale {
                 }</div>
             `))
         }
+        
         return array;
     };
 

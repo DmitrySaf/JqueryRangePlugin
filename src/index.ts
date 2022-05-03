@@ -23,7 +23,7 @@ import { IOptions } from './app/options';
 
 $('#range').slider({
     min: 1,
-    max: 20000,
+    max: 2000,
     vertical: false,
     double: false,
     from: 300,
