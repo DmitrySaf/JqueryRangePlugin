@@ -2,6 +2,7 @@ import { Model } from './app/model/model';
 import { Presenter } from './app/presenter/presenter';
 import { View } from './app/view/view';
 import { IOptions } from './app/options';
+import { Panel } from './panel/panel';
 
 (function Declare($: JQueryStatic) {
     $.fn.slider = function Slider(options: IOptions) {
@@ -32,6 +33,10 @@ $('#range').slider({
     scale: true,
     scaleFrequency: 20
 });
+
+const panel = new Panel();
+
+$('#range').before(panel.$elem);
 
 /* $('#test').slider({
     max: 10000,

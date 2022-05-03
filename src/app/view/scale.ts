@@ -1,11 +1,11 @@
 class Scale {
-    public container: JQuery<HTMLElement>;
+    public $container: JQuery<HTMLElement>;
 
-    public elem: JQuery<HTMLElement>;
+    public $elem: JQuery<HTMLElement>;
 
     constructor() {
-        this.container = $('<div class="slider__scale_container js-slider__scale_container"></div>');
-        this.elem = $('<div class="slider__scale_elem js-slider__scale_elem"></div>');
+        this.$container = $('<div class="slider__scale_container js-slider__scale_container"></div>');
+        this.$elem = $('<div class="slider__scale_elem js-slider__scale_elem"></div>');
     }
 
     public createElemsArray = (frequency: number, min: number, max: number) => {
