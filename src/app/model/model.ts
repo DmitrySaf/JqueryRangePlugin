@@ -61,6 +61,7 @@ class Model {
             if (checkingOptions.from > this.staticOptions.to) confirmedOptions.from = this.staticOptions.to;
         } else {
             confirmedOptions.from = confirmedOptions.min;
+            this.staticOptions.from = confirmedOptions.min;
         }
         if (checkingOptions.to > confirmedOptions.max) confirmedOptions.to = confirmedOptions.max;
         if (checkingOptions.to < this.staticOptions.from) confirmedOptions.to = this.staticOptions.from;

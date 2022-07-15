@@ -24,6 +24,7 @@ class Scale {
                     }</div>
                 `));
             };
+            
             array.push($(`
                 <div class="slider__scale_elem js-slider__scale_elem">${
                     max
@@ -40,7 +41,7 @@ class Scale {
         return array;
     };
 
-    public removeElem = (array: JQuery<HTMLDivElement>) => array.remove();
+    public removeArray = (array: JQuery<HTMLElement>) => array.remove();
 }
 
 export { Scale };

@@ -23,15 +23,15 @@ import { Panel } from './panel/panel';
 }(jQuery));
 
 $('#range').slider({
-    min: 1,
+    min: 0,
     max: 4000,
-    vertical: false,
-    double: false,
+    vertical: true,
+    double: true,
     from: 300,
     to: 700,
     step: 1,
     scale: true,
-    scaleFrequency: 20
+    scaleFrequency: 9
 });
 
 const panel = new Panel();

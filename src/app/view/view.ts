@@ -157,14 +157,17 @@ class View {
     };
 
     private onScaleClick = (event: MouseEvent) => {
+        const { left, top } = $(event.currentTarget).position();
+        const elemWidth = $(event.currentTarget).width() as number;
+        const elemHeight = $(event.currentTarget).height() as number;
         const coords = this.checkedOptions.vertical 
             ? {
-                x: event.currentTarget.offsetTop + event.currentTarget.offsetHeight / 2, 
-                y: event.currentTarget.offsetLeft
+                x: left, 
+                y: top + (elemHeight / 2)
             }
             : { 
-                x: event.currentTarget.offsetLeft + event.currentTarget.offsetWidth / 2, 
-                y: event.currentTarget.offsetTop
+                x: left + (elemWidth / 2), 
+                y: top
             }
         const val = this.calcValue(coords);
 
@@ -295,25 +298,25 @@ class View {
     private comfortableScaleDisplay = () => {
         this.appendScaleElements();
         if (!this.checkedOptions.vertical) {
-            const scaleElemsArray = this.scale.$container.find('div');
+            const scaleElemsArray = this.scale.$container.children();
             let sum = 0;
             const sliderWidth = this.slider.$elem.outerWidth() as number;
-    
-            for (let i = 0; i < scaleElemsArray.length; i++) {
+
+            for (let i = 0; i < (scaleElemsArray.length - 1); i++) {
                 sum += scaleElemsArray[i].offsetWidth;
+                console.log(sum);
                 if (sum > (sliderWidth - 100)) {
-                    this.scale.removeElem(scaleElemsArray)
-                    this.checkedOptions.scaleFrequency -= 1;
+                    this.checkedOptions.scaleFrequency--;
                 }
             };
-            
+            this.scale.removeArray(scaleElemsArray);
             this.appendScaleElements();
-            const test = this.scale.$container.find('div');
-            for (let i=0; i < (test.length - 1); i++) {
+            for (let i = 0; i < (this.scale.$container.find('div').length - 1); i++) {
+                let test = this.scale.$container.find('div');
                 if (Math.abs(test[i].offsetLeft - test[i+1].offsetLeft) < 30) {
-                    $(test[i]).remove();
+                    test[i+1].remove();
+                    this.checkedOptions.scaleFrequency--;
                 }
-
             }
         }
     }
