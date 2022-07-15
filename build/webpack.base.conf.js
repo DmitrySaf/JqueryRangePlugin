@@ -105,7 +105,7 @@ module.exports = {
 			filename: `${PATHS.assets}css/[name].css`
 		}),
 		new HtmlWebpackPlugin({
-			template: 'src/index.html',
+			template: 'src/demo/index.html',
 			scriptLoading: 'blocking'
 		}),
 		new webpack.ProvidePlugin({

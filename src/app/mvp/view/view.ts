@@ -1,10 +1,10 @@
-import { IOptions, Coords } from '../options';
+import { IOptions, Coords } from '../../options';
 import { Bar } from './bar';
 import { Dot } from './dot';
 import { Slider } from './slider';
 import { Minmax } from './minmax';
 import { Scale } from './scale';
-import { Event } from '../event';
+import { Event } from '../../event';
 
 interface MouseEvent {
     pageX: number,

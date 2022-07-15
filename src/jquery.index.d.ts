@@ -1,6 +1,6 @@
-import { Model } from './app/model/model';
-import { Presenter } from './app/presenter/presenter';
-import { View } from './app/view/view';
+import { Model } from './app/mvp/model/model';
+import { Presenter } from './app/mvp/presenter/presenter';
+import { View } from './app/mvp/view/view';
 import { IOptions } from './app/options';
 
 interface Ex {

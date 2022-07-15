@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { View } from '../app/view/view';
+import { View } from '../mvp/view/view';
 
 const recievedOptions = {
     min: 2000,

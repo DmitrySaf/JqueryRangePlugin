@@ -1,8 +1,8 @@
-import { Model } from './app/model/model';
-import { Presenter } from './app/presenter/presenter';
-import { View } from './app/view/view';
+import { Model } from './app/mvp/model/model';
+import { Presenter } from './app/mvp/presenter/presenter';
+import { View } from './app/mvp/view/view';
 import { IOptions } from './app/options';
-import { Panel } from './panel/panel';
+//import { Panel } from './demo/panel/panel';
 
 (function Declare($: JQueryStatic) {
     $.fn.slider = function Slider(options: IOptions) {
@@ -25,8 +25,8 @@ import { Panel } from './panel/panel';
 $('#range').slider({
     min: 0,
     max: 4000,
-    vertical: true,
-    double: true,
+    vertical: false,
+    double: false,
     from: 300,
     to: 700,
     step: 1,
@@ -34,9 +34,9 @@ $('#range').slider({
     scaleFrequency: 9
 });
 
-const panel = new Panel();
+/* const panel = new Panel();
 
-$('#range').before(panel.$elem);
+$('#range').before(panel.$elem); */
 
 /* $('#test').slider({
     max: 10000,

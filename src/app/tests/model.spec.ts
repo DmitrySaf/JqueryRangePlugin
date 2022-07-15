@@ -1,5 +1,5 @@
-import { Model } from '../app/model/model';
-import { defaultOptions } from '../app/options';
+import { Model } from '../mvp/model/model';
+import { defaultOptions } from '../options';
 
 const recievedOptions = {
     min: 2000,

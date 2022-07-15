@@ -1,5 +1,5 @@
-import { Event } from '../event';
-import { IOptions, defaultOptions, Coords } from '../options';
+import { Event } from '../../event';
+import { IOptions, defaultOptions, Coords } from '../../options';
 
 class Model {
     public updateModelOptionsObserver: Event;

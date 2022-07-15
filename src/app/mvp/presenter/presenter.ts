@@ -1,6 +1,6 @@
 import { View } from '../view/view';
 import { Model } from '../model/model';
-import { IOptions } from '../options';
+import { IOptions } from '../../options';
 
 class Presenter {
     public view: View;
