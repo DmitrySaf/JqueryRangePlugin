@@ -57,6 +57,7 @@ class View {
         this.checkedOptions = { ...modelOptions };
         this.currentOptions = { ...modelOptions };
         this.modelStatic = { ...modelStatic };
+        this.render();
     };
 
     private init = () => {
@@ -296,6 +297,7 @@ class View {
     }
 
     private comfortableScaleDisplay = () => {
+        this.scale.removeScale();
         this.appendScaleElements();
         if (!this.checkedOptions.vertical) {
             const scaleElemsArray = this.scale.$container.children();
@@ -304,12 +306,11 @@ class View {
 
             for (let i = 0; i < (scaleElemsArray.length - 1); i++) {
                 sum += scaleElemsArray[i].offsetWidth;
-                console.log(sum);
                 if (sum > (sliderWidth - 100)) {
                     this.checkedOptions.scaleFrequency--;
                 }
             };
-            this.scale.removeArray(scaleElemsArray);
+            this.scale.removeScale();
             this.appendScaleElements();
             for (let i = 0; i < (this.scale.$container.find('div').length - 1); i++) {
                 let test = this.scale.$container.find('div');

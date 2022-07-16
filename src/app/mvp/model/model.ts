@@ -4,7 +4,7 @@ import { IOptions, defaultOptions, Coords } from '../../options';
 class Model {
     public updateModelOptionsObserver: Event;
 
-    public correctOptions: IOptions;
+    private correctOptions: IOptions;
 
     private staticOptions: Coords;
 
@@ -28,6 +28,7 @@ class Model {
         this.correctOptions = this.optionsCorrection(viewOptions);
         this.staticOptions = { ...modelStatic };
         this.updateModelOptionsObserver.notify();
+        console.log(this.correctOptions);
     };
 
     private optionsCorrection = (checkingOptions: IOptions) : IOptions => {

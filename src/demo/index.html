@@ -9,10 +9,70 @@
 <body>
     <div class="container">
         <div class="slider__container">
-            <input type="text" id="range">
-
+            <div class="input__wrapper">
+                <input type="text" class="js-querySlider">
+            </div>
+            <div class="slider__panel">
+                <div class="panel__input_wrapper panel__input_min_wrapper">
+                    <label class="panel__input_label panel__input_min_label">
+                        <div class="panel__input_label_text"> Min value: </div>
+                        <input type="number" class="panel__input panel__input_min js-panel__input_min">
+                    </label>
+                </div>
+                <div class="panel__input_wrapper panel__input_max_wrapper">
+                    <label class="panel__input_label panel__input_max_label">
+                        <div class="panel__input_label_text"> Max value: </div>
+                        <input type="number" class="panel__input panel__input_max js-panel__input_max">
+                    </label>
+                </div>
+                <div class="panel__input_wrapper panel__input_step_wrapper">
+                    <label class="panel__input_label panel__input_step_label">
+                        <div class="panel__input_label_text"> Step: </div>
+                        <input type="number" class="panel__input panel__input_step js-panel__input_step">
+                    </label>
+                </div>
+                <div class="panel__input_wrapper panel__input_dots_wrapper">
+                    <div class="panel__input_from_wrapper">
+                        <label class="panel__input_label panel__input_from_label">
+                            <div class="panel__input_label_text"> From: </div>
+                            <input type="number" class="panel__input panel__input_from js-panel__input_from">
+                        </label>
+                    </div>
+                    -
+                    <div class="panel__input_wrapper panel__input_to_wrapper">
+                        <label class="panel__input_label panel__input_to_label">
+                            <div class="panel__input_label_text"> To: </div>
+                            <input type="number" class="panel__input panel__input_to js-panel__input_to">
+                        </label>
+                    </div>
+                </div>
+                <div class="panel__input_wrapper panel__input_vertical_wrapper">
+                    <label class="panel__input_label panel__input_label_checkbox panel__input_vertical_label">
+                        <div class="panel__input_label_text"> Vertical: </div>
+                        <input type="checkbox" class="panel__input_checkbox panel__input_vertical js-panel__input_vertical">
+                    </label>
+                </div>
+                <div class="panel__input_wrapper panel__input_double_wrapper">
+                    <label class="panel__input_label panel__input_label_checkbox panel__input_double_label">
+                        <div class="panel__input_label_text"> Double: </div>
+                        <input type="checkbox" class="panel__input_checkbox panel__input_double js-panel__input_double">
+                    </label>
+                </div>
+                <div class="panel__input_wrapper panel__input_scale_wrapper">
+                    <label class="panel__input_label panel__input_label_checkbox panel__input_scale_label">
+                        <div class="panel__input_label_text"> Scale: </div>
+                        <input type="checkbox" class="panel__input_checkbox panel__input_scale js-panel__input_scale">
+                    </label>
+                    
+                </div>
+                <div class="panel__input_wrapper panel__input_scaleFrequency_wrapper">
+                    <label class="panel__input_label panel__input_scaleFrequency_label">
+                        <div class="panel__input_label_text"> Scale frequency: </div>
+                        <input type="number" class="panel__input panel__input_scaleFrequency js-panel__input_scaleFrequency">
+                    </label>
+                </div>
+            </div>
         </div>
-        <!-- <input type="text" id="test"> -->
     </div>
 </body>
 </html>

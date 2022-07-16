@@ -41,7 +41,9 @@ class Scale {
         return array;
     };
 
-    public removeArray = (array: JQuery<HTMLElement>) => array.remove();
+    public removeScale() {
+        $(this.$container.children()).remove();
+    }
 }
 
 export { Scale };
