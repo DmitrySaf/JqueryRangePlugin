@@ -87,11 +87,18 @@ class View {
             vertical,
             double
         } = this.checkedOptions
-        if (vertical) this.addVerticalClasses();
+        if (vertical) {
+            this.addVerticalClasses();
+        } else {
+            this.removeVerticalClasses();
+        }
 
         if (double) {
             this.dot.$elemFirst.addClass('shown');
             this.moveAt(this.dot.$elemFirst[0], 'from');
+        } else {
+            this.dot.$elemFirst.removeClass('shown');
+            this.dot.$elemFirst.addClass('hidden');
         }
 
         if (this.checkedOptions.scale) this.comfortableScaleDisplay();
@@ -194,8 +201,10 @@ class View {
     private moveAt = (target: HTMLElement, optionName: 'from' | 'to') => {
         if (this.checkedOptions.vertical) {
             target.style.top = `${this.calcPosition(this.checkedOptions[optionName])}px`;
+            target.style.left = '0px';
         } else {
             target.style.left = `${this.calcPosition(this.checkedOptions[optionName])}px`;
+            target.style.top = '0px';
         }
     };
 
@@ -328,6 +337,14 @@ class View {
         this.minmax.$elemMin.addClass('slider__min_vertical');
         this.minmax.$elemMax.addClass('slider__max_vertical');
         this.scale.$container.addClass('slider__scale_container_vertical');
+    };
+
+    private removeVerticalClasses = () => {
+        this.slider.$elem.removeClass('slider_vertical');
+        this.bar.$elem.removeClass('slider__bar_vertical');
+        this.minmax.$elemMin.removeClass('slider__min_vertical');
+        this.minmax.$elemMax.removeClass('slider__max_vertical');
+        this.scale.$container.removeClass('slider__scale_container_vertical');
     };
 
     private toggleMinMaxHidden = (coords: number, elementName: '$elemMin' | '$elemMax') => (
