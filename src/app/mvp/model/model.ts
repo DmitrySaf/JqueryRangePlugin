@@ -28,7 +28,6 @@ class Model {
         this.correctOptions = this.optionsCorrection(viewOptions);
         this.staticOptions = { ...modelStatic };
         this.updateModelOptionsObserver.notify();
-        console.log(this.correctOptions);
     };
 
     private optionsCorrection = (checkingOptions: IOptions) : IOptions => {

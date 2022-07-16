@@ -159,8 +159,8 @@ class View {
 
     private onScaleClick = (event: MouseEvent) => {
         const { left, top } = $(event.currentTarget).position();
-        const elemWidth = $(event.currentTarget).width() as number;
-        const elemHeight = $(event.currentTarget).height() as number;
+        const elemWidth = Number($(event.currentTarget).width());
+        const elemHeight = Number($(event.currentTarget).height());
         const coords = this.checkedOptions.vertical 
             ? {
                 x: left, 
@@ -234,7 +234,7 @@ class View {
     };
 
     private setFillerStyles = () => {
-        const dotWidth = this.dot.$elemSecond.outerWidth() as number;
+        const dotWidth = Number(this.dot.$elemSecond.outerWidth());
         const isVertical = this.checkedOptions.vertical;
         const posFrom = this.calcPosition(this.checkedOptions.from);
         const posTo = this.calcPosition(this.checkedOptions.to);
@@ -302,7 +302,7 @@ class View {
         if (!this.checkedOptions.vertical) {
             const scaleElemsArray = this.scale.$container.children();
             let sum = 0;
-            const sliderWidth = this.slider.$elem.outerWidth() as number;
+            const sliderWidth = Number(this.slider.$elem.outerWidth());
 
             for (let i = 0; i < (scaleElemsArray.length - 1); i++) {
                 sum += scaleElemsArray[i].offsetWidth;
@@ -338,8 +338,8 @@ class View {
 
     private calcValue = (cursorCoords : { x: number, y: number }): number => {
         const coordsToSliderRatio: number = this.checkedOptions.vertical
-            ? cursorCoords.y / (this.slider.$elem.outerHeight() as number)
-            : cursorCoords.x / (this.slider.$elem.outerWidth() as number);
+            ? cursorCoords.y / (Number(this.slider.$elem.outerHeight()))
+            : cursorCoords.x / (Number(this.slider.$elem.outerWidth()));
         return Math.round(
             (coordsToSliderRatio
             * (this.checkedOptions.max - this.checkedOptions.min)
@@ -348,12 +348,12 @@ class View {
     };
 
     private calcPosition = (value: number, target: JQuery<HTMLElement> = this.dot.$elemSecond): number => {
-        const sliderHeight = this.slider.$elem.outerHeight() as number;
-        const sliderWidth = this.slider.$elem.outerWidth() as number;
+        const sliderHeight = Number(this.slider.$elem.outerHeight());
+        const sliderWidth = Number(this.slider.$elem.outerWidth());
         const sliderProp = this.checkedOptions.vertical ? sliderHeight : sliderWidth;
         const dotWidth = this.checkedOptions.vertical 
-            ? target.outerHeight() as number 
-            : target.outerWidth() as number;
+            ? Number(target.outerHeight())
+            : Number(target.outerWidth());
         return (
             (value - this.checkedOptions.min)
             / (this.checkedOptions.max - this.checkedOptions.min)
