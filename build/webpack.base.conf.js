@@ -4,7 +4,7 @@ const path = require('path'),
 	  webpack = require('webpack');
 const ghpages = require('gh-pages');
 
-ghpages.publish('dist');
+ghpages.publish('../dist');
 const PAGE_LIVE = 'index.html';
 // Main const
 const PATHS = {
