@@ -63,7 +63,8 @@
     "test": "jest --watch --coverage --env=jsdom",
     "dev": "cross-env NODE_ENV=development webpack serve --config ./build/webpack.dev.conf.js",
     "build": "cross-env NODE_ENV=build webpack --config ./build/webpack.build.conf.js",
-    "eslint": "eslint --ext .jsx,.ts,.tsx src"
+    "eslint": "eslint --ext .jsx,.ts,.tsx src",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
