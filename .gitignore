@@ -4,9 +4,6 @@ node_modules/
 #ignore .cache
 .cache
 
-#ignore dist
-dist/
-
 #ignore package-lock
 package-lock
 
