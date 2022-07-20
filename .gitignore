@@ -10,5 +10,5 @@ dist/
 #ignore package-lock
 package-lock
 
-#coverage
+#ignore coverage
 coverage/
