@@ -40,4 +40,9 @@ interface Coords {
     to: number
 }
 
-export { defaultOptions, IDefinedOptions, Coords, IUndefinedOptions };
+export {
+    defaultOptions,
+    IDefinedOptions,
+    Coords,
+    IUndefinedOptions
+};

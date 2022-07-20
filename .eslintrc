@@ -47,6 +47,7 @@
         "no-param-reassign": [2, { "props": false }],
         "max-len": ["error", { "code": 120 }],
         "comma-dangle": "off",
-        "@typescript-eslint/comma-dangle": ["error", { "functions": "never" }]
+        "@typescript-eslint/comma-dangle": ["error", { "functions": "never" }],
+        "no-plusplus": [2, { "allowForLoopAfterthoughts": true }]
     }
 }

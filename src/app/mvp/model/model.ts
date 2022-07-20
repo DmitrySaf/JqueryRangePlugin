@@ -51,7 +51,9 @@ class Model {
             confirmedOptions.step = 1;
         }
         if (checkingOptions.scaleFrequency < 1) confirmedOptions.scaleFrequency = 1;
-        if (checkingOptions.scaleFrequency > (confirmedOptions.max - confirmedOptions.min + 1)) confirmedOptions.scaleFrequency = confirmedOptions.max - confirmedOptions.min + 1;
+        if (checkingOptions.scaleFrequency > (confirmedOptions.max - confirmedOptions.min + 1)) {
+            confirmedOptions.scaleFrequency = confirmedOptions.max - confirmedOptions.min + 1;
+        }
 
         this.correctStaticOptions(confirmedOptions.min, confirmedOptions.max);
 

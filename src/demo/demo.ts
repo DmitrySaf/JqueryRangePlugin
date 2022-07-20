@@ -24,5 +24,6 @@ $('.js-querySlider#second-slider').slider({
 });
 $('.js-querySlider#third-slider').slider();
 $('.js-querySlider').each(function setDemo(): void {
+    // eslint-disable-next-line no-new
     new Panel($(this));
 });

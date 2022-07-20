@@ -1,11 +1,7 @@
 import { Presenter } from '../../app/mvp/presenter/presenter';
-//import { IOptions } from '../../app/options';
 
 class Panel {
-
     private app: Presenter;
-
-    //private slider: JQuery<HTMLElement>;
 
     private panel: JQuery<HTMLElement>;
 
@@ -32,8 +28,7 @@ class Panel {
     private inputCheckbox: JQuery<HTMLElement>;
 
     constructor(input: JQuery) {
-        //this.slider = input.prev();
-        this.app = input.data('slider');
+        this.app = input.data('slider') as Presenter;
         this.panel = input.parent().next();
         this.initInputs();
         this.fillInputs();
@@ -53,7 +48,7 @@ class Panel {
         this.inputScaleFrequency = panel.find('input.js-panel__input_scaleFrequency');
         this.inputNumber = panel.find('input.panel__input[type="number"]');
         this.inputCheckbox = panel.find('input.panel__input_checkbox[type="checkbox"]');
-    }
+    };
 
     private fillInputs = (): void => {
         const {
@@ -76,39 +71,39 @@ class Panel {
         this.inputDouble.prop('checked', double);
         this.inputScale.prop('checked', scale);
         this.inputScaleFrequency.val(scaleFrequency);
-    }
+    };
 
     private addEventListeners = (): void => {
         this.inputNumber.on('blur', this.onBlur);
         this.inputNumber.on('keyup', this.onKeyUp);
         this.inputCheckbox.on('change', this.onCheck);
-    }
+    };
 
-    private onBlur = (event: {target: HTMLElement}): void => {
+    private onBlur = (event: { target: HTMLElement }): void => {
         const option = String($(event.target).attr('data-option'));
         const value = Number($(event.target).val());
-        this.appUpdate({[ option ]: value });
-    }
+        this.appUpdate({ [option]: value });
+    };
 
     private onKeyUp = (event: { key: string, target: HTMLElement }): void => {
         const option = String($(event.target).attr('data-option'));
         const value = Number($(event.target).val());
 
         if (event.key === 'Enter') {
-            this.appUpdate({[ option ]: value });
-        } else return;
-    }
+            this.appUpdate({ [option]: value });
+        }
+    };
 
     private onCheck = (event: { target: HTMLElement }): void => {
         const option = String($(event.target).attr('data-option'));
-        const value = $(event.target).prop('checked');
-        this.appUpdate({[ option ]: value });
-    }
+        const value = Boolean($(event.target).prop('checked'));
+        this.appUpdate({ [option]: value });
+    };
 
     private appUpdate = (value: { [prop: string]: number | boolean }) => {
         const options = $.extend(this.app.view.checkedOptions, value);
-        this.app.updateModelOptions(options, { from: 300, to: 700});
-    }
+        this.app.updateModelOptions(options, { from: 300, to: 700 });
+    };
 }
 
 export { Panel };

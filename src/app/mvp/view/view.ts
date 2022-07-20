@@ -81,12 +81,12 @@ class View {
     };
 
     private render = () => {
-        const { 
+        const {
             min,
             max,
             vertical,
             double
-        } = this.checkedOptions
+        } = this.checkedOptions;
         if (vertical) {
             this.addVerticalClasses();
         } else {
@@ -172,19 +172,19 @@ class View {
         const { left, top } = $(event.currentTarget).position();
         const elemWidth = Number($(event.currentTarget).width());
         const elemHeight = Number($(event.currentTarget).height());
-        const coords = this.checkedOptions.vertical 
+        const coords = this.checkedOptions.vertical
             ? {
-                x: left, 
+                x: left,
                 y: top + (elemHeight / 2)
             }
-            : { 
-                x: left + (elemWidth / 2), 
+            : {
+                x: left + (elemWidth / 2),
                 y: top
-            }
+            };
         const val = this.calcValue(coords);
 
-        this.updateCurrentOptions(val, "to")
-        this.moveAt(this.dots[1], "to");
+        this.updateCurrentOptions(val, 'to');
+        this.moveAt(this.dots[1], 'to');
         this.comfortableValueDisplay();
         this.setFillerStyles();
     };
@@ -213,12 +213,12 @@ class View {
     };
 
     private comfortableValueDisplay = () => {
-        const { 
+        const {
             max,
-            from, 
-            to 
+            from,
+            to,
+            vertical
         } = this.checkedOptions;
-        const isVertical = this.checkedOptions.vertical;
         const posFrom = this.calcPosition(from);
         const posTo = this.calcPosition(to);
         const posMax = this.calcPosition(max);
@@ -235,12 +235,12 @@ class View {
                     .addClass('hidden')
                     .removeClass('shown');
                 this.dot.$valueSecond.text(`${from} - ${to}`);
-                if (!isVertical) {
+                if (!vertical) {
                     this.dot.$valueSecond.css({ left: `calc(50% - ${(posTo - posFrom) / 2}px)` });
                 }
             } else {
                 this.dot.$valueFirst.removeClass('hidden');
-                if (!isVertical) this.dot.$valueSecond.css('left', '50%');
+                if (!vertical) this.dot.$valueSecond.css('left', '50%');
             }
             this.toggleMinMaxHidden(posFrom, '$elemMin');
         }
@@ -248,22 +248,22 @@ class View {
 
     private setFillerStyles = () => {
         const dotWidth = Number(this.dot.$elemSecond.outerWidth());
-        const isVertical = this.checkedOptions.vertical;
+        const { vertical } = this.checkedOptions;
         const posFrom = this.calcPosition(this.checkedOptions.from);
         const posTo = this.calcPosition(this.checkedOptions.to);
 
         this.bar.$filler.css({
             top: `${
-                isVertical ? posFrom + (dotWidth / 2) : 0
+                vertical ? posFrom + (dotWidth / 2) : 0
             }px`,
             left: `${
-                isVertical ? 0 : posFrom + (dotWidth / 2)
+                vertical ? 0 : posFrom + (dotWidth / 2)
             }px`,
             height: `${
-                isVertical ? (posTo - posFrom) : 20
+                vertical ? (posTo - posFrom) : 20
             }px`,
             width: `${
-                isVertical ? 20 : (posTo - posFrom)
+                vertical ? 20 : (posTo - posFrom)
             }px`
         });
     };
@@ -281,33 +281,37 @@ class View {
 
         const scaleElemsArray = this.scale.$container.find('div');
         const scaleElemsDisplay = (option: 'top' | 'left') => {
-            scaleElemsArray.filter(`:nth-child(1)`).css(
-                option, 
-                this.calcPosition(min, scaleElemsArray.filter(`:nth-child(1)`))
+            scaleElemsArray.filter(':nth-child(1)').css(
+                option,
+                this.calcPosition(min, scaleElemsArray.filter(':nth-child(1)'))
             );
             for (let i = 1; i < (frequency - 1); i++) {
-                scaleElemsArray.filter(`:nth-child(${ i + 1 })`).css(
+                scaleElemsArray.filter(`:nth-child(${i + 1})`).css(
                     option,
                     this.calcPosition(
-                        Math.round((min + i * ( (max - min) / (frequency - 1) )) / step) * step,
-                        scaleElemsArray.filter(`:nth-child(${ i + 1 })`)
+                        Math.round((min + i * ((max - min) / (frequency - 1))) / step) * step,
+                        scaleElemsArray.filter(`:nth-child(${i + 1})`)
                     )
                 );
-            };
+            }
             scaleElemsArray.filter(`:nth-child(${frequency})`).css(
-                option, 
+                option,
                 this.calcPosition(max, scaleElemsArray.filter(`:nth-child(${frequency})`))
             );
-        }
+        };
 
         if (frequency > 1) {
-            vertical ? scaleElemsDisplay('top') : scaleElemsDisplay('left')
+            if (vertical) {
+                scaleElemsDisplay('top');
+            } else {
+                scaleElemsDisplay('left');
+            }
+        } else if (vertical) {
+            (scaleElemsArray[0].style.top = `calc(50% - ${scaleElemsArray[0].clientHeight / 2}px)`);
         } else {
-            vertical 
-                ? scaleElemsArray[0].style.top = `calc(50% - ${scaleElemsArray[0].clientHeight / 2}px)`
-                : scaleElemsArray[0].style.left = `calc(50% - ${scaleElemsArray[0].clientWidth / 2}px)`
+            (scaleElemsArray[0].style.left = `calc(50% - ${scaleElemsArray[0].clientWidth / 2}px)`);
         }
-    }
+    };
 
     private comfortableScaleDisplay = () => {
         this.scale.removeScale();
@@ -320,20 +324,20 @@ class View {
             for (let i = 0; i < (scaleElemsArray.length - 1); i++) {
                 sum += scaleElemsArray[i].offsetWidth;
                 if (sum > (sliderWidth - 100)) {
-                    this.checkedOptions.scaleFrequency--;
+                    this.checkedOptions.scaleFrequency -= 1;
                 }
-            };
+            }
             this.scale.removeScale();
             this.appendScaleElements();
             for (let i = 0; i < (this.scale.$container.find('div').length - 1); i++) {
-                let test = this.scale.$container.find('div');
-                if (Math.abs(test[i].offsetLeft - test[i+1].offsetLeft) < 30) {
-                    test[i+1].remove();
-                    this.checkedOptions.scaleFrequency--;
+                const scaleElements = this.scale.$container.find('div');
+                if (Math.abs(scaleElements[i].offsetLeft - scaleElements[i + 1].offsetLeft) < 30) {
+                    scaleElements[i + 1].remove();
+                    this.checkedOptions.scaleFrequency -= 1;
                 }
             }
         }
-    }
+    };
 
     private addVerticalClasses = () => {
         this.slider.$elem.addClass('slider_vertical');
@@ -352,7 +356,7 @@ class View {
     };
 
     private toggleMinMaxHidden = (coords: number, elementName: '$elemMin' | '$elemMax') => (
-        coords < 50
+        (coords < 50)
             ? this.minmax[elementName].addClass('hidden')
             : this.minmax[elementName].removeClass('hidden')
     );
@@ -372,7 +376,7 @@ class View {
         const sliderHeight = Number(this.slider.$elem.outerHeight());
         const sliderWidth = Number(this.slider.$elem.outerWidth());
         const sliderProp = this.checkedOptions.vertical ? sliderHeight : sliderWidth;
-        const dotWidth = this.checkedOptions.vertical 
+        const dotWidth = this.checkedOptions.vertical
             ? Number(target.outerHeight())
             : Number(target.outerWidth());
         return (
