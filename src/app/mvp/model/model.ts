@@ -1,20 +1,20 @@
 import { Event } from '../../event';
-import { IOptions, defaultOptions, Coords } from '../../options';
+import { IDefinedOptions, defaultOptions, Coords } from '../../options';
 
 class Model {
     public updateModelOptionsObserver: Event;
 
-    private correctOptions: IOptions;
+    private correctOptions: IDefinedOptions;
 
     private staticOptions: Coords;
 
-    private optionsSec: IOptions;
+    private optionsSec: IDefinedOptions;
 
-    get options(): IOptions { return this.correctOptions; }
+    get options(): IDefinedOptions { return this.correctOptions; }
 
     get static(): Coords { return this.staticOptions; }
 
-    constructor(options: IOptions) {
+    constructor(options: IDefinedOptions) {
         this.updateModelOptionsObserver = new Event();
         this.optionsSec = options;
         this.staticOptions = { from: options.from, to: options.to };
@@ -22,7 +22,7 @@ class Model {
     }
 
     public updateModelOptions = (
-        viewOptions: IOptions,
+        viewOptions: IDefinedOptions,
         modelStatic: Coords
     ): void => {
         this.correctOptions = this.optionsCorrection(viewOptions);
@@ -30,7 +30,7 @@ class Model {
         this.updateModelOptionsObserver.notify();
     };
 
-    private optionsCorrection = (checkingOptions: IOptions) : IOptions => {
+    private optionsCorrection = (checkingOptions: IDefinedOptions) : IDefinedOptions => {
         const confirmedOptions = { ...checkingOptions };
 
         // Check for inappropriate values

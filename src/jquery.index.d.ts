@@ -1,7 +1,7 @@
 import { Model } from './app/mvp/model/model';
 import { Presenter } from './app/mvp/presenter/presenter';
 import { View } from './app/mvp/view/view';
-import { IOptions } from './app/options';
+import { IQOptions } from './app/options';
 
 interface Ex {
     view: View,
@@ -10,6 +10,6 @@ interface Ex {
 
 declare global {
     interface JQuery {
-        slider(options: IOptions): Presenter
+        slider(options?: IQOptions): Presenter
     }
 }

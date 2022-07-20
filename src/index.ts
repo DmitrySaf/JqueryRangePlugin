@@ -1,11 +1,11 @@
 import { Model } from './app/mvp/model/model';
 import { Presenter } from './app/mvp/presenter/presenter';
 import { View } from './app/mvp/view/view';
-import { IOptions, defaultOptions } from './app/options';
+import { IDefinedOptions, defaultOptions, IUndefinedOptions } from './app/options';
 
 (function Declare($: JQueryStatic) {
-    $.fn.slider = function Slider(options: IOptions) {
-        const settings = $.extend(defaultOptions, options);
+    $.fn.slider = function Slider(options: IUndefinedOptions) {
+        const settings : IDefinedOptions = $.extend({ ...defaultOptions }, options);
         const model = new Model(settings);
         const view = new View(this, model.options);
         const presenter = new Presenter(view, model);

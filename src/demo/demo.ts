@@ -1,6 +1,6 @@
 import { Panel } from './panel/panel';
 
-$('.js-querySlider').slider({
+$('.js-querySlider#first-slider').slider({
     min: 0,
     max: 4000,
     vertical: false,
@@ -8,9 +8,21 @@ $('.js-querySlider').slider({
     from: 300,
     to: 700,
     step: 1,
-    scale: true,
+    scale: false,
     scaleFrequency: 9
 });
+$('.js-querySlider#second-slider').slider({
+    min: -1000,
+    max: 6600,
+    vertical: false,
+    double: true,
+    from: 300,
+    to: 3200,
+    step: 17,
+    scale: false,
+    scaleFrequency: 9
+});
+$('.js-querySlider#third-slider').slider();
 $('.js-querySlider').each(function setDemo(): void {
     new Panel($(this));
 });

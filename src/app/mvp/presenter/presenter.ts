@@ -1,6 +1,6 @@
 import { View } from '../view/view';
 import { Model } from '../model/model';
-import { IOptions } from '../../options';
+import { IDefinedOptions } from '../../options';
 
 class Presenter {
     public view: View;
@@ -22,11 +22,11 @@ class Presenter {
         });
     };
 
-    public updateModelOptions = (viewOptions: IOptions, modelStatic: { from: number, to: number }): void => {
+    public updateModelOptions = (viewOptions: IDefinedOptions, modelStatic: { from: number, to: number }): void => {
         this.model.updateModelOptions(viewOptions, modelStatic);
     };
 
-    public updateViewOptions = (modelOptions: IOptions, modelStatic: { from: number, to: number }): void => {
+    public updateViewOptions = (modelOptions: IDefinedOptions, modelStatic: { from: number, to: number }): void => {
         this.view.updateViewOptions(modelOptions, modelStatic);
     };
 }

@@ -1,4 +1,4 @@
-const defaultOptions: IOptions = {
+const defaultOptions: IDefinedOptions = {
     min: 0,
     max: 10000,
     from: 3000,
@@ -10,8 +10,8 @@ const defaultOptions: IOptions = {
     scaleFrequency: 5
 };
 
-interface IOptions {
-    [index : string]: number | boolean,
+interface IDefinedOptions {
+    [index: string]: number | boolean,
     min: number,
     max: number,
     from: number,
@@ -23,9 +23,21 @@ interface IOptions {
     scaleFrequency: number
 }
 
+interface IUndefinedOptions {
+    min?: number,
+    max?: number,
+    from?: number,
+    to?: number,
+    step?: number,
+    vertical?: boolean,
+    double?: boolean,
+    scale?: boolean,
+    scaleFrequency?: number
+}
+
 interface Coords {
     from: number,
     to: number
 }
 
-export { defaultOptions, IOptions, Coords };
+export { defaultOptions, IDefinedOptions, Coords, IUndefinedOptions };

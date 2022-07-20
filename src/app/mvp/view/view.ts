@@ -1,4 +1,4 @@
-import { IOptions, Coords } from '../../options';
+import { IDefinedOptions, Coords } from '../../options';
 import { Bar } from './bar';
 import { Dot } from './dot';
 import { Slider } from './slider';
@@ -16,11 +16,11 @@ interface MouseEvent {
 class View {
     public updateViewOptionsObserver: Event;
 
-    public currentOptions: IOptions;
+    public currentOptions: IDefinedOptions;
 
     public modelStatic: Coords;
 
-    public checkedOptions: IOptions;
+    public checkedOptions: IDefinedOptions;
 
     private slider: Slider;
 
@@ -36,7 +36,7 @@ class View {
 
     private scale: Scale;
 
-    constructor(input: JQuery<HTMLElement>, options: IOptions) {
+    constructor(input: JQuery<HTMLElement>, options: IDefinedOptions) {
         this.input = input;
         this.checkedOptions = options;
         this.currentOptions = { ...options };
@@ -51,7 +51,7 @@ class View {
     }
 
     public updateViewOptions = (
-        modelOptions: IOptions,
+        modelOptions: IDefinedOptions,
         modelStatic: Coords
     ): void => {
         this.checkedOptions = { ...modelOptions };
@@ -101,7 +101,11 @@ class View {
             this.dot.$elemFirst.addClass('hidden');
         }
 
-        if (this.checkedOptions.scale) this.comfortableScaleDisplay();
+        if (this.checkedOptions.scale) {
+            this.comfortableScaleDisplay();
+        } else {
+            this.scale.removeScale();
+        }
 
         this.setFillerStyles();
         this.minmax.$elemMax.text(max);
