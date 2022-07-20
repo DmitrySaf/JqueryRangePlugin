@@ -9,3 +9,6 @@ dist/
 
 #ignore package-lock
 package-lock
+
+#coverage
+coverage/
