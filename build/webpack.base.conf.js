@@ -2,7 +2,9 @@ const path = require('path'),
 	  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
 	  HtmlWebpackPlugin = require('html-webpack-plugin'),
 	  webpack = require('webpack');
+const ghpages = require('gh-pages');
 
+ghpages.publish('dist');
 const PAGE_LIVE = 'index.html';
 // Main const
 const PATHS = {
