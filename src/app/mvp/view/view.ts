@@ -244,6 +244,19 @@ class View {
             }
             this.toggleMinMaxHidden(posFrom, '$elemMin');
         }
+
+        if (this.checkedOptions.valuesDisplay) {
+            this.dot.$valueSecond.removeClass('hidden');
+            this.dot.$valueFirst.removeClass('hidden');
+            this.dot.$valueSecond.addClass('shown');
+            this.dot.$valueFirst.addClass('shown');
+        } else {
+            this.dot.$valueSecond.removeClass('shown');
+            this.dot.$valueFirst.removeClass('shown');
+            this.dot.$valueSecond.addClass('hidden');
+            this.dot.$valueFirst.addClass('hidden');
+            console.log(this.dot.$valueFirst);
+        }
     };
 
     private setFillerStyles = () => {

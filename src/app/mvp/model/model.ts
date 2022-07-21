@@ -35,7 +35,7 @@ class Model {
 
         // Check for inappropriate values
         Object.keys(checkingOptions).forEach((key) => {
-            if ((key === 'double') || (key === 'vertical') || (key === 'scale')) {
+            if ((key === 'double') || (key === 'vertical') || (key === 'scale') || (key === 'valuesDisplay')) {
                 if (typeof (checkingOptions[key]) !== 'boolean') {
                     confirmedOptions[key] = defaultOptions[key];
                 }

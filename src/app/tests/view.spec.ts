@@ -10,7 +10,8 @@ const recievedOptions = {
     to: 6000,
     step: 100,
     scale: true,
-    scaleFrequency: 4
+    scaleFrequency: 4,
+    valuesDisplay: true
 };
 
 describe('View', () => {

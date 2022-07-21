@@ -15,6 +15,8 @@ class Panel {
 
     private inputStep: JQuery<HTMLElement>;
 
+    private inputValuesDisplay: JQuery<HTMLElement>;
+
     private inputVertical: JQuery<HTMLElement>;
 
     private inputDouble: JQuery<HTMLElement>;
@@ -42,6 +44,7 @@ class Panel {
         this.inputFrom = panel.find('input.js-panel__input_from');
         this.inputTo = panel.find('input.js-panel__input_to');
         this.inputStep = panel.find('input.js-panel__input_step');
+        this.inputValuesDisplay = panel.find('input.js-panel__input_valuesDisplay');
         this.inputVertical = panel.find('input.js-panel__input_vertical');
         this.inputDouble = panel.find('input.js-panel__input_double');
         this.inputScale = panel.find('input.js-panel__input_scale');
@@ -60,13 +63,15 @@ class Panel {
             vertical,
             double,
             scale,
-            scaleFrequency
+            scaleFrequency,
+            valuesDisplay
         } = this.app.view.checkedOptions;
         this.inputMin.val(min);
         this.inputMax.val(max);
         this.inputFrom.val(from);
         this.inputTo.val(to);
         this.inputStep.val(step);
+        this.inputValuesDisplay.prop('checked', valuesDisplay);
         this.inputVertical.prop('checked', vertical);
         this.inputDouble.prop('checked', double);
         this.inputScale.prop('checked', scale);

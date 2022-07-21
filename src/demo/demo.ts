@@ -9,7 +9,8 @@ $('.js-querySlider#first-slider').slider({
     to: 700,
     step: 1,
     scale: false,
-    scaleFrequency: 9
+    scaleFrequency: 9,
+    valuesDisplay: false
 });
 $('.js-querySlider#second-slider').slider({
     min: -1000,
@@ -20,7 +21,8 @@ $('.js-querySlider#second-slider').slider({
     to: 3200,
     step: 17,
     scale: false,
-    scaleFrequency: 9
+    scaleFrequency: 9,
+    valuesDisplay: true
 });
 $('.js-querySlider#third-slider').slider();
 $('.js-querySlider').each(function setDemo(): void {

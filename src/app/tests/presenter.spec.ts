@@ -11,7 +11,8 @@ const recievedOptions = {
     to: 6000,
     step: 100,
     scale: true,
-    scaleFrequency: 4
+    scaleFrequency: 4,
+    valuesDisplay: true
 };
 
 const staticExample = { from: 5000, to: 6000 };

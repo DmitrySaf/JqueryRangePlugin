@@ -7,7 +7,8 @@ const defaultOptions: IDefinedOptions = {
     double: false,
     vertical: false,
     scale: false,
-    scaleFrequency: 5
+    scaleFrequency: 5,
+    valuesDisplay: true
 };
 
 interface IDefinedOptions {
@@ -20,7 +21,8 @@ interface IDefinedOptions {
     vertical: boolean,
     double: boolean,
     scale: boolean,
-    scaleFrequency: number
+    scaleFrequency: number,
+    valuesDisplay: boolean
 }
 
 interface IUndefinedOptions {
@@ -32,7 +34,8 @@ interface IUndefinedOptions {
     vertical?: boolean,
     double?: boolean,
     scale?: boolean,
-    scaleFrequency?: number
+    scaleFrequency?: number,
+    valuesDisplay?: boolean
 }
 
 interface Coords {
