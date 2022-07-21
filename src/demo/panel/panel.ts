@@ -3,6 +3,10 @@ import { Presenter } from '../../app/mvp/presenter/presenter';
 class Panel {
     private app: Presenter;
 
+    private slider: JQuery<HTMLElement>;
+
+    private sliderDots: JQuery<HTMLElement>;
+
     private panel: JQuery<HTMLElement>;
 
     private inputMin: JQuery<HTMLElement>;
@@ -31,6 +35,8 @@ class Panel {
 
     constructor(input: JQuery) {
         this.app = input.data('slider') as Presenter;
+        this.slider = input.prev();
+        this.sliderDots = this.slider.find('span').parent()
         this.panel = input.parent().next();
         this.initInputs();
         this.fillInputs();
@@ -82,7 +88,21 @@ class Panel {
         this.inputNumber.on('blur', this.onBlur);
         this.inputNumber.on('keyup', this.onKeyUp);
         this.inputCheckbox.on('change', this.onCheck);
+        this.sliderDots.on('mousedown', this.onMouseDown);
     };
+
+    private onMouseDown = () => {
+        const fillToFromInputs = () => {
+            this.inputFrom.val(this.app.view.checkedOptions.from);
+            this.inputTo.val(this.app.view.checkedOptions.to);
+        }
+        const mousemove = () => {
+            $(document).off('mousemove', fillToFromInputs);
+            $(document).off('mouseup', mousemove);
+        }
+        $(document).on('mousemove', fillToFromInputs);
+        $(document).on('mouseup', mousemove);
+    }
 
     private onBlur = (event: { target: HTMLElement }): void => {
         const option = String($(event.target).attr('data-option'));
