@@ -5,10 +5,10 @@ node_modules/
 .cache
 
 #ignore package-lock
-package-lock
+package-lock.json
 
 #ignore coverage
 coverage/
 
 #ignore dist
-dist/
+dist
