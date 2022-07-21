@@ -26,7 +26,7 @@ module.exports = {
 	output: {
 		filename: `${PATHS.assets}app/[name].js`,
 		path: PATHS.dist,
-		publicPath: "/"
+		publicPath: ""
 	},
 	target: (process.env.NODE_ENV === "development") ? "web" : "browserslist",
 	module: {
