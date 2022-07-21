@@ -87,7 +87,9 @@ class Panel {
     private onBlur = (event: { target: HTMLElement }): void => {
         const option = String($(event.target).attr('data-option'));
         const value = Number($(event.target).val());
+
         this.appUpdate({ [option]: value });
+        this.fillInputs();
     };
 
     private onKeyUp = (event: { key: string, target: HTMLElement }): void => {
@@ -96,13 +98,21 @@ class Panel {
 
         if (event.key === 'Enter') {
             this.appUpdate({ [option]: value });
+            this.fillInputs();
         }
     };
 
     private onCheck = (event: { target: HTMLElement }): void => {
         const option = String($(event.target).attr('data-option'));
         const value = Boolean($(event.target).prop('checked'));
-        this.appUpdate({ [option]: value });
+        if (option === 'double') {
+            this.appUpdate({ 
+                double: value,
+                from: Number(this.inputFrom.val())
+            });
+        } else {
+            this.appUpdate({ [option]: value });
+        }
     };
 
     private appUpdate = (value: { [prop: string]: number | boolean }) => {

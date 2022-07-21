@@ -255,7 +255,6 @@ class View {
             this.dot.$valueFirst.removeClass('shown');
             this.dot.$valueSecond.addClass('hidden');
             this.dot.$valueFirst.addClass('hidden');
-            console.log(this.dot.$valueFirst);
         }
     };
 
