@@ -25,8 +25,7 @@ module.exports = {
 	},
 	output: {
 		filename: `${PATHS.assets}app/[name].js`,
-		path: PATHS.dist,
-		publicPath: ""
+		path: PATHS.dist
 	},
 	target: (process.env.NODE_ENV === "development") ? "web" : "browserslist",
 	module: {
@@ -51,7 +50,7 @@ module.exports = {
 				test: /\.(svg|png|jpg)$/,
 				type: 'asset/resource',
 				generator: {
-					filename: 'assets/img/[name].[ext]'
+					filename: 'assets/img/[name][ext]'
 				}
 			},
 			{
