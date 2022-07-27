@@ -6,6 +6,7 @@
 
 1) Скачать <a href="https://github.com/DmitrySaf/JqueryRangePlugin/blob/main/dist/assets/app/main.js" download>скрипты</a><br>
 2) Скачать <a href="https://github.com/DmitrySaf/JqueryRangePlugin/blob/main/dist/assets/css/main.css" download>стили</a><br>
+3) Не забудьте добавить <a href="https://github.com/DmitrySaf/JqueryRangePlugin/blob/main/dist/assets/img/hello_kitty.png" download>фотографию</a><br>
 
 Шаг 2:
 Подключить
