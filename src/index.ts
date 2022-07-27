@@ -5,7 +5,7 @@ import { IDefinedOptions, defaultOptions, IUndefinedOptions } from './app/option
 
 (function Declare($: JQueryStatic) {
     $.fn.slider = function Slider(options: IUndefinedOptions) {
-        const settings : IDefinedOptions = $.extend({ ...defaultOptions }, options);
+        const settings: IDefinedOptions = $.extend({ ...defaultOptions }, options);
         const model = new Model(settings);
         const view = new View(this, model.options);
         const presenter = new Presenter(view, model);
