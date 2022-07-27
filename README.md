@@ -4,9 +4,12 @@
 Установка с помощью npm: <br>
 Шаг 1:
 
-1) Скачать <a href="https://github.com/DmitrySaf/JqueryRangePlugin/blob/main/dist/assets/app/main.js" download>скрипты</a>
-Шаг 2:
+1) Скачать <a href="https://github.com/DmitrySaf/JqueryRangePlugin/blob/main/dist/assets/app/main.js" download>скрипты</a><br>
+2) Скачать <a href="https://github.com/DmitrySaf/JqueryRangePlugin/blob/main/dist/assets/css/main.css" download>стили</a><br>
 
+Шаг 2:
+Подключить
+  
 ```
 <html>
   <head>
