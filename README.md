@@ -23,13 +23,13 @@
 </html>
 ```
   
-<h2>Описание архитектуры</h2><br>
+<h2>Описание архитектуры</h2>
 Для построение архитектуры приложения использовался подход MVP (Model-View-Presenter). Model и View взаимодействуют между собой через Presenter при помощи паттерна Observer.
-<h3>Model</h3><br>
+<h3>Model</h3>
 Бизнес-логика приложения
-<h3>View</h3><br>
+<h3>View</h3>
 Реагирует на действия пользователя и направляет данные в Presenter
-<h3>Presenter</h3><br>
+<h3>Presenter</h3>
 Получает данные от View и передает их в Model, затем получает данные от Model и передает во View для отображения
 <h3>UML диаграмма:</h3>
 <img src="https://github.com/DmitrySaf/JqueryRangePlugin/blob/main/src/assets/img/uml.drawio.png">
