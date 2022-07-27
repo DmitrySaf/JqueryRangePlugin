@@ -23,6 +23,43 @@
 </html>
 ```
   
-UML диаграмма:
+<h2>UML диаграмма:</h2>
 <img src="https://github.com/DmitrySaf/JqueryRangePlugin/blob/main/src/assets/img/uml.drawio.png">
 
+<h2>Запуск команд:</h2> <br>
+Шаг 1:
+
+```
+git clone https://github.com/DmitrySaf/JqueryRangePlugin/
+```
+Шаг 2:
+  
+```
+cd JqueryRangeSlider
+```
+Шаг 3:
+ 
+```
+npm install
+```
+Шаг 4:
+  
+1) Build
+
+```
+npm run build
+```
+2) Develop
+
+```
+npm run dev
+```
+3) Tests
+
+```
+npm run test
+```
+  
+  
+  
+  
