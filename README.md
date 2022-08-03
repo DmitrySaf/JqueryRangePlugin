@@ -23,7 +23,21 @@
   </body>
 </html>
 ```
-  
+<h2>API проекта</h2>
+
+| Option           |  Type   | Default | Description                             |
+|------------------|---------|---------|-----------------------------------------|
+| min              | number  | 0       | Slider minimum value                    |
+| max              | number  | 10000   | Slider maximum value                    |
+| from             | number  | 3000    | Slider start value                      |
+| to               | number  | 7000    | Slider end value                        |
+| step             | number  | 1       | Slide step                              |
+| vertical         | boolean | false   | Sets slider vertically                  |
+| double           | boolean | false   | Enables second value                    |
+| scale            | boolean | false   | Sets scale under the slider             |
+| scaleFrequency   | number  | 5       | Frequency of the scale elements         |
+| valuesDisplay    | boolean | true    | Visibility of the values above the dots |
+
 <h2>Описание архитектуры</h2>
 Для построение архитектуры приложения использовался подход MVP (Model-View-Presenter). Model и View взаимодействуют между собой через Presenter при помощи паттерна Observer.
 <h3>Model</h3>
@@ -68,7 +82,9 @@ npm run dev
 ```
 npm run test
 ```
-  
-  
+
+<h2>Совметимость слайдера</h2>
+jquery ^3.6.0
+node ^16.14.2
   
   
