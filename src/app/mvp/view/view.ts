@@ -59,12 +59,6 @@ class View {
         this.modelStatic = { ...modelStatic };
     };
 
-    private init = () => {
-        this.createSlider();
-        this.render();
-        this.addEventListeners();
-    };
-
     public render = () => {
         const {
             min,
@@ -99,6 +93,12 @@ class View {
 
         this.moveAt(this.dot.$elemSecond[0], 'to');
         this.comfortableValueDisplay();
+    };
+
+    private init = () => {
+        this.createSlider();
+        this.render();
+        this.addEventListeners();
     };
 
     private createSlider = () => {
