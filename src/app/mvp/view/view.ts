@@ -57,7 +57,6 @@ class View {
         this.checkedOptions = { ...modelOptions };
         this.currentOptions = { ...modelOptions };
         this.modelStatic = { ...modelStatic };
-        this.render();
     };
 
     private init = () => {
@@ -66,21 +65,7 @@ class View {
         this.addEventListeners();
     };
 
-    private createSlider = () => {
-        this.input.addClass('hidden');
-        this.slider.$elem.append(
-            this.bar.$elem,
-            this.minmax.$elemMax,
-            this.minmax.$elemMin,
-            this.scale.$container,
-            this.dot.$elemFirst,
-            this.dot.$elemSecond
-        );
-        this.input.before(this.slider.$elem);
-        this.dots = this.slider.$elem.find('span').parent();
-    };
-
-    private render = () => {
+    public render = () => {
         const {
             min,
             max,
@@ -114,6 +99,20 @@ class View {
 
         this.moveAt(this.dot.$elemSecond[0], 'to');
         this.comfortableValueDisplay();
+    };
+
+    private createSlider = () => {
+        this.input.addClass('hidden');
+        this.slider.$elem.append(
+            this.bar.$elem,
+            this.minmax.$elemMax,
+            this.minmax.$elemMin,
+            this.scale.$container,
+            this.dot.$elemFirst,
+            this.dot.$elemSecond
+        );
+        this.input.before(this.slider.$elem);
+        this.dots = this.slider.$elem.find('span').parent();
     };
 
     private addEventListeners = () => {

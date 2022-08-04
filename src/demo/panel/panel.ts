@@ -140,6 +140,7 @@ class Panel {
     private appUpdate = (value: { [prop: string]: number | boolean }) => {
         const options = $.extend(this.app.view.checkedOptions, value);
         this.app.updateModelOptions(options, this.app.view.modelStatic);
+        this.app.view.render();
     };
 }
 
