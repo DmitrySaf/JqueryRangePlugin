@@ -263,13 +263,12 @@ class View {
         const { vertical } = this.checkedOptions;
         const posFrom = this.calcPosition(this.checkedOptions.from);
         const posTo = this.calcPosition(this.checkedOptions.to);
-
         this.bar.$filler.css({
             top: `${
-                vertical ? posFrom + (dotWidth / 2) : 0
+                vertical ? (posFrom + (dotWidth / 2)) : 0
             }px`,
             left: `${
-                vertical ? 0 : posFrom + (dotWidth / 2)
+                vertical ? 0 : (posFrom + (dotWidth / 2))
             }px`,
             height: `${
                 vertical ? (posTo - posFrom) : 20

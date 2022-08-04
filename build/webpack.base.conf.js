@@ -118,12 +118,8 @@ module.exports = {
 			filename: `${PATHS.assets}css/[name].css`
 		}),
 		new HtmlWebpackPlugin({
-			template: 'src/demo/index.pug'
-		}),
-		new webpack.ProvidePlugin({
-			$: `jquery`,
-			jQuery: `jquery`,
-			'window.jQuery': 'jquery'
+			template: 'src/demo/index.pug',
+			scriptLoading: 'blocking'
 		})
 	],
 	performance: {
