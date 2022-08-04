@@ -1,0 +1,13 @@
+mixin panel-input(options) 
+    if !options
+        - var options = {}
+
+    .panel__item
+        label.panel__label(
+            class=`${(options.type === "number") ? '' : 'panel__label_checkbox'}`
+        )
+            .panel__text=options.text
+            input(
+                class=`${(options.type === "number") ? 'panel__input' : 'panel__checkbox'} panel__input_${options.option} js-panel__input_${options.option}`
+                type=options.type 
+                data-option=options.option)

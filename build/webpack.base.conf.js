@@ -1,12 +1,12 @@
 const path = require('path'),
 	  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
 	  HtmlWebpackPlugin = require('html-webpack-plugin'),
-	  webpack = require('webpack');
+	  webpack = require('webpack'),
+	  CopyWebpackPlugin = require('copy-webpack-plugin');
 const ghpages = require('gh-pages');
 
 ghpages.publish('../dist');
 const PAGE_LIVE = 'index.html';
-// Main const
 const PATHS = {
 	src: path.join(__dirname, '../src'),
 	dist: path.join(__dirname, '../dist'),
@@ -30,6 +30,10 @@ module.exports = {
 	target: (process.env.NODE_ENV === "development") ? "web" : "browserslist",
 	module: {
 		rules: [
+			{
+				test: /\.pug$/,
+				loader: "pug-loader"
+			},
 			{
 				//JavaScript
 				test: /\.js$/,
@@ -102,12 +106,19 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new CopyWebpackPlugin({
+			patterns: [
+				{
+					from: `${PATHS.src}/${PATHS.assets}favicon`,
+					to: `${PATHS.assets}favicon`
+				}
+			]
+		}),
 		new MiniCssExtractPlugin({
 			filename: `${PATHS.assets}css/[name].css`
 		}),
 		new HtmlWebpackPlugin({
-			template: 'src/demo/index.html',
-			scriptLoading: 'blocking'
+			template: 'src/demo/index.pug'
 		}),
 		new webpack.ProvidePlugin({
 			$: `jquery`,

@@ -1,4 +1,5 @@
 import { Presenter } from '../../app/mvp/presenter/presenter';
+import "./panel-input/panel-input";
 
 class Panel {
     private app: Presenter;
@@ -56,7 +57,7 @@ class Panel {
         this.inputScale = panel.find('input.js-panel__input_scale');
         this.inputScaleFrequency = panel.find('input.js-panel__input_scaleFrequency');
         this.inputNumber = panel.find('input.panel__input[type="number"]');
-        this.inputCheckbox = panel.find('input.panel__input_checkbox[type="checkbox"]');
+        this.inputCheckbox = panel.find('input.panel__checkbox[type="checkbox"]');
     };
 
     private fillInputs = (): void => {

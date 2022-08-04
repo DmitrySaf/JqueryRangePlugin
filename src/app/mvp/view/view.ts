@@ -6,7 +6,7 @@ import { Minmax } from './minmax';
 import { Scale } from './scale';
 import { Event } from '../../event';
 
-interface MouseEvent {
+interface PointerEvent {
     pageX: number,
     pageY: number,
     currentTarget: HTMLElement,
@@ -103,6 +103,7 @@ class View {
 
         if (this.checkedOptions.scale) {
             this.comfortableScaleDisplay();
+            this.scale.$container.children().on('click', this.onScaleClick);
         } else {
             this.scale.removeScale();
         }
@@ -118,10 +119,9 @@ class View {
     private addEventListeners = () => {
         this.dots.on('mousedown', this.onMouseDown);
         this.bar.$elem.on('click', this.onMouseClick);
-        this.scale.$container.children().on('click', this.onScaleClick);
     };
 
-    private onMouseDown = (event: MouseEvent) => {
+    private onMouseDown = (event: PointerEvent) => {
         event.preventDefault();
 
         const mousemove = (e: { pageX: number, pageY: number }) => {
@@ -145,7 +145,7 @@ class View {
         $(document).on('mouseup', mouseup);
     };
 
-    private onMouseClick = (event: MouseEvent) => {
+    private onMouseClick = (event: PointerEvent) => {
         if (this.checkedOptions.double) {
             if (Math.abs(this.getValueOfDot(event) - this.currentOptions.from)
             <= Math.abs(this.getValueOfDot(event) - this.currentOptions.to)) {
@@ -168,7 +168,7 @@ class View {
         this.modelStatic.to = this.checkedOptions.to;
     };
 
-    private onScaleClick = (event: MouseEvent) => {
+    private onScaleClick = (event: PointerEvent) => {
         const { left, top } = $(event.currentTarget).position();
         const elemWidth = Number($(event.currentTarget).width());
         const elemHeight = Number($(event.currentTarget).height());
