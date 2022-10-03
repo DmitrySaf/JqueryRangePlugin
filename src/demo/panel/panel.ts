@@ -1,5 +1,4 @@
 import { Presenter } from '../../app/mvp/presenter/presenter';
-import './panel-input/panel-input';
 import './panel.sass';
 
 class Panel {

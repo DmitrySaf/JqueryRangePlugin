@@ -1,11 +1,8 @@
-const path = require('path'),
-	  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
-	  HtmlWebpackPlugin = require('html-webpack-plugin'),
-	  webpack = require('webpack'),
-	  CopyWebpackPlugin = require('copy-webpack-plugin');
-const ghpages = require('gh-pages');
-
-ghpages.publish('../dist');
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const PAGE_LIVE = 'index.html';
 const PATHS = {
 	src: path.join(__dirname, '../src'),
@@ -102,15 +99,7 @@ module.exports = {
 				test: /\.tsx?$/,
 				use: 'ts-loader',
 				exclude: /node_modules/,
-			},
-			{
-				// Expose jQuery
-				test: require.resolve('jquery'),
-				loader: 'expose-loader',
-				options: {
-				  	exposes: ['$', 'jQuery'],
-				},
-			},
+			}
 		]
 	},
 	plugins: [
@@ -128,7 +117,12 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template: 'src/demo/index.pug',
 			scriptLoading: 'blocking'
-		})
+		}),
+		new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery'
+    })
 	],
 	performance: {
 		maxEntrypointSize: 2048000,
