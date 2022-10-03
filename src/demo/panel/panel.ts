@@ -46,16 +46,17 @@ class Panel {
 
   private initInputs = (): void => {
     const { panel } = this;
-    this.inputMin = panel.find('input.js-panel__input_min');
-    this.inputMax = panel.find('input.js-panel__input_max');
-    this.inputFrom = panel.find('input.js-panel__input_from');
-    this.inputTo = panel.find('input.js-panel__input_to');
-    this.inputStep = panel.find('input.js-panel__input_step');
-    this.inputValuesDisplay = panel.find('input.js-panel__input_valuesDisplay');
-    this.inputVertical = panel.find('input.js-panel__input_vertical');
-    this.inputDouble = panel.find('input.js-panel__input_double');
-    this.inputScale = panel.find('input.js-panel__input_scale');
-    this.inputScaleFrequency = panel.find('input.js-panel__input_scaleFrequency');
+
+    this.inputMin = panel.find('input[data-option="min"]');
+    this.inputMax = panel.find('input[data-option="max"]');
+    this.inputFrom = panel.find('input[data-option="from"]');
+    this.inputTo = panel.find('input[data-option="to"]');
+    this.inputStep = panel.find('input[data-option="step"]');
+    this.inputValuesDisplay = panel.find('input[data-option="valuesDisplay"]');
+    this.inputVertical = panel.find('input[data-option="vertical"]');
+    this.inputDouble = panel.find('input[data-option="double"]');
+    this.inputScale = panel.find('input[data-option="scale"]');
+    this.inputScaleFrequency = panel.find('input[data-option="scaleFrequency"]');
     this.inputNumber = panel.find('input.panel__input[type="number"]');
     this.inputCheckbox = panel.find('input.panel__checkbox[type="checkbox"]');
   };
@@ -126,6 +127,7 @@ class Panel {
   private onCheck = (event: { target: HTMLElement }): void => {
     const option = String($(event.target).attr('data-option'));
     const value = Boolean($(event.target).prop('checked'));
+
     if (option === 'double') {
       this.appUpdate({
         double: value,
@@ -138,6 +140,7 @@ class Panel {
 
   private appUpdate = (value: { [prop: string]: number | boolean }) => {
     const options = $.extend(this.app.view.checkedOptions, value);
+
     this.app.updateModelOptions(options, this.app.view.modelStatic);
     this.app.view.render();
   };

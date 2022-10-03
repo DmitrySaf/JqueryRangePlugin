@@ -4,7 +4,7 @@ const baseWebpackConfig = require('./webpack.base.conf');
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   mode: 'development',
-  devtool: 'eval-cheap-module-source-map',
+  devtool: 'eval',
   devServer: {
     open: true,
     contentBase: `${baseWebpackConfig.externals.paths.pageTest}`,
@@ -17,9 +17,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
-    new webpack.SourceMapDevToolPlugin({
-      filename: '[file].map'
-    }),
     new webpack.HotModuleReplacementPlugin()
   ]
 });

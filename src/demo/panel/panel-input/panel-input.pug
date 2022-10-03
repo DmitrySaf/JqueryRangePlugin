@@ -11,10 +11,11 @@ mixin panel-input(options)
 
   .panel__item
     label.panel__label(
-      class=`${(type === "number") ? '' : 'panel__label_checkbox'}`
+      class=(type === "checkbox") && 'panel__label_rowed'
     )
       .panel__text=text
       input(
-        class=`${(type === "number") ? 'panel__input' : 'panel__checkbox'} panel__input_${option} js-panel__input_${option}`
+        class=(type === "number") ? 'panel__input' : 'panel__checkbox'
         type=type 
-        data-option=option)
+        data-option=option
+      )

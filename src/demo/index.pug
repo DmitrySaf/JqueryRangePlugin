@@ -1,5 +1,12 @@
 include ./panel/panel
 
+-
+  const ids = [
+    'first-slider',
+    'second-slider',
+    'third-slider'
+  ]
+
 doctype html
 html(lang="en")
   head
@@ -15,15 +22,8 @@ html(lang="en")
     meta(name="theme-color" content="#ffffff")
   body 
     .container
-      .slider__container
-        .input__wrapper
-          input#first-slider.js-querySlider
-        +panel
-      .slider__container
-        .input__wrapper
-          input#second-slider.js-querySlider
-        +panel
-      .slider__container
-        .input__wrapper
-          input#third-slider.js-querySlider
-        +panel
+      each id in ids
+        .slider__container
+          .slider__wrapper
+            input.js-querySlider(id=id)
+          +panel

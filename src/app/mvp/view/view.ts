@@ -124,7 +124,7 @@ class View {
     event.preventDefault();
 
     const mousemove = (e: { pageX: number, pageY: number }) => {
-      if (event.currentTarget.classList.contains('js-slider__dot_wrapper_first')) {
+      if (event.currentTarget.classList.contains('js-slider__dot-wrapper_order_first')) {
         this.updateCurrentOptions(this.getValueOfDot(e), 'from');
         this.moveAt(this.dots[0], 'from');
       } else {
@@ -354,7 +354,7 @@ class View {
     this.bar.$elem.addClass('slider__bar_vertical');
     this.minmax.$elemMin.addClass('slider__min_vertical');
     this.minmax.$elemMax.addClass('slider__max_vertical');
-    this.scale.$container.addClass('slider__scale_container_vertical');
+    this.scale.$container.addClass('slider__scale_vertical');
   };
 
   private removeVerticalClasses = () => {
@@ -362,7 +362,7 @@ class View {
     this.bar.$elem.removeClass('slider__bar_vertical');
     this.minmax.$elemMin.removeClass('slider__min_vertical');
     this.minmax.$elemMax.removeClass('slider__max_vertical');
-    this.scale.$container.removeClass('slider__scale_container_vertical');
+    this.scale.$container.removeClass('slider__scale_vertical');
   };
 
   private toggleMinMaxHidden = (coords: number, elementName: '$elemMin' | '$elemMax') => (
