@@ -3,32 +3,32 @@ import { Model } from '../model/model';
 import { IDefinedOptions } from '../../options';
 
 class Presenter {
-    public view: View;
+  public view: View;
 
-    public model: Model;
+  public model: Model;
 
-    constructor(view: View, model: Model) {
-        this.view = view;
-        this.model = model;
-        this.init();
-    }
+  constructor(view: View, model: Model) {
+    this.view = view;
+    this.model = model;
+    this.init();
+  }
 
-    public init = (): void => {
-        this.model.updateModelOptionsObserver.attach(() => {
-            this.updateViewOptions(this.model.options, this.model.static);
-        });
-        this.view.updateViewOptionsObserver.attach(() => {
-            this.updateModelOptions(this.view.currentOptions, this.view.modelStatic);
-        });
-    };
+  public init = (): void => {
+    this.model.updateModelOptionsObserver.attach(() => {
+      this.updateViewOptions(this.model.options, this.model.static);
+    });
+    this.view.updateViewOptionsObserver.attach(() => {
+      this.updateModelOptions(this.view.currentOptions, this.view.modelStatic);
+    });
+  };
 
-    public updateModelOptions = (viewOptions: IDefinedOptions, modelStatic: { from: number, to: number }): void => {
-        this.model.updateModelOptions(viewOptions, modelStatic);
-    };
+  public updateModelOptions = (viewOptions: IDefinedOptions, modelStatic: { from: number, to: number }): void => {
+    this.model.updateModelOptions(viewOptions, modelStatic);
+  };
 
-    public updateViewOptions = (modelOptions: IDefinedOptions, modelStatic: { from: number, to: number }): void => {
-        this.view.updateViewOptions(modelOptions, modelStatic);
-    };
+  public updateViewOptions = (modelOptions: IDefinedOptions, modelStatic: { from: number, to: number }): void => {
+    this.view.updateViewOptions(modelOptions, modelStatic);
+  };
 }
 
 export { Presenter };

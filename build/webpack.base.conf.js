@@ -103,6 +103,14 @@ module.exports = {
 				use: 'ts-loader',
 				exclude: /node_modules/,
 			},
+			{
+				// Expose jQuery
+				test: require.resolve('jquery'),
+				loader: 'expose-loader',
+				options: {
+				  	exposes: ['$', 'jQuery'],
+				},
+			},
 		]
 	},
 	plugins: [

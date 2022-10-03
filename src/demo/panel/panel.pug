@@ -1,19 +1,19 @@
 include ./panel-input/panel-input
 
 mixin panel(optoins) 
-    if !options 
-        - var options = {}
+  if !options 
+    - const options = {}
 
-    .panel
-        +panel-input({option: "min", type: "number", text: "Min value: "})
-        +panel-input({option: "max", type: "number", text: "Max value: "})
-        +panel-input({option: "step", type: "number", text: "Step: "})
-        .panel__dots 
-            +panel-input({option: "from", type: "number", text: "From: "})
-            | -
-            +panel-input({option: "to", type: "number", text: "To: "})
-        +panel-input({option: "scaleFrequency", type: "number", text: "scaleFrequency: "})
-        +panel-input({option: "valuesDisplay", type: "checkbox", text: "valuesDisplay: "})
-        +panel-input({option: "vertical", type: "checkbox", text: "Vertical: "})
-        +panel-input({option: "double", type: "checkbox", text: "Double: "})
-        +panel-input({option: "scale", type: "checkbox", text: "Scale: "})
+  .panel
+    +panel-input({option: "min", type: "number", text: "Min value: "})
+    +panel-input({option: "max", type: "number", text: "Max value: "})
+    +panel-input({option: "step", type: "number", text: "Step: "})
+    .panel__dots 
+      +panel-input({option: "from", type: "number", text: "From: "})
+      | -
+      +panel-input({option: "to", type: "number", text: "To: "})
+    +panel-input({option: "scaleFrequency", type: "number", text: "scaleFrequency: "})
+    +panel-input({option: "valuesDisplay", type: "checkbox", text: "valuesDisplay: "})
+    +panel-input({option: "vertical", type: "checkbox", text: "Vertical: "})
+    +panel-input({option: "double", type: "checkbox", text: "Double: "})
+    +panel-input({option: "scale", type: "checkbox", text: "Scale: "})

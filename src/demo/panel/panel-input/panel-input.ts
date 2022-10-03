@@ -1,1 +1,0 @@
-import "./panel-input.sass";

@@ -2,28 +2,28 @@ include ./panel/panel
 
 doctype html
 html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(http-equiv="X-UA-Compatible", content="IE=edge")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Slider
-        link(rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png")
-        link(rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png")
-        link(rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png")
-        link(rel="manifest" href="./assets/favicon/site.webmanifest")
-        meta(name="msapplication-TileColor" content="#da532c")
-        meta(name="theme-color" content="#ffffff")
-    body 
-        .container
-            .slider__container
-                .input__wrapper
-                    input#first-slider.js-querySlider
-                +panel
-            .slider__container
-                .input__wrapper
-                    input#second-slider.js-querySlider
-                +panel
-            .slider__container
-                .input__wrapper
-                    input#third-slider.js-querySlider
-                +panel
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Slider
+    link(rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png")
+    link(rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png")
+    link(rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png")
+    link(rel="manifest" href="./assets/favicon/site.webmanifest")
+    meta(name="msapplication-TileColor" content="#da532c")
+    meta(name="theme-color" content="#ffffff")
+  body 
+    .container
+      .slider__container
+        .input__wrapper
+          input#first-slider.js-querySlider
+        +panel
+      .slider__container
+        .input__wrapper
+          input#second-slider.js-querySlider
+        +panel
+      .slider__container
+        .input__wrapper
+          input#third-slider.js-querySlider
+        +panel
