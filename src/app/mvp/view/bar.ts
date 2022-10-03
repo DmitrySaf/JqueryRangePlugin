@@ -10,4 +10,4 @@ class Bar {
   }
 }
 
-export { Bar };
+export default Bar;

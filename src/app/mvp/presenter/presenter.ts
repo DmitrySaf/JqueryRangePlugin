@@ -1,5 +1,5 @@
-import { View } from '../view/view';
-import { Model } from '../model/model';
+import View from '../view/view';
+import Model from '../model/model';
 import { IDefinedOptions } from '../../options';
 
 class Presenter {
@@ -31,4 +31,4 @@ class Presenter {
   };
 }
 
-export { Presenter };
+export default Presenter;

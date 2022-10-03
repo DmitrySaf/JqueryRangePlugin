@@ -1,10 +1,10 @@
 import { IDefinedOptions, Coords } from '../../options';
-import { Bar } from './bar';
-import { Dot } from './dot';
-import { Slider } from './slider';
-import { Minmax } from './minmax';
-import { Scale } from './scale';
-import { Event } from '../../event';
+import Bar from './bar';
+import Dot from './dot';
+import Slider from './slider';
+import Minmax from './minmax';
+import Scale from './scale';
+import Event from '../../event';
 
 interface PointerEvent {
   pageX: number,
@@ -396,4 +396,4 @@ class View {
   };
 }
 
-export { View };
+export default View;

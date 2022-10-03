@@ -9,4 +9,4 @@ class Minmax {
   }
 }
 
-export { Minmax };
+export default Minmax;

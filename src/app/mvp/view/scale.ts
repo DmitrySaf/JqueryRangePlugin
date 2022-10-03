@@ -40,4 +40,4 @@ class Scale {
   }
 }
 
-export { Scale };
+export default Scale;

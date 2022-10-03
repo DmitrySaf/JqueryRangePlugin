@@ -1,4 +1,4 @@
-import { Event } from '../../event';
+import Event from '../../event';
 import { IDefinedOptions, defaultOptions, Coords } from '../../options';
 
 class Model {
@@ -93,4 +93,4 @@ class Model {
   ): number => (((value < min) || (value > max)) ? min : value);
 }
 
-export { Model };
+export default Model;
