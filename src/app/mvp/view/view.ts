@@ -7,10 +7,13 @@ import Scale from './scale';
 import Event from '../../event';
 
 interface PointerEvent {
-  pageX: number,
-  pageY: number,
   currentTarget: HTMLElement,
   preventDefault: () => void
+}
+
+interface PointerEventCoords {
+  pageX: number,
+  pageY: number
 }
 
 class View {
@@ -116,14 +119,14 @@ class View {
   };
 
   private addEventListeners = () => {
-    this.dots.on('mousedown', this.onMouseDown);
+    this.dots.on('pointerdown', this.onPointerDown);
     this.bar.$elem.on('click', this.onMouseClick);
   };
 
-  private onMouseDown = (event: PointerEvent) => {
+  private onPointerDown = (event: PointerEvent) => {
     event.preventDefault();
 
-    const mousemove = (e: { pageX: number, pageY: number }) => {
+    const pointermove = (e: any) => {
       if (event.currentTarget.classList.contains('js-slider__dot-wrapper_order_first')) {
         this.updateCurrentOptions(this.getValueOfDot(e), 'from');
         this.moveAt(this.dots[0], 'from');
@@ -133,18 +136,18 @@ class View {
       }
       this.comfortableValueDisplay();
       this.setFillerStyles();
-      this.onMouseUp();
+      this.onPointerUp();
     };
-    const mouseup = () => {
-      $(document).off('mousemove', mousemove);
-      $(document).off('mouseup', mouseup);
-      this.onMouseUp();
+    const pointerup = () => {
+      $(document).off('pointermove', pointermove);
+      $(document).off('pointerup', pointerup);
+      this.onPointerUp();
     };
-    $(document).on('mousemove', mousemove);
-    $(document).on('mouseup', mouseup);
+    $(document).on('pointermove', pointermove);
+    $(document).on('pointerup', pointerup);
   };
 
-  private onMouseClick = (event: PointerEvent) => {
+  private onMouseClick = (event: PointerEventCoords) => {
     if (this.checkedOptions.double) {
       if (Math.abs(this.getValueOfDot(event) - this.currentOptions.from)
         <= Math.abs(this.getValueOfDot(event) - this.currentOptions.to)) {
@@ -162,7 +165,7 @@ class View {
     this.setFillerStyles();
   };
 
-  private onMouseUp = () => {
+  private onPointerUp = () => {
     this.modelStatic.from = this.checkedOptions.from;
     this.modelStatic.to = this.checkedOptions.to;
   };
