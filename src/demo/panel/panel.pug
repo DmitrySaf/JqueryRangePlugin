@@ -8,10 +8,8 @@ mixin panel(options)
     +panel-input({option: "min", type: "number", text: "Min value: "})
     +panel-input({option: "max", type: "number", text: "Max value: "})
     +panel-input({option: "step", type: "number", text: "Step: "})
-    .panel__dots 
-      +panel-input({option: "from", type: "number", text: "From: "})
-      | -
-      +panel-input({option: "to", type: "number", text: "To: "})
+    +panel-input({option: "from", type: "number", text: "From: "})
+    +panel-input({option: "to", type: "number", text: "To: "})
     +panel-input({option: "scaleFrequency", type: "number", text: "scaleFrequency: "})
     +panel-input({option: "valuesDisplay", type: "checkbox", text: "valuesDisplay: "})
     +panel-input({option: "vertical", type: "checkbox", text: "Vertical: "})
