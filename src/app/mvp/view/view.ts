@@ -2,7 +2,7 @@ import { IDefinedOptions, Coords } from '../../options';
 import Bar from './bar';
 import Dot from './dot';
 import Slider from './slider';
-import Minmax from './minmax';
+import Minmax from './min-max';
 import Scale from './scale';
 import Event from '../../event';
 

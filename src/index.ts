@@ -1,4 +1,4 @@
-import './app/sliderInit';
+import './app/slider-init';
 import './demo/demo';
 import './demo/panel/panel';
 
