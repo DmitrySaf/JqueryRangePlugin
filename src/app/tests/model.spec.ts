@@ -19,7 +19,6 @@ describe('Model', () => {
     const options = $.extend(recievedOptions, { min: '123', vertical: 'asda' });
     const model = new Model(options);
 
-    // return options to normal types
     $.extend(recievedOptions, { min: 2000, vertical: true });
 
     expect(model.options.min).toEqual(defaultOptions.min);
@@ -95,7 +94,6 @@ describe('Model', () => {
     jest.spyOn(model, 'updateModelOptions');
     jest.spyOn(model.updateModelOptionsObserver, 'notify');
 
-    // sending updated options
     const staticExample = { from: 5000, to: 6000 };
     model.updateModelOptions(recievedOptions, staticExample);
     expect(model.updateModelOptionsObserver.notify).toHaveBeenCalled();

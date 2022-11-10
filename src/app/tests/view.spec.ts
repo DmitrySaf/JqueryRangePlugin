@@ -92,15 +92,12 @@ describe('View', () => {
     const optoinsExample = { ...recievedOptions, from: 4000, to: 6000 };
     const modelStaticExample = { from: 5000, to: 6000 };
 
-    // check for equality before change
     expect(view.checkedOptions).toEqual({ ...recievedOptions });
     expect(view.currentOptions).toEqual({ ...recievedOptions });
     expect(view.modelStatic).toEqual({ from: recievedOptions.from, to: recievedOptions.to });
 
-    // new data uploaded
     view.updateViewOptions(optoinsExample, modelStaticExample);
 
-    // check for equality after new data
     expect(view.checkedOptions).toEqual(optoinsExample);
     expect(view.currentOptions).toEqual(optoinsExample);
     expect(view.modelStatic).toEqual(modelStaticExample);

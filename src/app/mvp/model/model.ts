@@ -33,7 +33,6 @@ class Model {
   private optionsCorrection = (checkingOptions: IDefinedOptions): IDefinedOptions => {
     const confirmedOptions = { ...checkingOptions };
 
-    // Check for inappropriate values
     Object.keys(checkingOptions).forEach((key) => {
       if ((key === 'double') || (key === 'vertical') || (key === 'scale') || (key === 'valuesDisplay')) {
         if (typeof (checkingOptions[key]) !== 'boolean') {
@@ -44,7 +43,6 @@ class Model {
       }
     });
 
-    // Change invalid property value
     if (checkingOptions.step < 1) confirmedOptions.step = 1;
     if (checkingOptions.min >= checkingOptions.max) {
       confirmedOptions.max = checkingOptions.min + 1;
@@ -57,7 +55,6 @@ class Model {
 
     this.correctStaticOptions(confirmedOptions.min, confirmedOptions.max);
 
-    // Change values overriding each other
     if (confirmedOptions.double) {
       if (checkingOptions.from < confirmedOptions.min) confirmedOptions.from = confirmedOptions.min;
       if (checkingOptions.from > this.staticOptions.to) confirmedOptions.from = this.staticOptions.to;
