@@ -32,14 +32,12 @@ module.exports = {
 				loader: "pug-loader"
 			},
 			{
-				//JavaScript
 				test: /\.js$/,
 				loader: "babel-loader",
 				exclude: [
 					/node_modules/,
 				]
 			},
-				// fonts and images
 			{
 				test: /\.(ttf|eot|woff|woff2)$/,
 				type: 'asset/resource',
@@ -55,7 +53,6 @@ module.exports = {
 				}
 			},
 			{
-				// Css
 				test: /\.css$/,
 				use: [
 					MiniCssExtractPlugin.loader,
@@ -74,7 +71,6 @@ module.exports = {
 				
 			},
 			{
-				// Sass
 				test: /\.sass$/,
 				use: [
 					MiniCssExtractPlugin.loader,
@@ -95,7 +91,6 @@ module.exports = {
 				]
 			},
 			{
-				//typescript loader
 				test: /\.tsx?$/,
 				use: 'ts-loader',
 				exclude: /node_modules/,
