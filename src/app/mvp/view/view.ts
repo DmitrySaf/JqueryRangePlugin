@@ -76,6 +76,11 @@ class View {
 
     if (this.checkedOptions.scale) {
       this.comfortableScaleDisplay();
+      const scaleChildren = this.scale.container.children;
+
+      for (let i = 0; i < scaleChildren.length; i++) {
+        scaleChildren[i].addEventListener('click', this.onScaleClick);
+      }
     } else {
       this.scale.removeScale();
     }
@@ -122,13 +127,6 @@ class View {
       item.addEventListener('pointerdown', this.onPointerDown);
     });
     this.bar.elem.addEventListener('click', this.onMouseClick);
-    if (this.checkedOptions.scale) {
-      const scaleChildren = this.scale.container.children;
-
-      for (let i = 0; i < scaleChildren.length; i++) {
-        scaleChildren[i].addEventListener('click', this.onScaleClick);
-      }
-    }
   };
 
   private onPointerDown = (event: PointerEvent) => {
@@ -180,7 +178,7 @@ class View {
       from,
       double
     } = this.checkedOptions;
-    console.log(elemValue);
+
     if (double && Math.abs(to - elemValue) > Math.abs(from - elemValue)) {
       this.updateCurrentOptions(elemValue, 'from');
       this.moveAt(this.firstDot.elem, 'from');

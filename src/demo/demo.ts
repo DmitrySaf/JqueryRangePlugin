@@ -14,7 +14,7 @@ $('.js-querySlider#first-slider').slider({
 $('.js-querySlider#second-slider').slider({
   min: -1000,
   max: 6600,
-  vertical: false,
+  vertical: true,
   double: true,
   from: 300,
   to: 3200,
