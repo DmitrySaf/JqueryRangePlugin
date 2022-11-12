@@ -1,6 +1,6 @@
-import Model from './mvp/model/model';
-import Presenter from './mvp/presenter/presenter';
-import View from './mvp/view/view';
+import Model from './mvp/model/Model';
+import Presenter from './mvp/presenter/Presenter';
+import View from './mvp/view/View';
 import { IDefinedOptions, defaultOptions, IUndefinedOptions } from './options';
 
 $.fn.slider = function Slider(options: IUndefinedOptions) {

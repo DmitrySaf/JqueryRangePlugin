@@ -1,4 +1,4 @@
-import { Panel } from './panel/panel';
+import { Panel } from './panel/Panel';
 
 $('.js-querySlider#first-slider').slider({
   min: 0,

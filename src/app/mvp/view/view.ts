@@ -1,10 +1,10 @@
 import { IDefinedOptions, Coords } from '../../options';
-import Bar from './bar';
-import Dot from './dot';
-import Slider from './slider';
-import Minmax from './min-max';
-import Scale from './scale';
-import Event from '../../event';
+import Bar from './Bar';
+import Dot from './Dot';
+import Slider from './Slider';
+import Minmax from './Minmax';
+import Scale from './Scale';
+import Event from '../../Event';
 
 interface PointerEventCoords {
   pageX: number,
