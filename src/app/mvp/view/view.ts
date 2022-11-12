@@ -231,7 +231,8 @@ class View {
       max,
       from,
       to,
-      vertical
+      vertical,
+      valuesDisplay
     } = this.checkedOptions;
     const posFrom = this.calcPosition(from);
     const posTo = this.calcPosition(to);
@@ -243,8 +244,16 @@ class View {
     this.firstDot.value.textContent = String(from);
     this.secondDot.value.textContent = String(to);
 
+    if (valuesDisplay) {
+      this.secondDot.value.classList.remove('slider_hidden');
+      this.firstDot.value.classList.remove('slider_hidden');
+    } else {
+      this.secondDot.value.classList.add('slider_hidden');
+      this.firstDot.value.classList.add('slider_hidden');
+    }
+
     if (this.checkedOptions.double) {
-      if ((posTo - posFrom) < 40) {
+      if ((posTo - posFrom) < 5) {
         this.firstDot.value.classList.add('slider_hidden');
         this.secondDot.value.textContent = `${from} - ${to}`;
         if (!vertical) {
@@ -255,14 +264,6 @@ class View {
         if (!vertical) this.secondDot.value.style.left = '50%';
       }
       this.toggleMinMaxHidden(posFrom, 'elemMin');
-    }
-
-    if (this.checkedOptions.valuesDisplay) {
-      this.secondDot.value.classList.remove('slider_hidden');
-      this.firstDot.value.classList.remove('slider_hidden');
-    } else {
-      this.secondDot.value.classList.add('slider_hidden');
-      this.firstDot.value.classList.add('slider_hidden');
     }
   };
 
