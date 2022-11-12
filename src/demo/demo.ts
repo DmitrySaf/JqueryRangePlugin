@@ -5,11 +5,10 @@ $('.js-querySlider#first-slider').slider({
   max: 4000,
   vertical: false,
   double: false,
-  from: 300,
   to: 700,
   step: 1,
   scale: true,
-  scaleFrequency: 9,
+  scaleFrequency: 40,
   valuesDisplay: false
 });
 $('.js-querySlider#second-slider').slider({

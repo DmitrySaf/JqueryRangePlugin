@@ -304,14 +304,7 @@ class View {
       scaleElemsArray[0].style[option] = `${this.calcPosition(min)}%`;
       for (let i = 1; i < frequency; i++) {
         const value = this.calcPosition(Math.round((min + i * ((max - min) / frequency)) / step) * step);
-
         scaleElemsArray[i].style[option] = `${value}%`;
-/*         if (Math.abs(
-          value
-          - this.calcPosition(Math.round((min + (i + 1) * ((max - min) / frequency)) / step) * step)
-        ) < 6) {
-          scaleElemsArray[i + 1].remove();
-        } */
       }
       scaleElemsArray[frequency].style[option] = `${this.calcPosition(max)}%`;
     };
@@ -323,13 +316,12 @@ class View {
   };
 
   private comfortableScaleDisplay = () => {
-    /* const {
+    const {
       vertical
-      scaleFrequency
-    } = this.checkedOptions; */
+    } = this.checkedOptions;
     this.scale.removeScale();
     this.appendScaleElements();
-    /* if (!vertical) {
+    if (!vertical) {
       const scaleElemsArray = this.scale.container.querySelectorAll('div');
       let sum = 0;
       const sliderWidth = Number(this.slider.elem.offsetWidth);
@@ -349,7 +341,7 @@ class View {
           this.checkedOptions.scaleFrequency -= 1;
         }
       }
-    } */
+    }
   };
 
   private toggleMinMaxHidden = (coords: number, elementName: 'elemMin' | 'elemMax'): void => {
