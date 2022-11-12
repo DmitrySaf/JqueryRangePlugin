@@ -90,20 +90,22 @@ class Panel {
     this.inputNumber.on('blur', this.onBlur);
     this.inputNumber.on('keyup', this.onKeyUp);
     this.inputCheckbox.on('change', this.onCheck);
-    this.sliderDots.on('mousedown', this.onMouseDown);
+    this.sliderDots.on('pointerdown', this.onPointerDown);
   };
 
-  private onMouseDown = () => {
-    const fillToFromInputs = () => {
+  private onPointerDown = (event: Event) => {
+    event.preventDefault();
+
+    const onPointerMove = () => {
       this.inputFrom.val(this.app.view.checkedOptions.from);
       this.inputTo.val(this.app.view.checkedOptions.to);
     };
-    const mousemove = () => {
-      $(document).off('mousemove', fillToFromInputs);
-      $(document).off('mouseup', mousemove);
+    const onPointerUp = () => {
+      $(document).off('pointermove', onPointerMove);
+      $(document).off('pointerup', onPointerUp);
     };
-    $(document).on('mousemove', fillToFromInputs);
-    $(document).on('mouseup', mousemove);
+    $(document).on('pointermove', onPointerMove);
+    $(document).on('pointerup', onPointerUp);
   };
 
   private onBlur = (event: { target: HTMLElement }): void => {
