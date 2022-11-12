@@ -6,12 +6,6 @@ import Minmax from './min-max';
 import Scale from './scale';
 import Event from '../../event';
 
-interface PointerEvent {
-  target: any,
-  currentTarget: any,
-  preventDefault: any
-}
-
 interface PointerEventCoords {
   pageX: number,
   pageY: number
@@ -135,8 +129,10 @@ class View {
   private onPointerDown = (event: PointerEvent) => {
     event.preventDefault();
 
+    const target = event.target as HTMLElement || document.createElement('div');
+
     const pointermove = (e: PointerEventCoords) => {
-      if (event.target.parentElement.classList.contains('js-slider__dot-wrapper_order_first')) {
+      if (target.classList.contains('js-slider__dot-wrapper_order_first')) {
         this.updateCurrentOptions(this.getValueOfDot(e), 'from');
         this.moveAt(this.firstDot.elem, 'from');
       } else {
