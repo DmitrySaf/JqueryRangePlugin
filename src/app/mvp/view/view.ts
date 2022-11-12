@@ -68,6 +68,7 @@ class View {
     }
 
     if (double) {
+      this.firstDot.elem.classList.remove('slider_hidden');
       this.moveAt(this.firstDot.elem, 'from');
     } else {
       this.firstDot.elem.classList.add('slider_hidden');
@@ -179,7 +180,8 @@ class View {
       from,
       double
     } = this.checkedOptions;
-    if (double && Math.abs(to - elemValue) <= Math.abs(from - elemValue)) {
+    console.log(elemValue);
+    if (double && Math.abs(to - elemValue) > Math.abs(from - elemValue)) {
       this.updateCurrentOptions(elemValue, 'from');
       this.moveAt(this.firstDot.elem, 'from');
       return;
@@ -215,9 +217,10 @@ class View {
 
   private comfortableValueDisplay = () => {
     const {
+      to,
       max,
       from,
-      to,
+      double,
       vertical,
       valuesDisplay
     } = this.checkedOptions;
@@ -239,7 +242,7 @@ class View {
       this.firstDot.value.classList.add('slider_hidden');
     }
 
-    if (this.checkedOptions.double) {
+    if (double) {
       if ((posTo - posFrom) < 5) {
         this.firstDot.value.classList.add('slider_hidden');
         this.secondDot.value.textContent = `${from} - ${to}`;
@@ -247,7 +250,7 @@ class View {
           this.secondDot.value.style.left = `calc(50% - ${(posTo - posFrom) / 2}px)`;
         }
       } else {
-        this.firstDot.value.classList.remove('slider_hidden');
+        if (valuesDisplay) this.firstDot.value.classList.remove('slider_hidden');
         if (!vertical) this.secondDot.value.style.left = '50%';
       }
       this.toggleMinMaxHidden(posFrom, 'elemMin');
