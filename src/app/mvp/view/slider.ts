@@ -1,8 +1,9 @@
 class Slider {
-  public $elem: JQuery<HTMLElement>;
+  public elem: HTMLElement;
 
   constructor() {
-    this.$elem = $('<div class="slider js-slider"></div>');
+    this.elem = document.createElement('div');
+    this.elem.classList.add('slider', 'js-slider');
   }
 }
 

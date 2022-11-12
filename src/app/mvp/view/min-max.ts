@@ -1,11 +1,13 @@
 class Minmax {
-  public $elemMax: JQuery<HTMLElement>;
+  public elemMax: HTMLElement;
 
-  public $elemMin: JQuery<HTMLElement>;
+  public elemMin: HTMLElement;
 
   constructor() {
-    this.$elemMin = $('<div class="slider__min js-slider__min"></div>');
-    this.$elemMax = $('<div class="slider__max js-slider__max"></div>');
+    this.elemMin = document.createElement('div');
+    this.elemMin.classList.add('slider__min', 'js-slider__min');
+    this.elemMax = document.createElement('div');
+    this.elemMax.classList.add('slider__max', 'js-slider__max');
   }
 }
 

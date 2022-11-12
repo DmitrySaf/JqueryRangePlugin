@@ -16,7 +16,9 @@ const recievedOptions = {
 describe('View', () => {
   beforeEach(() => {
     $('<input/>').attr({ id: 'range' }).appendTo($('body'));
-    const view = new View($('input#range'), recievedOptions);
+    const elem = document.createElement('input');
+    elem.setAttribute('id', 'range');
+    const view = new View(elem, recievedOptions);
     jest.spyOn(view, 'updateViewOptions');
   });
 
@@ -72,7 +74,7 @@ describe('View', () => {
 
   it('shows correct current values above the dot', () => {
     const input = $('input[id="range"]');
-    const view = new View(input, { ...recievedOptions });
+    const view = new View(input[0], { ...recievedOptions });
     const slider = input.prev();
 
     expect(+slider.find('.slider__dot_first_value').text()).toBe(view.checkedOptions.from);
@@ -80,7 +82,7 @@ describe('View', () => {
 
   it('static options are equal to checked "from" and "to" options', () => {
     const input = $('input[id="range"]');
-    const view = new View(input, { ...recievedOptions });
+    const view = new View(input[0], { ...recievedOptions });
 
     expect(view.modelStatic.from).toEqual(view.checkedOptions.from);
     expect(view.modelStatic.to).toEqual(view.checkedOptions.to);
@@ -88,7 +90,7 @@ describe('View', () => {
 
   it('updateViewOptions method changes all options', () => {
     const input = $('input[id="range"]');
-    const view = new View(input, { ...recievedOptions });
+    const view = new View(input[0], { ...recievedOptions });
     const optoinsExample = { ...recievedOptions, from: 4000, to: 6000 };
     const modelStaticExample = { from: 5000, to: 6000 };
 

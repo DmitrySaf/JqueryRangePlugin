@@ -1,24 +1,22 @@
 class Dot {
-  public $elemFirst: JQuery<HTMLElement>;
+  public elem: HTMLElement;
 
-  public $valueFirst: JQuery<HTMLElement>;
+  public value: HTMLElement;
 
-  public $elemSecond: JQuery<HTMLElement>;
+  private dot: HTMLElement;
 
-  public $valueSecond: JQuery<HTMLElement>;
-
-  constructor() {
-    this.$elemFirst = $(`<div class="slider__dot-wrapper_order_first js-slider__dot-wrapper_order_first">
-        <span class="slider__dot"></span>
-        <div class="slider__dot-value_order_first js-slider__dot-value_order_first"></div>
-      </div>`);
-    this.$elemSecond = $(`
-      <div class="slider__dot-wrapper_order_second js-slider__dot-wrapper_order_second">
-        <span class="slider__dot"></span>
-        <div class="slider__dot-value_order_second js-slider__dot-value_order_second"></div>
-      </div>`);
-    this.$valueFirst = this.$elemFirst.find('.js-slider__dot-value_order_first');
-    this.$valueSecond = this.$elemSecond.find('.js-slider__dot-value_order_second');
+  constructor(order: string) {
+    this.dot = document.createElement('span');
+    this.dot.classList.add('slider__dot');
+    this.value = document.createElement('div');
+    this.value.classList.add(`slider__dot-value_order_${order}`, `js-slider__dot-value_order_${order}`);
+    this.elem = document.createElement('div');
+    this.elem.classList.add(
+      'slider__dot-wrapper',
+      `slider__dot-wrapper_order_${order}`,
+      `js-slider__dot-wrapper_order_${order}`
+    );
+    this.elem.append(this.dot, this.value);
   }
 }
 

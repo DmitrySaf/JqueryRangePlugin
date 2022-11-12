@@ -1,42 +1,45 @@
 class Scale {
-  public $container: JQuery<HTMLElement>;
+  public container: HTMLElement;
 
-  public $elem: JQuery<HTMLElement>;
+  public elem: HTMLElement;
 
   constructor() {
-    this.$container = $('<div class="slider__scale js-slider__scale"></div>');
-    this.$elem = $('<div class="slider__scale-elem js-slider__scale-elem"></div>');
+    this.container = document.createElement('div');
+    this.container.classList.add('slider__scale', 'js-slider__scale');
+    this.elem = document.createElement('div');
+    this.elem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
   }
 
-  public createElemsArray = (frequency: number, min: number, max: number, step: number): JQuery<HTMLElement>[] => {
+  public createElemsArray = (frequency: number, min: number, max: number, step: number): HTMLElement[] => {
     const array = [];
 
-    if (frequency > 1) {
-      array.push($(`
-        <div class="slider__scale-elem js-slider__scale-elem">${min}</div>
-      `));
-      for (let i = 1; i < (frequency - 1); i++) {
-        array.push($(`
-          <div class="slider__scale-elem js-slider__scale-elem">
-          ${Math.round((min + i * ((max - min) / (frequency - 1))) / step) * step}
-          </div>
-        `));
+    if (frequency > 0) {
+      const firstElem = document.createElement('div');
+      firstElem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
+      firstElem.textContent = String(min);
+      array.push(firstElem);
+      for (let i = 1; i < frequency; i++) {
+        const cycleElem = document.createElement('div');
+        cycleElem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
+        cycleElem.textContent = String(Math.round((min + i * ((max - min) / frequency)) / step) * step);
+        array.push(cycleElem);
       }
-      array.push($(`
-        <div class="slider__scale-elem js-slider__scale-elem">${max}</div>
-      `));
+      const lastElem = document.createElement('div');
+      lastElem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
+      lastElem.textContent = String(max);
+      array.push(lastElem);
     } else {
-      array.push($(`
-        <div class="slider__scale-elem js-slider__scale-elem">
-        ${Math.round((min + (max - min) / 2) / step) * step}
-        </div>
-      `));
+      const elem = document.createElement('div');
+      elem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
+      elem.textContent = String(Math.round((min + (max - min) / 2) / step) * step);
+      array.push(elem);
     }
     return array;
   };
 
   public removeScale(): void {
-    $(this.$container.children()).remove();
+    const children = this.container.querySelectorAll('.slider__scale-elem');
+    children.forEach((item) => item.remove());
   }
 }
 

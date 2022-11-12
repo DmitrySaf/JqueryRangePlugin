@@ -7,8 +7,9 @@ import Scale from './scale';
 import Event from '../../event';
 
 interface PointerEvent {
-  currentTarget: HTMLElement,
-  preventDefault: () => void
+  target: any,
+  currentTarget: any,
+  preventDefault: any
 }
 
 interface PointerEventCoords {
@@ -27,26 +28,30 @@ class View {
 
   private slider: Slider;
 
-  private dot: Dot;
+  private firstDot: Dot;
+
+  private secondDot: Dot;
+
+  private dots: HTMLElement[];
 
   private bar: Bar;
 
   private minmax: Minmax;
 
-  private dots: JQuery<HTMLElement>;
-
-  private input: JQuery<HTMLElement>;
+  private input: HTMLElement;
 
   private scale: Scale;
 
-  constructor(input: JQuery<HTMLElement>, options: IDefinedOptions) {
+  constructor(input: HTMLElement, options: IDefinedOptions) {
     this.input = input;
     this.checkedOptions = options;
     this.currentOptions = { ...options };
     this.updateViewOptionsObserver = new Event();
     this.slider = new Slider();
     this.bar = new Bar();
-    this.dot = new Dot();
+    this.firstDot = new Dot('first');
+    this.secondDot = new Dot('second');
+    this.dots = [this.firstDot.elem, this.secondDot.elem];
     this.minmax = new Minmax();
     this.scale = new Scale();
     this.modelStatic = { from: this.checkedOptions.from, to: this.checkedOptions.to };
@@ -76,25 +81,29 @@ class View {
     }
 
     if (double) {
-      this.dot.$elemFirst.addClass('shown');
-      this.moveAt(this.dot.$elemFirst[0], 'from');
+      this.firstDot.elem.classList.add('shown');
+      this.moveAt(this.firstDot.elem, 'from');
     } else {
-      this.dot.$elemFirst.removeClass('shown');
-      this.dot.$elemFirst.addClass('hidden');
+      this.firstDot.elem.classList.remove('shown');
+      this.firstDot.elem.classList.add('hidden');
     }
 
     if (this.checkedOptions.scale) {
+      const scaleChildren = this.scale.container.children;
+
       this.comfortableScaleDisplay();
-      this.scale.$container.children().on('click', this.onScaleClick);
+      for (let i = 0; i < scaleChildren.length; i++) {
+        scaleChildren[i].addEventListener('click', this.onScaleClick);
+      }
     } else {
       this.scale.removeScale();
     }
 
     this.setFillerStyles();
-    this.minmax.$elemMax.text(max);
-    this.minmax.$elemMin.text(min);
+    this.minmax.elemMax.textContent = String(max);
+    this.minmax.elemMin.textContent = String(min);
 
-    this.moveAt(this.dot.$elemSecond[0], 'to');
+    this.moveAt(this.secondDot.elem, 'to');
     this.comfortableValueDisplay();
   };
 
@@ -105,46 +114,47 @@ class View {
   };
 
   private createSlider = () => {
-    this.input.addClass('hidden');
-    this.slider.$elem.append(
-      this.bar.$elem,
-      this.minmax.$elemMax,
-      this.minmax.$elemMin,
-      this.scale.$container,
-      this.dot.$elemFirst,
-      this.dot.$elemSecond
+    this.input.classList.add('hidden');
+    this.slider.elem.append(
+      this.bar.elem,
+      this.minmax.elemMax,
+      this.minmax.elemMin,
+      this.scale.container,
+      this.firstDot.elem,
+      this.secondDot.elem
     );
-    this.input.before(this.slider.$elem);
-    this.dots = this.slider.$elem.find('span').parent();
+    this.input.before(this.slider.elem);
   };
 
   private addEventListeners = () => {
-    this.dots.on('pointerdown', this.onPointerDown);
-    this.bar.$elem.on('click', this.onMouseClick);
+    this.dots.forEach((item) => {
+      item.addEventListener('pointerdown', this.onPointerDown);
+    });
+    this.bar.elem.addEventListener('click', this.onMouseClick);
   };
 
   private onPointerDown = (event: PointerEvent) => {
     event.preventDefault();
 
-    const pointermove = (e: any) => {
-      if (event.currentTarget.classList.contains('js-slider__dot-wrapper_order_first')) {
+    const pointermove = (e: PointerEventCoords) => {
+      if (event.target.parentElement.classList.contains('js-slider__dot-wrapper_order_first')) {
         this.updateCurrentOptions(this.getValueOfDot(e), 'from');
-        this.moveAt(this.dots[0], 'from');
+        this.moveAt(this.firstDot.elem, 'from');
       } else {
         this.updateCurrentOptions(this.getValueOfDot(e), 'to');
-        this.moveAt(this.dots[1], 'to');
+        this.moveAt(this.secondDot.elem, 'to');
       }
       this.comfortableValueDisplay();
       this.setFillerStyles();
       this.onPointerUp();
     };
     const pointerup = () => {
-      $(document).off('pointermove', pointermove);
-      $(document).off('pointerup', pointerup);
+      document.removeEventListener('pointermove', pointermove);
+      document.removeEventListener('pointerup', pointerup);
       this.onPointerUp();
     };
-    $(document).on('pointermove', pointermove);
-    $(document).on('pointerup', pointerup);
+    document.addEventListener('pointermove', pointermove);
+    document.addEventListener('pointerup', pointerup);
   };
 
   private onMouseClick = (event: PointerEventCoords) => {
@@ -152,14 +162,14 @@ class View {
       if (Math.abs(this.getValueOfDot(event) - this.currentOptions.from)
         <= Math.abs(this.getValueOfDot(event) - this.currentOptions.to)) {
         this.updateCurrentOptions(this.getValueOfDot(event), 'from');
-        this.moveAt(this.dots[0], 'from');
+        this.moveAt(this.firstDot.elem, 'from');
       } else {
         this.updateCurrentOptions(this.getValueOfDot(event), 'to');
-        this.moveAt(this.dots[1], 'to');
+        this.moveAt(this.secondDot.elem, 'to');
       }
     } else {
       this.updateCurrentOptions(this.getValueOfDot(event), 'to');
-      this.moveAt(this.dots[1], 'to');
+      this.moveAt(this.secondDot.elem, 'to');
     }
     this.comfortableValueDisplay();
     this.setFillerStyles();
@@ -193,8 +203,8 @@ class View {
 
   private getValueOfDot = (event: { pageX: number, pageY: number }): number => {
     const coords = {
-      x: event.pageX - this.slider.$elem.position().left,
-      y: event.pageY - this.slider.$elem.position().top
+      x: event.pageX - this.slider.elem.getBoundingClientRect().left,
+      y: event.pageY - this.slider.elem.getBoundingClientRect().top
     };
     return this.calcValue(coords);
   };
@@ -225,64 +235,62 @@ class View {
     const posTo = this.calcPosition(to);
     const posMax = this.calcPosition(max);
 
-    this.toggleMinMaxHidden(posMax - posTo, '$elemMax');
-    this.toggleMinMaxHidden(posTo, '$elemMin');
+    this.toggleMinMaxHidden(posMax - posTo, 'elemMax');
+    this.toggleMinMaxHidden(posTo, 'elemMin');
 
-    this.dot.$valueSecond.text(to);
-    this.dot.$valueFirst.text(from);
+    this.firstDot.value.textContent = String(from);
+    this.secondDot.value.textContent = String(to);
 
     if (this.checkedOptions.double) {
       if ((posTo - posFrom) < 40) {
-        this.dot.$valueFirst
-          .addClass('hidden')
-          .removeClass('shown');
-        this.dot.$valueSecond.text(`${from} - ${to}`);
+        this.firstDot.value.classList.add('hidden');
+        this.firstDot.value.classList.remove('shown');
+        this.secondDot.value.textContent = `${from} - ${to}`;
         if (!vertical) {
-          this.dot.$valueSecond.css({ left: `calc(50% - ${(posTo - posFrom) / 2}px)` });
+          this.secondDot.value.style.left = `calc(50% - ${(posTo - posFrom) / 2}px)`;
         }
       } else {
-        this.dot.$valueFirst.removeClass('hidden');
-        if (!vertical) this.dot.$valueSecond.css('left', '50%');
+        this.firstDot.value.classList.remove('hidden');
+        if (!vertical) this.secondDot.value.style.left = '50%';
       }
-      this.toggleMinMaxHidden(posFrom, '$elemMin');
+      this.toggleMinMaxHidden(posFrom, 'elemMin');
     }
 
     if (this.checkedOptions.valuesDisplay) {
-      this.dot.$valueSecond.removeClass('hidden');
-      this.dot.$valueFirst.removeClass('hidden');
-      this.dot.$valueSecond.addClass('shown');
-      this.dot.$valueFirst.addClass('shown');
+      this.secondDot.value.classList.remove('hidden');
+      this.firstDot.value.classList.remove('hidden');
+      this.secondDot.value.classList.add('shown');
+      this.firstDot.value.classList.add('shown');
     } else {
-      this.dot.$valueSecond.removeClass('shown');
-      this.dot.$valueFirst.removeClass('shown');
-      this.dot.$valueSecond.addClass('hidden');
-      this.dot.$valueFirst.addClass('hidden');
+      this.secondDot.value.classList.remove('shown');
+      this.firstDot.value.classList.remove('shown');
+      this.secondDot.value.classList.add('hidden');
+      this.firstDot.value.classList.add('hidden');
     }
   };
 
   private setFillerStyles = () => {
-    const dotWidth = Number(this.dot.$elemSecond.outerWidth());
+    const dotWidth = Number(this.secondDot.elem.offsetWidth);
     const { vertical } = this.checkedOptions;
     const posFrom = this.calcPosition(this.checkedOptions.from);
     const posTo = this.calcPosition(this.checkedOptions.to);
-    this.bar.$filler.css({
-      top: `${
-        vertical ? (posFrom + (dotWidth / 2)) : 0
-      }px`,
-      left: `${
-        vertical ? 0 : (posFrom + (dotWidth / 2))
-      }px`,
-      height: `${
-        vertical ? (posTo - posFrom) : 20
-      }px`,
-      width: `${
-        vertical ? 20 : (posTo - posFrom)
-      }px`
-    });
+
+    this.bar.filler.style.top = `${
+      vertical ? (posFrom + (dotWidth / 2)) : 0
+    }px`;
+    this.bar.filler.style.left = `${
+      vertical ? 0 : (posFrom + (dotWidth / 2))
+    }px`;
+    this.bar.filler.style.height = `${
+      vertical ? (posTo - posFrom) : 20
+    }px`;
+    this.bar.filler.style.width = `${
+      vertical ? 20 : (posTo - posFrom)
+    }px`;
   };
 
   private appendScaleElements = () => {
-    const frequency = this.checkedOptions.scaleFrequency;
+    const frequency = this.checkedOptions.scaleFrequency - 1;
     const {
       min,
       max,
@@ -290,30 +298,23 @@ class View {
       vertical
     } = this.checkedOptions;
 
-    this.scale.$container.append(this.scale.createElemsArray(frequency, min, max, step));
+    this.scale.container.append(...this.scale.createElemsArray(frequency, min, max, step));
 
-    const scaleElemsArray = this.scale.$container.find('div');
+    const scaleElemsArray = this.scale.container.querySelectorAll('div');
     const scaleElemsDisplay = (option: 'top' | 'left') => {
-      scaleElemsArray.filter(':nth-child(1)').css(
-        option,
-        this.calcPosition(min, scaleElemsArray.filter(':nth-child(1)'))
-      );
-      for (let i = 1; i < (frequency - 1); i++) {
-        scaleElemsArray.filter(`:nth-child(${i + 1})`).css(
-          option,
-          this.calcPosition(
-            Math.round((min + i * ((max - min) / (frequency - 1))) / step) * step,
-            scaleElemsArray.filter(`:nth-child(${i + 1})`)
-          )
-        );
+      scaleElemsArray[0].style[option] = `${this.calcPosition(min, scaleElemsArray[0])}px`;
+
+      for (let i = 1; i < frequency; i++) {
+        scaleElemsArray[i].style[option] = `${this.calcPosition(
+          Math.round((min + i * ((max - min) / frequency)) / step) * step,
+          scaleElemsArray[i]
+        )}px`;
       }
-      scaleElemsArray.filter(`:nth-child(${frequency})`).css(
-        option,
-        this.calcPosition(max, scaleElemsArray.filter(`:nth-child(${frequency})`))
-      );
+
+      scaleElemsArray[frequency].style[option] = `${this.calcPosition(max, scaleElemsArray[frequency])}px`;
     };
 
-    if (frequency > 1) {
+    if (frequency > 0) {
       if (vertical) {
         scaleElemsDisplay('top');
       } else {
@@ -330,9 +331,9 @@ class View {
     this.scale.removeScale();
     this.appendScaleElements();
     if (!this.checkedOptions.vertical) {
-      const scaleElemsArray = this.scale.$container.children();
+      const scaleElemsArray = this.scale.container.querySelectorAll('div');
       let sum = 0;
-      const sliderWidth = Number(this.slider.$elem.outerWidth());
+      const sliderWidth = Number(this.slider.elem.offsetWidth);
 
       for (let i = 0; i < (scaleElemsArray.length - 1); i++) {
         sum += scaleElemsArray[i].offsetWidth;
@@ -342,8 +343,8 @@ class View {
       }
       this.scale.removeScale();
       this.appendScaleElements();
-      for (let i = 0; i < (this.scale.$container.find('div').length - 1); i++) {
-        const scaleElements = this.scale.$container.find('div');
+      for (let i = 0; i < (this.scale.container.querySelectorAll('div').length - 1); i++) {
+        const scaleElements = this.scale.container.querySelectorAll('div');
         if (Math.abs(scaleElements[i].offsetLeft - scaleElements[i + 1].offsetLeft) < 30) {
           scaleElements[i + 1].remove();
           this.checkedOptions.scaleFrequency -= 1;
@@ -353,31 +354,35 @@ class View {
   };
 
   private addVerticalClasses = () => {
-    this.slider.$elem.addClass('slider_vertical');
-    this.bar.$elem.addClass('slider__bar_vertical');
-    this.minmax.$elemMin.addClass('slider__min_vertical');
-    this.minmax.$elemMax.addClass('slider__max_vertical');
-    this.scale.$container.addClass('slider__scale_vertical');
+    this.slider.elem.classList.add('slider_vertical');
+    this.bar.elem.classList.add('slider__bar_vertical');
+    this.minmax.elemMin.classList.add('slider__min_vertical');
+    this.minmax.elemMax.classList.add('slider__max_vertical');
+    this.scale.container.classList.add('slider__scale_vertical');
   };
 
   private removeVerticalClasses = () => {
-    this.slider.$elem.removeClass('slider_vertical');
-    this.bar.$elem.removeClass('slider__bar_vertical');
-    this.minmax.$elemMin.removeClass('slider__min_vertical');
-    this.minmax.$elemMax.removeClass('slider__max_vertical');
-    this.scale.$container.removeClass('slider__scale_vertical');
+    this.slider.elem.classList.remove('slider_vertical');
+    this.bar.elem.classList.remove('slider__bar_vertical');
+    this.minmax.elemMin.classList.remove('slider__min_vertical');
+    this.minmax.elemMax.classList.remove('slider__max_vertical');
+    this.scale.container.classList.remove('slider__scale_vertical');
   };
 
-  private toggleMinMaxHidden = (coords: number, elementName: '$elemMin' | '$elemMax') => (
-    (coords < 50)
-      ? this.minmax[elementName].addClass('hidden')
-      : this.minmax[elementName].removeClass('hidden')
-  );
+  private toggleMinMaxHidden = (coords: number, elementName: 'elemMin' | 'elemMax'): void => {
+    const elem = this.minmax[elementName] || document.createElement('div');
+
+    if (coords < 50) {
+      elem.classList.add('hidden');
+    } else {
+      elem.classList.remove('hidden');
+    }
+  };
 
   private calcValue = (cursorCoords: { x: number, y: number }): number => {
     const coordsToSliderRatio: number = this.checkedOptions.vertical
-      ? cursorCoords.y / (Number(this.slider.$elem.outerHeight()))
-      : cursorCoords.x / (Number(this.slider.$elem.outerWidth()));
+      ? cursorCoords.y / (Number(this.slider.elem.offsetHeight))
+      : cursorCoords.x / (Number(this.slider.elem.offsetWidth));
     return Math.round(
       (coordsToSliderRatio
         * (this.checkedOptions.max - this.checkedOptions.min)
@@ -385,13 +390,13 @@ class View {
     ) * this.checkedOptions.step;
   };
 
-  private calcPosition = (value: number, target: JQuery<HTMLElement> = this.dot.$elemSecond): number => {
-    const sliderHeight = Number(this.slider.$elem.outerHeight());
-    const sliderWidth = Number(this.slider.$elem.outerWidth());
+  private calcPosition = (value: number, target: HTMLElement = this.secondDot.elem): number => {
+    const sliderHeight = Number(this.slider.elem.offsetHeight);
+    const sliderWidth = Number(this.slider.elem.offsetWidth);
     const sliderProp = this.checkedOptions.vertical ? sliderHeight : sliderWidth;
     const dotWidth = this.checkedOptions.vertical
-      ? Number(target.outerHeight())
-      : Number(target.outerWidth());
+      ? Number(target.offsetHeight)
+      : Number(target.offsetWidth);
     return (
       (value - this.checkedOptions.min)
       / (this.checkedOptions.max - this.checkedOptions.min)
