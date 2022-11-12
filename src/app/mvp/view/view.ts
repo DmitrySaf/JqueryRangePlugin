@@ -81,11 +81,9 @@ class View {
     }
 
     if (double) {
-      this.firstDot.elem.classList.add('shown');
       this.moveAt(this.firstDot.elem, 'from');
     } else {
-      this.firstDot.elem.classList.remove('shown');
-      this.firstDot.elem.classList.add('hidden');
+      this.firstDot.elem.classList.add('slider_hidden');
     }
 
     if (this.checkedOptions.scale) {
@@ -114,7 +112,8 @@ class View {
   };
 
   private createSlider = () => {
-    this.input.classList.add('hidden');
+    this.input.classList.add('slider_hidden');
+    this.input.tabIndex = -1;
     this.slider.elem.append(
       this.bar.elem,
       this.minmax.elemMax,
@@ -180,23 +179,26 @@ class View {
     this.modelStatic.to = this.checkedOptions.to;
   };
 
-  private onScaleClick = (event: PointerEvent) => {
-    const { left, top } = $(event.currentTarget).position();
-    const elemWidth = Number($(event.currentTarget).width());
-    const elemHeight = Number($(event.currentTarget).height());
-    const coords = this.checkedOptions.vertical
-      ? {
-        x: left,
-        y: top + (elemHeight / 2)
+  private onScaleClick = (event: { target: EventTarget | null }) => {
+    const elem = event.target as HTMLElement || document.createElement('div');
+    const elemValue = Number(elem.getAttribute('data-value'));
+    const {
+      to,
+      from,
+      double
+    } = this.checkedOptions;
+    if (double) {
+      if (Math.abs(to - elemValue) < Math.abs(from - elemValue)) {
+        this.updateCurrentOptions(elemValue, 'to');
+        this.moveAt(this.secondDot.elem, 'to');
+      } else {
+        this.updateCurrentOptions(elemValue, 'from');
+        this.moveAt(this.firstDot.elem, 'from');
       }
-      : {
-        x: left + (elemWidth / 2),
-        y: top
-      };
-    const val = this.calcValue(coords);
-
-    this.updateCurrentOptions(val, 'to');
-    this.moveAt(this.dots[1], 'to');
+    } else {
+      this.updateCurrentOptions(elemValue, 'to');
+      this.moveAt(this.secondDot.elem, 'to');
+    }
     this.comfortableValueDisplay();
     this.setFillerStyles();
   };
@@ -243,29 +245,24 @@ class View {
 
     if (this.checkedOptions.double) {
       if ((posTo - posFrom) < 40) {
-        this.firstDot.value.classList.add('hidden');
-        this.firstDot.value.classList.remove('shown');
+        this.firstDot.value.classList.add('slider_hidden');
         this.secondDot.value.textContent = `${from} - ${to}`;
         if (!vertical) {
           this.secondDot.value.style.left = `calc(50% - ${(posTo - posFrom) / 2}px)`;
         }
       } else {
-        this.firstDot.value.classList.remove('hidden');
+        this.firstDot.value.classList.remove('slider_hidden');
         if (!vertical) this.secondDot.value.style.left = '50%';
       }
       this.toggleMinMaxHidden(posFrom, 'elemMin');
     }
 
     if (this.checkedOptions.valuesDisplay) {
-      this.secondDot.value.classList.remove('hidden');
-      this.firstDot.value.classList.remove('hidden');
-      this.secondDot.value.classList.add('shown');
-      this.firstDot.value.classList.add('shown');
+      this.secondDot.value.classList.remove('slider_hidden');
+      this.firstDot.value.classList.remove('slider_hidden');
     } else {
-      this.secondDot.value.classList.remove('shown');
-      this.firstDot.value.classList.remove('shown');
-      this.secondDot.value.classList.add('hidden');
-      this.firstDot.value.classList.add('hidden');
+      this.secondDot.value.classList.add('slider_hidden');
+      this.firstDot.value.classList.add('slider_hidden');
     }
   };
 
@@ -355,10 +352,10 @@ class View {
   private toggleMinMaxHidden = (coords: number, elementName: 'elemMin' | 'elemMax'): void => {
     const elem = this.minmax[elementName] || document.createElement('div');
 
-    if (coords < 50) {
-      elem.classList.add('hidden');
+    if (coords < 5) {
+      elem.classList.add('slider_hidden');
     } else {
-      elem.classList.remove('hidden');
+      elem.classList.remove('slider_hidden');
     }
   };
 

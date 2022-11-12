@@ -40,7 +40,8 @@
     & > .slider__bar
       width: 10px
       height: 100%
-
+  &_hidden
+    display: none !important
   &__wrapper
     width: 100%
     display: flex
@@ -71,8 +72,6 @@
         width: 20px
         height: 20px
         touch-action: none
-      &_first
-        display: none
   &__dot-value
     &_order
       &_first, &_second
@@ -151,4 +150,4 @@
       height: 5px
       background-color: #cacaca
       top: -3px
-      left: calc( 50% - 1px )
+      left: calc(50% - 1px)

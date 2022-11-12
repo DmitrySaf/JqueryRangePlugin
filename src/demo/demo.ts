@@ -8,7 +8,7 @@ $('.js-querySlider#first-slider').slider({
   from: 300,
   to: 700,
   step: 1,
-  scale: false,
+  scale: true,
   scaleFrequency: 9,
   valuesDisplay: false
 });
