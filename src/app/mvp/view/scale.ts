@@ -11,36 +11,28 @@ class Scale {
   }
 
   public createElemsArray = (frequency: number, min: number, max: number, step: number): HTMLElement[] => {
-    const array = [];
-
     if (frequency > 0) {
-      const firstElem = document.createElement('div');
-      firstElem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
-      firstElem.textContent = String(min);
-      array.push(firstElem);
+      const array = [];
       for (let i = 1; i < frequency; i++) {
-        const cycleElem = document.createElement('div');
-        cycleElem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
-        cycleElem.textContent = String(Math.round((min + i * ((max - min) / frequency)) / step) * step);
-        array.push(cycleElem);
+        array.push(this.createElement(Math.round((min + i * ((max - min) / frequency)) / step) * step));
       }
-      const lastElem = document.createElement('div');
-      lastElem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
-      lastElem.textContent = String(max);
-      array.push(lastElem);
-    } else {
-      const elem = document.createElement('div');
-      elem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
-      elem.textContent = String(Math.round((min + (max - min) / 2) / step) * step);
-      array.push(elem);
+      return [this.createElement(min), ...array, this.createElement(max)];
     }
-    return array;
+    return [this.createElement(Math.round((min + (max - min) / 2) / step) * step)];
   };
 
   public removeScale(): void {
     const children = this.container.querySelectorAll('.slider__scale-elem');
     children.forEach((item) => item.remove());
   }
+
+  private createElement = (value: number) => {
+    const elem = document.createElement('div');
+    elem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
+    elem.textContent = String(value);
+    elem.setAttribute('data-value', String(value));
+    return elem;
+  };
 }
 
 export default Scale;
