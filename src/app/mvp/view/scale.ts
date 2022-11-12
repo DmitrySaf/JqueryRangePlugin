@@ -14,7 +14,9 @@ class Scale {
     if (frequency > 0) {
       const array = [];
       for (let i = 1; i < frequency; i++) {
-        array.push(this.createElement(Math.round((min + i * ((max - min) / frequency)) / step) * step));
+        array.push(this.createElement(
+          +(Math.round((min + i * ((max - min) / frequency)) / step) * step).toFixed(2)
+        ));
       }
       return [this.createElement(min), ...array, this.createElement(max)];
     }

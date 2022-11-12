@@ -284,46 +284,52 @@ class View {
   };
 
   private appendScaleElements = () => {
-    const frequency = this.checkedOptions.scaleFrequency - 1;
     const {
       min,
       max,
       step,
-      vertical
+      vertical,
+      scaleFrequency
     } = this.checkedOptions;
+    const frequency = scaleFrequency - 1;
 
     this.scale.container.append(...this.scale.createElemsArray(frequency, min, max, step));
 
     const scaleElemsArray = this.scale.container.querySelectorAll('div');
     const scaleElemsDisplay = (option: 'top' | 'left') => {
-      scaleElemsArray[0].style[option] = `${this.calcPosition(min)}%`;
-
-      for (let i = 1; i < frequency; i++) {
-        scaleElemsArray[i].style[option] = `${this.calcPosition(
-          Math.round((min + i * ((max - min) / frequency)) / step) * step
-        )}%`;
+      if (frequency < 1) {
+        scaleElemsArray[0].style[option] = `${this.calcPosition(Math.round(((max - min) / 2) / step) * step)}%`;
+        return;
       }
+      scaleElemsArray[0].style[option] = `${this.calcPosition(min)}%`;
+      for (let i = 1; i < frequency; i++) {
+        const value = this.calcPosition(Math.round((min + i * ((max - min) / frequency)) / step) * step);
 
+        scaleElemsArray[i].style[option] = `${value}%`;
+/*         if (Math.abs(
+          value
+          - this.calcPosition(Math.round((min + (i + 1) * ((max - min) / frequency)) / step) * step)
+        ) < 6) {
+          scaleElemsArray[i + 1].remove();
+        } */
+      }
       scaleElemsArray[frequency].style[option] = `${this.calcPosition(max)}%`;
     };
-
-    if (frequency > 0) {
-      if (vertical) {
-        scaleElemsDisplay('top');
-      } else {
-        scaleElemsDisplay('left');
-      }
-    } else if (vertical) {
-      scaleElemsArray[0].style.top = `calc(50% - ${scaleElemsArray[0].clientHeight / 2}px)`;
+    if (vertical) {
+      scaleElemsDisplay('top');
     } else {
-      scaleElemsArray[0].style.left = `${this.calcPosition((max - min) / 2)}px`;
+      scaleElemsDisplay('left');
     }
   };
 
   private comfortableScaleDisplay = () => {
+    /* const {
+      vertical
+      scaleFrequency
+    } = this.checkedOptions; */
     this.scale.removeScale();
     this.appendScaleElements();
-    if (!this.checkedOptions.vertical) {
+    /* if (!vertical) {
       const scaleElemsArray = this.scale.container.querySelectorAll('div');
       let sum = 0;
       const sliderWidth = Number(this.slider.elem.offsetWidth);
@@ -343,7 +349,7 @@ class View {
           this.checkedOptions.scaleFrequency -= 1;
         }
       }
-    }
+    } */
   };
 
   private toggleMinMaxHidden = (coords: number, elementName: 'elemMin' | 'elemMax'): void => {
@@ -360,11 +366,11 @@ class View {
     const coordsToSliderRatio: number = this.checkedOptions.vertical
       ? cursorCoords.y / Number(this.slider.elem.offsetHeight)
       : cursorCoords.x / Number(this.slider.elem.offsetWidth);
-    return Math.round(
+    return +(Math.round(
       (coordsToSliderRatio
         * (this.checkedOptions.max - this.checkedOptions.min)
         + this.checkedOptions.min) / this.checkedOptions.step
-    ) * this.checkedOptions.step;
+    ) * this.checkedOptions.step).toFixed(2);
   };
 
   private calcPosition = (value: number): number => ((
