@@ -1,4 +1,4 @@
-import Model from '../mvp/model/Model';
+import Model from '../mvp/Model/Model';
 import { defaultOptions } from '../options';
 
 const recievedOptions = {

@@ -1,4 +1,4 @@
-import View from '../mvp/view/View';
+import View from '../mvp/View/View';
 
 const recievedOptions = {
   min: 2000,

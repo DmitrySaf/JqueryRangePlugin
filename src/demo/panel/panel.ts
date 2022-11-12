@@ -1,4 +1,4 @@
-import Presenter from '../../app/mvp/presenter/Presenter';
+import Presenter from '../../app/mvp/Presenter/Presenter';
 import './panel.sass';
 
 class Panel {

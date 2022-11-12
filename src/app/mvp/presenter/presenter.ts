@@ -1,5 +1,5 @@
-import View from '../view/View';
-import Model from '../model/Model';
+import View from '../View/View';
+import Model from '../Model/Model';
 import { IDefinedOptions } from '../../options';
 
 class Presenter {
