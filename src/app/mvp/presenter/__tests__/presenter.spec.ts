@@ -1,6 +1,6 @@
-import Presenter from '../mvp/Presenter/Presenter';
-import View from '../mvp/View/View';
-import Model from '../mvp/Model/Model';
+import Presenter from '../Presenter';
+import View from '../../View/View';
+import Model from '../../Model/Model';
 
 const recievedOptions = {
   min: 2000,

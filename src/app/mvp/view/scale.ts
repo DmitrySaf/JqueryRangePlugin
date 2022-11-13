@@ -10,17 +10,17 @@ class Scale {
     this.elem.classList.add('slider__scale-elem', 'js-slider__scale-elem');
   }
 
-  public createElemsArray = (frequency: number, min: number, max: number, step: number): HTMLElement[] => {
+  public createElemsArray = (frequency: number, min: number, max: number, step: number): void => {
     if (frequency > 0) {
       const array = [];
       for (let i = 1; i < frequency; i++) {
-        array.push(this.createElement(
-          +(Math.round((min + i * ((max - min) / frequency)) / step) * step).toFixed(2)
-        ));
+        const value = (Math.round((min + i * ((max - min) / frequency)) / step) * step).toFixed(2);
+        array.push(this.createElement(+value));
       }
-      return [this.createElement(min), ...array, this.createElement(max)];
+      this.container.append(...[this.createElement(min), ...array, this.createElement(max)]);
+      return;
     }
-    return [this.createElement(Math.round((min + (max - min) / 2) / step) * step)];
+    this.container.append(...[this.createElement(Math.round((min + (max - min) / 2) / step) * step)]);
   };
 
   public removeScale(): void {
