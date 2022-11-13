@@ -283,9 +283,7 @@ class View {
       scaleFrequency
     } = this.checkedOptions;
     const frequency = scaleFrequency - 1;
-
-    this.scale.container.append(...this.scale.createElemsArray(frequency, min, max, step));
-
+    this.scale.createElemsArray(frequency, min, max, step);
     const scaleElemsArray = this.scale.container.querySelectorAll('div');
     const scaleElemsDisplay = (option: 'top' | 'left') => {
       if (frequency < 1) {
