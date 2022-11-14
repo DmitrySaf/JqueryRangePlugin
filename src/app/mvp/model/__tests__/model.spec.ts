@@ -1,25 +1,29 @@
 import Model from '../Model';
 import { defaultOptions } from '../../../options';
 
-const recievedOptions = {
-  min: 2000,
-  max: 11000,
-  vertical: true,
-  double: true,
-  from: 5000,
-  to: 6000,
-  step: 100,
-  scale: true,
-  scaleFrequency: 4,
-  valuesDisplay: true
-};
+const mockCoords = { from: 2001, to: 6000 };
 
 describe('Model', () => {
-  it('changes value types where needed', () => {
-    const options = $.extend(recievedOptions, { min: '123', vertical: 'asda' });
-    const model = new Model(options);
+  const model = new Model(defaultOptions);
 
-    $.extend(recievedOptions, { min: 2000, vertical: true });
+  afterEach(() => {
+    model.updateModelOptions(defaultOptions, mockCoords);
+  });
+
+  it('changes value types where needed', () => {
+    model.updateModelOptions({
+      ...defaultOptions,
+      min: '123',
+      max: undefined,
+      from: null,
+      to: 'asd',
+      step: '-123',
+      vertical: 123,
+      double: null,
+      scale: '123',
+      scaleFrequency: 'undefined',
+      valuesDisplay: 'null'
+    }, mockCoords);
 
     expect(model.options.min).toEqual(defaultOptions.min);
     expect(model.options.vertical).toBeFalsy();
@@ -87,6 +91,15 @@ describe('Model', () => {
     const model = new Model(options);
 
     expect(model.options.from).toEqual(model.options.min);
+  });
+
+  it('changes "frequancy" value if its too high or too low', () => {
+    const options = {
+      ...recievedOptions, scale: true, min: 0, max: 1000, step: 100, scaleFrequency: 20
+    };
+    const model = new Model(options);
+
+    expect(model.options.scaleFrequency).toEqual(11);
   });
 
   it('triggers the "notify" function', () => {
