@@ -350,7 +350,7 @@ class View {
     const coordsToSliderRatio: number = vertical
       ? cursorCoords.y / Number(this.slider.elem.offsetHeight)
       : cursorCoords.x / Number(this.slider.elem.offsetWidth);
-    return +(Math.round((coordsToSliderRatio * (max - min) + min) / step) * step).toFixed(2);
+    return +(Math.round((coordsToSliderRatio * (max - min)) / step) * step).toFixed(2) + min;
   };
 
   private calcPosition = (value: number): number => ((
