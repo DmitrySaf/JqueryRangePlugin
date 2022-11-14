@@ -52,7 +52,9 @@ class Model {
       if (checkingOptions.scaleFrequency < 1) confirmedOptions.scaleFrequency = 1;
       if (checkingOptions.scaleFrequency
         > (((confirmedOptions.max - confirmedOptions.min) / confirmedOptions.step) + 1)) {
-        confirmedOptions.scaleFrequency = ((confirmedOptions.max - confirmedOptions.min) / confirmedOptions.step) + 1;
+        confirmedOptions.scaleFrequency = Math.round(
+          (confirmedOptions.max - confirmedOptions.min) / confirmedOptions.step
+        ) + 1;
       }
     }
 
