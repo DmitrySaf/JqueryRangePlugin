@@ -20,7 +20,7 @@ describe('Model', () => {
       step: '-123',
       vertical: 123,
       double: null,
-      scale: '123',
+      scale: '123', 
       scaleFrequency: 'undefined',
       valuesDisplay: 'null'
     }, mockCoords);
