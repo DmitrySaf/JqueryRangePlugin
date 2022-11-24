@@ -4,7 +4,7 @@ $('.js-querySlider#first-slider').slider({
   min: 0,
   max: 4000,
   vertical: false,
-  double: true,
+  double: false,
   to: 700,
   step: 1,
   scale: true,

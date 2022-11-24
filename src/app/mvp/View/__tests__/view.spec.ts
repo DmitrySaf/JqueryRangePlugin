@@ -2,12 +2,16 @@ import View from '../View';
 import { defaultOptions } from '../../../options';
 
 const mockCoords = { from: 2001, to: 6000 };
+const mockPosition = {
+  from: ((defaultOptions.from - defaultOptions.min) / (defaultOptions.max - defaultOptions.min)) * 100,
+  to: ((defaultOptions.to - defaultOptions.min) / (defaultOptions.max - defaultOptions.min)) * 100
+};
 
 describe('View', () => {
   const elem = document.createElement('input');
   elem.setAttribute('id', 'range');
   document.body.append(elem);
-  const view = new View(elem, defaultOptions);
+  const view = new View(elem, defaultOptions, mockPosition);
   const getSliderElems = () => ({
     input: document.body.querySelector('input#range') as HTMLElement,
     slider: document.body.querySelector('.slider') as HTMLElement,
@@ -25,7 +29,7 @@ describe('View', () => {
   jest.spyOn(view, 'updateViewOptions');
 
   afterEach(() => {
-    view.updateViewOptions(defaultOptions, mockCoords);
+    view.updateViewOptions(defaultOptions, mockCoords, mockPosition);
     view.render();
   });
 
@@ -62,18 +66,18 @@ describe('View', () => {
   });
 
   it('checks option "double" to remove or add a hiding class to first dot', () => {
-    view.updateViewOptions({ ...defaultOptions, double: false }, mockCoords);
+    view.updateViewOptions({ ...defaultOptions, double: false }, mockCoords, mockPosition);
     view.render();
     const { firstDot } = getSliderElems();
     expect(firstDot.classList.contains('slider_hidden')).toBeTruthy();
 
-    view.updateViewOptions({ ...defaultOptions, double: true }, mockCoords);
+    view.updateViewOptions({ ...defaultOptions, double: true }, mockCoords, mockPosition);
     view.render();
     expect(firstDot.classList.contains('slider_hidden')).toBeFalsy();
   });
 
   it('adds verical class if option "vertical" is true', () => {
-    view.updateViewOptions({ ...defaultOptions, vertical: true }, mockCoords);
+    view.updateViewOptions({ ...defaultOptions, vertical: true }, mockCoords, mockPosition);
     view.render();
     const { slider } = getSliderElems();
 
@@ -85,14 +89,14 @@ describe('View', () => {
 
     view.updateViewOptions({
       ...defaultOptions, min: 0, to: 0, max: 100
-    }, mockCoords);
+    }, mockCoords, mockPosition);
     view.render();
 
     expect(min.classList.contains('slider_hidden')).toBeTruthy();
 
     view.updateViewOptions({
       ...defaultOptions, min: 0, to: 100, max: 100
-    }, mockCoords);
+    }, mockCoords, mockPosition);
     view.render();
 
     expect(max.classList.contains('slider_hidden')).toBeTruthy();
@@ -104,7 +108,7 @@ describe('View', () => {
       from: 0,
       double: true,
       max: 100
-    }, mockCoords);
+    }, mockCoords, mockPosition);
     view.render();
 
     expect(min.classList.contains('slider_hidden')).toBeTruthy();
@@ -116,7 +120,7 @@ describe('View', () => {
 
     expect(secondValue.textContent).toBe(String(defaultOptions.to));
 
-    view.updateViewOptions({ ...defaultOptions, double: true }, mockCoords);
+    view.updateViewOptions({ ...defaultOptions, double: true }, mockCoords, mockPosition);
     view.render();
 
     expect(firstValue.textContent).toBe(String(defaultOptions.from));
@@ -125,7 +129,7 @@ describe('View', () => {
   it('changes the value textContent when values are close', () => {
     view.updateViewOptions({
       ...defaultOptions, double: true, from: 1000, to: 1000
-    }, mockCoords);
+    }, mockCoords, mockPosition);
     view.render();
     const { firstValue, secondValue } = getSliderElems();
 
@@ -134,7 +138,7 @@ describe('View', () => {
   });
 
   it('values change on scale click', () => {
-    view.updateViewOptions({ ...defaultOptions, scale: true }, mockCoords);
+    view.updateViewOptions({ ...defaultOptions, scale: true }, mockCoords, mockPosition);
     view.render();
     const mock = jest.fn();
     const { scaleItems } = getSliderElems();
@@ -161,14 +165,14 @@ describe('View', () => {
       it('horizontal', () => {
         expect(parseFloat(secondDot.style.left)).toBe(70);
 
-        view.updateViewOptions({ ...defaultOptions, double: true }, mockCoords);
+        view.updateViewOptions({ ...defaultOptions, double: true }, mockCoords, mockPosition);
         view.render();
 
         expect(parseFloat(firstDot.style.left)).toBe(30);
       });
 
       it('vertical', () => {
-        view.updateViewOptions({ ...defaultOptions, double: true, vertical: true }, mockCoords);
+        view.updateViewOptions({ ...defaultOptions, double: true, vertical: true }, mockCoords, mockPosition);
         view.render();
 
         expect(parseFloat(firstDot.style.top)).toBe(30);
@@ -182,13 +186,13 @@ describe('View', () => {
 
     describe('orientaion', () => {
       it('horizontal', () => {
-        view.updateViewOptions({ ...defaultOptions, from: 0 }, mockCoords);
+        view.updateViewOptions({ ...defaultOptions, from: 0 }, mockCoords, mockPosition);
         view.render();
 
         expect(parseFloat(filler.style.left)).toBe(0);
         expect(parseFloat(filler.style.width)).toBe(70);
 
-        view.updateViewOptions({ ...defaultOptions, double: true }, mockCoords);
+        view.updateViewOptions({ ...defaultOptions, double: true }, mockCoords, mockPosition);
         view.render();
 
         expect(parseFloat(filler.style.left)).toBe(30);
@@ -196,7 +200,7 @@ describe('View', () => {
       });
 
       it('vertical', () => {
-        view.updateViewOptions({ ...defaultOptions, double: true, vertical: true }, mockCoords);
+        view.updateViewOptions({ ...defaultOptions, double: true, vertical: true }, mockCoords, mockPosition);
         view.render();
 
         expect(parseFloat(filler.style.top)).toBe(30);

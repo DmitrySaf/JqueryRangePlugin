@@ -1,5 +1,9 @@
 import Event from '../../Event';
-import { IDefinedOptions, defaultOptions, Coords } from '../../options';
+import {
+  IDefinedOptions,
+  defaultOptions,
+  Coords
+} from '../../options';
 
 class Model {
   public updateModelOptionsObserver: Event;
@@ -13,6 +17,8 @@ class Model {
   get options(): IDefinedOptions { return this.correctOptions; }
 
   get static(): Coords { return this.staticOptions; }
+
+  get position(): Coords { return this.valueToPercent(); }
 
   constructor(options: IDefinedOptions) {
     this.updateModelOptionsObserver = new Event();
@@ -93,6 +99,19 @@ class Model {
     max: number,
     value: number
   ): number => (((value < min) || (value > max)) ? min : value);
+
+  private valueToPercent = () => {
+    const {
+      min,
+      max,
+      from,
+      to
+    } = this.correctOptions;
+    return {
+      from: ((from - min) / (max - min)) * 100,
+      to: ((to - min) / (max - min)) * 100
+    };
+  };
 }
 
 export default Model;

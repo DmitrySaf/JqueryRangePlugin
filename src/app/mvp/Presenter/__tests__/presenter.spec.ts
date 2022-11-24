@@ -19,7 +19,7 @@ const staticExample = { from: 5000, to: 6000 };
 const elem = document.createElement('div');
 elem.setAttribute('id', 'range');
 const model = new Model(recievedOptions);
-const view = new View(elem, recievedOptions);
+const view = new View(elem, model.options, model.position);
 const presenter = new Presenter(view, model);
 
 beforeAll(() => {
